@@ -5,13 +5,8 @@ action: "deploy"
 #destroy时是否删除镜像
 enable_destroy_images: True
 
-<<<<<<< HEAD
 #配置文件目录
-config_dir: "/etc/klcloud"
-=======
-
->>>>>>> e804da1b7f2e8221335d24bcd168db2237203af3
-
+config_directory: "/etc/klcloud"
 
 ##########
 # role开关
