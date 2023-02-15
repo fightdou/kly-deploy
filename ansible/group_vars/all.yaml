@@ -1,0 +1,15 @@
+##########
+# role开关
+##########
+enable_haproxy: true
+enable_keepalived: true
+enable_mariadb: true
+enable_redis: true
+enable_emqx: true
+enable_libvirt: true
+enable_trochilus: true
+enable_websockify: true
+enable_prometheus: true
+enable_guest_service: true
+enable_fsd: true
+enable_btserver: true
