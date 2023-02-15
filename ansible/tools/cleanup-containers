@@ -1,0 +1,22 @@
+#!/bin/bash
+containers_to_kill=$(sudo docker ps --filter "label=kolla_version" --format "{{.Names}}" -a)
+
+volumes_to_remove=$(sudo docker inspect -f '{{range .Mounts}} {{printf "%s\n" .Name }}{{end}}' ${containers_to_kill} | egrep -v '(^\s*$)' | sort | uniq)
+
+echo "Stopping containers..."
+(sudo docker stop -t 2 ${containers_to_kill} 2>&1) > /dev/null
+
+echo "Removing containers..."
+(sudo docker rm -v -f ${containers_to_kill} 2>&1) > /dev/null
+
+echo "Disconnecting containers from docker host network"
+for container in ${containers_to_kill}; do
+(sudo docker network disconnect -f host $container 2>&1) > /dev/null
+done
+
+echo "Removing volumes..."
+(sudo docker volume rm ${volumes_to_remove} 2>&1) > /dev/null
+
+echo "All cleaned up!"
+
+

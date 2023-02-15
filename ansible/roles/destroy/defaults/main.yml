@@ -1,0 +1,4 @@
+---
+# defaults file for baremetal
+destroy_include_images: "{{ enable_destroy_images }}"
+

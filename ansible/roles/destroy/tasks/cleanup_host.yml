@@ -1,0 +1,8 @@
+---
+- name: Destroying host configuration
+  become: true
+  script: ../../tools/cleanup-host
+  environment:
+    config_dir: "{{ service_config_dir }}"
+
+
