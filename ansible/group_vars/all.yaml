@@ -1,3 +1,14 @@
+---
+#脚本执行动作类型
+action: "deploy"
+
+#destroy时是否删除镜像
+enable_destroy_images: True
+
+#配置文件目录
+config_dir: "/etc/klcloud"
+
+
 ##########
 # role开关
 ##########

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+ip netns list | while read -r line ; do
+    echo "Removing network namespace $line on the host"
+    ip netns delete $line
+done
+
+rm -rf "$config_dir/*"

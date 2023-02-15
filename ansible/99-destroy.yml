@@ -1,0 +1,6 @@
+---
+- name: Apply role destroy
+  hosts: all
+  roles:
+    - destroy
+

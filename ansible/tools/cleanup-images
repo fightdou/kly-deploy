@@ -1,0 +1,8 @@
+#!/bin/bash
+
+sudo docker rmi -f $(docker images -aq)
+
+if [[ $? -ne 0 ]]; then
+    echo "Command failed"
+    exit 1
+fi

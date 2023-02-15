@@ -1,0 +1,7 @@
+---
+- name: Removing images
+  script: ../../tools/cleanup-images
+  when:
+    - destroy_include_images | bool
+  ignore_errors: yes
+
