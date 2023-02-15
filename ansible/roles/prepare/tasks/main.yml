@@ -1,0 +1,4 @@
+---
+- import_tasks: install_docker.yml
+
+- import_tasks: post_install.yml

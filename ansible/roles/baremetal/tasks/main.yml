@@ -1,0 +1,15 @@
+- import_tasks: mount_cephfs.yml
+  when:
+    - enable_ceph | bool
+
+- import_tasks: hugepages_config.yml
+  when:
+    - enable_hugepages | bool
+
+- import_tasks: set_voi_data_device.yml
+  when: only_deploy_voi | bool
+  run_once: True
+
+- import_tasks: set_voi_virt_nic.yml
+  when: only_deploy_voi | bool
+  run_once: True

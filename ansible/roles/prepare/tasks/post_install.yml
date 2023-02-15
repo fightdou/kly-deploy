@@ -1,0 +1,85 @@
+---
+- name: set timezone to Asia/Shanghai
+  timezone:
+    name: "Asia/Shanghai"
+
+- name: set hostname
+  hostname:
+    name: "{{ hostvars[inventory_hostname]['hostname'] }}"
+
+- name: openEuler 设置防火墙规则
+  shell: iptables -P FORWARD ACCEPT
+
+- name: 加载br_netfilter模块
+  modprobe:
+    name: br_netfilter
+    state: present
+
+- name: 加载ip_conntrack模块
+  modprobe:
+    name: ip_conntrack
+    state: present
+
+- name: 设置系统参数
+  template: 
+    src: 95-sysctl.conf.j2 
+    dest: /etc/sysctl.d/95-sysctl.conf
+
+- name: 生效系统参数
+  shell: "sysctl -p /etc/sysctl.d/95-sysctl.conf"
+  ignore_errors: true
+
+- name: Disable system swap partition table
+  shell: "swapoff -a && sysctl -w vm.swappiness=0"
+  ignore_errors: true
+
+- name: 创建 yum 备份目录
+  file:
+    path: "/home/yumback"
+    state: directory
+    mode: 0755
+
+- name: 查看 yum 配置文件是否存在
+  stat:
+    path: /etc/yum.repos.d/openEuler.repo
+  register: repo_exists
+
+- name: 备份 yum 源
+  shell: mv /etc/yum.repos.d/* /home/yumback
+  when:
+    - repo_exists.stat.exists
+
+- name: 添加 yum 源
+  template:
+    src: local.repo.j2
+    dest: /etc/yum.repos.d/local.repo
+
+- name: 安装相关 rpm 包
+  yum:
+    state: present
+    name: "{{ packages }}"
+  vars:
+    packages:
+      - python3-libselinux
+      - python3-pip
+      - git
+      - rsync
+      - iptables
+      - jq
+      - ipvsadm
+      - ipmitool
+      - traceroute
+      - net-tools
+      - iputils
+      - telnet
+      - ethtool
+      - tcpdump
+      - bash-completion
+      - bridge-utils
+
+- name: Delete fstab swap config
+  lineinfile:
+    path: /etc/fstab
+    regexp: 'swap'
+    state: absent
+    backup: yes
