@@ -1,0 +1,12 @@
+---
+- name: Copy vip config file
+  template:
+    src: "vip.conf.j2"
+    dest: "{{ config_directory }}/keepalived/conf.d/{{ service_name }}.conf"
+  become: true
+  when:
+    - inventory_hostname in groups['keepalived']
+    - inventory_hostname in groups[service_name]
+    - enable_keepalived | bool
+  notify:
+    - "Restart keepalived container"

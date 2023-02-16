@@ -1,0 +1,44 @@
+---
+- name: Generate peer address list
+  set_fact:
+    k_peer_addresses: "{{ k_peer_addresses | default([]) + ['api' | kolla_address(item)] }}"
+  with_items: "{{ groups['haproxy'] }}"
+  run_once: True
+
+- name: Ensure keepalived custom confirure file directory existing
+  file:
+    path: "{{ config_directory }}/keepalived/scripts/"
+    state: "directory"
+    mode: "0775"
+  become: true
+
+- name: Copy keepalived vip check script
+  become: true
+  copy:
+    src: "check_haproxy_alive.sh"
+    dest: "{{ config_directory }}/keepalived/scripts/check_script_haproxy.sh"
+    mode: "0775"
+
+- name: Generate haproxy keepalived pass
+  set_fact:
+    haproxy_keepalived_pass: "{{ lookup('password', '/tmp/passwordfile chars=ascii_letters') }}"
+  run_once: True
+
+- name: set keepalived_virtual_router_id
+  set_fact:
+    keepalived_virtual_router_id: "{{ internal_vip_address.split('.')[-1] }}"
+
+- name: Configure keepalived for {{ project_name }}
+  import_role:
+    name: keepalived
+  vars:
+    service_name: "haproxy"
+    service_port: "{{ haproxy_stats_port }}"
+    vip_interface: "{{ api_interface }}"
+    vip_interface_address: "{{ 'api' | kolla_address(inventory_hostname) }}"
+    router_id: "{{ keepalived_virtual_router_id }}"
+    keepalived_action: "config-vip"
+    service_hosts: "{{ groups['haproxy'] }}"
+    vip_pass: "{{ haproxy_keepalived_pass }}"
+    vip_address: "{{ internal_vip_address }}"
+    peer_addresses: "{{ k_peer_addresses }}"

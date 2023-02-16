@@ -1,0 +1,44 @@
+! Configuration File for keepalived
+
+vrrp_script check_script_{{ service_name }} {
+  script "/usr/local/etc/keepalived/scripts/check_script_{{ service_name }}.sh"
+  interval 2
+  fall 2
+  rise 10
+}
+
+vrrp_instance {{ service_name }} {
+  state {{ vip_instance_state }}
+  interface {{ vip_interface }}
+  virtual_router_id {{ router_id }}
+  priority {{ vip_instance_priority }}
+  accept
+  garp_master_refresh 5
+  garp_master_refresh_repeat 2
+  advert_int 1
+  authentication {
+    auth_type PASS
+    auth_pass {{ vip_pass }}
+  }
+
+{% if keepalived_traffic_mode == 'unicast' %}
+  unicast_src_ip {{ vip_interface_address }}
+{% if peer_addresses | length > 1 %}
+  unicast_peer {
+{% for ip_addr in peer_addresses %}
+{% if ip_addr != vip_interface_address %}
+    {{ ip_addr }}
+{% endif %}
+{% endfor %}
+  }
+{% endif %}
+{% endif %}
+
+  virtual_ipaddress {
+    {{ vip_address }} dev {{ vip_interface }}
+  }
+
+  track_script {
+     check_script_{{ service_name }}
+  }
+}

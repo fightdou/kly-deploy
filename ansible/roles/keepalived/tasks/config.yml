@@ -1,0 +1,45 @@
+---
+- name: Ensuring config directories exist
+  file:
+    path: "{{ config_directory }}/{{ item.key }}"
+    state: "directory"
+    mode: "0770"
+  become: true
+  when:
+    - inventory_hostname in groups[item.value.group]
+    - item.value.enabled | bool
+  with_dict: "{{ keepalived_services }}"
+
+- name: Ensuring config directories conf.d exist
+  file:
+    path: "{{ config_directory }}/{{ item.key }}/conf.d"
+    state: "directory"
+    mode: "0775"
+  become: true
+  when:
+    - inventory_hostname in groups[item.value.group]
+    - item.value.enabled | bool
+  with_dict: "{{ keepalived_services }}"
+
+- name: Ensuring keepalived vip check scripts file directories exist
+  file:
+    path: "{{ config_directory }}/{{ item.key }}/scripts"
+    state: "directory"
+    mode: "0775"
+  become: true
+  when:
+    - inventory_hostname in groups[item.value.group]
+    - item.value.enabled | bool
+  with_dict: "{{ keepalived_services }}"
+
+- name: Copy keepalived common config file
+  copy:
+    src: "keepalived.conf"
+    dest: "{{ config_directory }}/{{ item.key }}/keepalived.conf"
+    mode: "644"
+  when:
+    - inventory_hostname in groups[item.value.group]
+    - item.value.enabled | bool
+  with_dict: "{{ keepalived_services }}"
+  notify:
+    - "Restart keepalived container"

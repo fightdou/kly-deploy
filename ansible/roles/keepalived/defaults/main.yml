@@ -1,0 +1,34 @@
+---
+project_name: "keepalived"
+keepalived_action: ""
+keepalived_services:
+  keepalived:
+    container_name: keepalived
+    group: keepalived
+    enabled: "{{ enable_keepalived | bool }}"
+    image: "{{ keepalived_image_full }}"
+    pid_mode: "host"
+    privileged: True
+    volumes: "{{ keepalived_default_volumes }}"
+    dimensions: "{{ keepalived_dimensions }}"
+
+
+service_hosts: "{{ service_hosts | shuffle }}"
+vip_instance_state: "{% if inventory_hostname == service_hosts[0] %}MASTER{% else %}BACKUP{% endif %}"
+vip_instance_priority: "{% if inventory_hostname == service_hosts[0] %}10{% else %}{{ service_hosts.index(inventory_hostname) + 1 }}{% endif %}"
+
+####################
+# Docker
+####################
+keepalived_image: "{{ docker_image_repository }}/keepalived"
+keepalived_tag: "{{ keepalived_tag }}"
+keepalived_image_full: "{{ keepalived_image }}:{{ keepalived_tag }}"
+
+keepalived_traffic_mode: "unicast"
+keepalived_dimensions: "{{ default_container_dimensions }}"
+keepalived_default_volumes:
+  - "{{ config_directory }}/keepalived/:/usr/local/etc/keepalived/"
+  - "/etc/localtime:/etc/localtime:ro"
+  - "{{ '/etc/timezone:/etc/timezone:ro' if ansible_os_family == 'Debian' else '' }}"
+  - "/lib/modules:/lib/modules:ro"
+  - "{{ 'haproxy_socket:/var/lib/haproxy/' if enable_haproxy | default('no') | bool else '' }}"
