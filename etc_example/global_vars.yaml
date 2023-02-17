@@ -1,13 +1,21 @@
 docker_register_domain: kunlunyun
 docker_register_port: 5002
 offline_deb_repo_port: 9865
-docker_image_repository: "{{ docker_register_domain }}:{{ docker_register_port }}/kubernetes"
+docker_namespace_name: kubernetes
+docker_image_repository: "{{ docker_register_domain }}:{{ docker_register_port }}/{{ docker_namespace_name }}"
 docker_image_tag: 2.0.0
+#配置文件目录
+config_directory: "/etc/klcloud"
+
 
 ###############
 # Global Config
 ###############
 # 默认预留内存和 CPU
+internal_vip_address: 10.2.36.221
+api_interface_address: "{{ 'api' | kolla_address }}"
+network_address_family: "ipv4"
+api_address_family: "{{ network_address_family }}"
 reserved_host_cpus: 2
 reserved_host_memory_mb: 16384
 # 每个osd需要留2G内存
@@ -17,6 +25,28 @@ reserved_osd_memory_mb: 4096
 reserved_mon_memory_mb: 2048
 reserved_mds_memory_mb: 2048
 reseverd_system_memory_mb: 16384
+
+
+####################
+# Docker options
+####################
+# Valid options are [ no, on-failure, always, unless-stopped ]
+docker_restart_policy: "no"
+# '0' means unlimited retries (applies only to 'on-failure' policy)
+docker_restart_policy_retry: "10"
+# Timeout after Docker sends SIGTERM before sending SIGKILL.
+docker_graceful_timeout: 60
+# Docker client timeout in seconds.
+docker_client_timeout: 120
+# Common options used throughout Docker
+docker_common_options:
+  restart_policy: "{{ docker_restart_policy }}"
+  restart_retries: "{{ docker_restart_policy_retry }}"
+  environment:
+    KOLLA_CONFIG_STRATEGY: "COPY_ALWAYS"
+  graceful_timeout: "{{ docker_graceful_timeout }}"
+  client_timeout: "{{ docker_client_timeout }}"
+default_container_dimensions: {}
 
 ##########
 # role开关
@@ -51,3 +81,26 @@ ceph_rbd_admin_user: client.admin
 hugepages_size: 2M
 enable_hugepages: "{% if only_deploy_voi %}false{% else %}true{% endif %}"
 libvirt_image_tag: 2.0.0
+
+#################
+# Haproxy Options
+#################
+haproxy_stats_port: 1984
+haproxy_user: admin
+haproxy_password: admin
+haproxy_monitor_port: 61313
+haproxy_tag: 2.0.0
+
+#################
+# Haproxy Options
+#################
+keepalived_tag: 2.0.0
+
+##############
+# Emqx Options
+##############
+emqx_mqtt_port: 1883
+emqx_mgmt_port: 8081
+emqx_mqttssl_port: 8883
+emqx_ws_port: 8083
+emqx_wss_port: 8084

@@ -9,14 +9,6 @@
         tags: baremetal,
         when: enable_baremetal| bool }
 
-- name: Apply role haproxy
-  gather_facts: false
-  hosts: haproxy
-  roles:
-    - { role: haproxy,
-        tags: haproxy,
-        when: enable_haproxy| bool }
-
 - name: Apply role keepalived
   gather_facts: false
   hosts: keepalived
@@ -24,6 +16,14 @@
     - { role: keepalived,
         tags: keepalived,
         when: enable_keepalived| bool }
+
+- name: Apply role haproxy
+  gather_facts: false
+  hosts: haproxy
+  roles:
+    - { role: haproxy,
+        tags: haproxy,
+        when: enable_haproxy| bool }
 
 - name: Apply role mariadb
   gather_facts: false
@@ -59,7 +59,7 @@
 
 - name: Apply role trochilus
   gather_facts: false
-  hosts: 
+  hosts:
     - trochilus-api
     - trochilus-agent
   roles:
@@ -69,7 +69,7 @@
 
 - name: Apply role websockify
   gather_facts: false
-  hosts: 
+  hosts:
     - websockify
   roles:
     - { role: websockify,
@@ -78,7 +78,7 @@
 
 - name: Apply role prometheus
   gather_facts: false
-  hosts: 
+  hosts:
     - prometheus
     - prometheus-node-exporter
     - prometheus-collectd-exporter

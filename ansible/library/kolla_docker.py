@@ -333,7 +333,6 @@ class DockerWorker(object):
             self.compare_security_opt(container_info) or
             self.compare_image(container_info) or
             self.compare_ipc_mode(container_info) or
-            self.compare_labels(container_info) or
             self.compare_privileged(container_info) or
             self.compare_pid_mode(container_info) or
             self.compare_volumes(container_info) or
@@ -739,26 +738,32 @@ class DockerWorker(object):
     def recreate_or_restart_container(self):
         self.changed = True
         container = self.check_container()
-        # get config_strategy from env
-        environment = self.params.get('environment')
-        config_strategy = environment.get('KOLLA_CONFIG_STRATEGY')
-
         if not container:
             self.start_container()
             return
-        # If config_strategy is COPY_ONCE or container's parameters are
-        # changed, try to start a new one.
-        if config_strategy == 'COPY_ONCE' or self.check_container_differs():
-            # NOTE(mgoddard): Pull the image if necessary before stopping the
-            # container, otherwise a failure to pull the image will leave the
-            # container stopped.
-            if not self.check_image():
-                self.pull_image()
-            self.stop_container()
-            self.remove_container()
-            self.start_container()
-        elif config_strategy == 'COPY_ALWAYS':
+        # get config_strategy from env
+        environment = self.params.get('environment')
+        if environment is None:
             self.restart_container()
+        else:
+            config_strategy = environment.get('KOLLA_CONFIG_STRATEGY')
+
+            if not container:
+                self.start_container()
+                return
+            # If config_strategy is COPY_ONCE or container's parameters are
+            # changed, try to start a new one.
+            if config_strategy == 'COPY_ONCE' or self.check_container_differs():
+                # NOTE(mgoddard): Pull the image if necessary before stopping the
+                # container, otherwise a failure to pull the image will leave the
+                # container stopped.
+                if not self.check_image():
+                    self.pull_image()
+                self.stop_container()
+                self.remove_container()
+                self.start_container()
+            elif config_strategy == 'COPY_ALWAYS':
+                self.restart_container()
 
     def start_container(self):
         if not self.check_image():

@@ -1,0 +1,46 @@
+global
+    daemon
+    log {{ inventory_hostname }}:5140 local1
+    maxconn {{ haproxy_max_connections }}
+    stats socket /var/lib/haproxy/haproxy.sock mode 660
+
+defaults
+    log global
+    option redispatch
+    retries 3
+    timeout http-request {{ haproxy_http_request_timeout }}
+    timeout queue {{ haproxy_queue_timeout }}
+    timeout connect {{ haproxy_connect_timeout }}
+    timeout client {{ haproxy_client_timeout }}
+    timeout server {{ haproxy_server_timeout }}
+    timeout check {{ haproxy_check_timeout }}
+    balance {{ haproxy_defaults_balance }}
+    maxconn {{ haproxy_defaults_max_connections }}
+
+listen stats
+   bind {{ inventory_hostname }}:{{ haproxy_stats_port }}
+   mode http
+   stats enable
+   stats uri /
+   stats refresh 15s
+   stats realm Haproxy\ Stats
+   stats auth {{ haproxy_user }}:{{ haproxy_password }}
+
+frontend status
+    bind {{ inventory_hostname }}:{{ haproxy_monitor_port }}
+    {% if api_interface_address != internal_vip_address %}
+    bind {{ internal_vip_address }}:{{ haproxy_monitor_port }}
+    {% endif %}
+    mode http
+    monitor-uri /
+
+{% if enable_emqx | bool %}
+listen emqx
+    mode tcp
+    bind {{ internal_vip_address }}:{{ emqx_mqtt_port }}
+    balance source
+    option tcplog
+{% for host in (groups['emqx']) %}
+    server {{ host }} {{ 'api' | filter_address(host) }}:{{ emqx_mqtt_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+{% endif %}

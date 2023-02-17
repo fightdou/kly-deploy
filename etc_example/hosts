@@ -8,22 +8,16 @@
 [allnodes]
 # 172.18.31.124 hostname=control1 api_interface=ens3 ceph_public_interface=ens3 ceph_cluster_interface=ens3 flat_network_interface="['ens4']" vlan_network_interface="{'ens4': '1:100'}" ceph_volume_data="['/dev/vdb','/dev/vdc']" nic_info="['ens3:172.18.31.124:1100', 'ens4::0100']"
 # 172.18.30.139 hostname=control2 api_interface=ens3 ceph_public_interface=ens3 ceph_cluster_interface=ens3 flat_network_interface="['ens4']" vlan_network_interface="{'ens4': '1:100'}" ceph_volume_data="['/dev/vdb','/dev/vdc']" nic_info="['ens3:172.18.31.124:1100', 'ens4::0100']"
-10.2.36.128  hostname=test1  api_interface=bond0  ceph_public_interface=bond2  ceph_cluster_interface=bond3  nic_info="['bond0:10.2.36.128:1000','bond2:10.2.11.128:0010','bond3:10.2.36.128:0001','bond1:null:0100']" flat_network_interface="['bond1']"   ceph_volume_data="['/dev/sda','/dev/sdb','/dev/sdc','/dev/sdd']"  vlan_network_interface="{'bond1':['1:4094']}"
+10.2.36.127  hostname=test1  api_interface=bond0  ceph_public_interface=bond2  ceph_cluster_interface=bond3  nic_info="['bond0:10.2.36.127:1000','bond2:10.2.11.127:0010','bond3:10.2.36.127:0001','bond1:null:0100']" flat_network_interface="['bond1']"   ceph_volume_data="['/dev/sda','/dev/sdb','/dev/sdc','/dev/sdd']"  vlan_network_interface="{'bond1':['1:4094']}"
 
 [control]
-10.2.36.128
 10.2.36.127
-10.2.36.6
 
 [compute]
-10.2.36.128
 10.2.36.127
-10.2.36.6
 
 [storage]
-10.2.36.128
 10.2.36.127
-10.2.36.6
 
 [ceph:children]
 ceph-mons

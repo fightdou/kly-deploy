@@ -1,0 +1,34 @@
+---
+project_name: "haproxy"
+
+haproxy_services:
+  haproxy:
+    container_name: haproxy
+    group: haproxy
+    enabled: true
+    image: "{{ haproxy_image_full }}"
+    privileged: True
+    volumes: "{{ haproxy_default_volumes }}"
+    dimensions: "{{ haproxy_dimensions }}"
+
+haproxy_image: "{{ docker_image_repository }}/haproxy"
+haproxy_image_full: "{{ haproxy_image }}:{{ haproxy_tag }}"
+haproxy_default_volumes:
+  - "{{ config_directory }}/haproxy/:/usr/local/etc/haproxy/"
+  - "/etc/localtime:/etc/localtime"
+  - "haproxy_socket:/var/lib/haproxy/"
+
+haproxy_dimensions: "{{ default_container_dimensions }}"
+haproxy_max_connections: 40000
+# Matches the mariadb 10000 max connections limit
+haproxy_defaults_max_connections: 10000
+
+# Default timeout values
+haproxy_http_request_timeout: "10s"
+haproxy_queue_timeout: "1m"
+haproxy_connect_timeout: "10s"
+haproxy_client_timeout: "1m"
+haproxy_server_timeout: "1m"
+haproxy_check_timeout: "10s"
+
+haproxy_defaults_balance: "source"
