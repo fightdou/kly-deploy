@@ -1,0 +1,27 @@
+---
+project_name: "libvirt"
+
+libvirt_services:
+  libvirt:
+    container_name: libvirt
+    group: "libvirt"
+    enabled: true
+    image: "{{ libvirt_image_full }}"
+    pid_mode: "host"
+    privileged: True
+    volumes: "{{ libvirt_default_volumes }}"
+    dimensions: "{{ libvirt_dimensions }}"
+
+libvirt_image: "{{ docker_image_repository }}/libvirt"
+libvirt_default_volumes:
+  - "{{ config_directory }}/libvirt:/etc/libvirt"
+  - "/etc/localtime:/etc/localtime:ro"
+  - "/lib/modules:/lib/modules:ro"
+  - "/run/:/run/:shared"
+  - "/dev:/dev"
+  - "/dev/hugepages:/dev/hugepages"
+  - "/sys/fs/cgroup:/sys/fs/cgroup"
+  - "libvirtd:/var/lib/libvirt"
+  - "trochilus:/var/lib/trochilus"
+libvirt_image_full: "{{ libvirt_image }}:{{ libvirt_tag }}"
+libvirt_dimensions: "{{ default_container_dimensions }}"
