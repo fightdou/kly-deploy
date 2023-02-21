@@ -1,0 +1,23 @@
+---
+project_name: "guest-service"
+
+guest_services:
+  guest-service:
+    container_name: guest-service
+    group: "guest-service"
+    enabled: true
+    image: "{{ guest_service_image_full }}"
+    pid_mode: "host"
+    privileged: True
+    volumes: "{{ guest_service_default_volumes }}"
+    dimensions: "{{ guest_service_dimensions }}"
+
+guest_service_image: "{{ docker_image_repository }}/guest-service"
+guest_service_image_full: "{{ guest_service_image }}:{{ guest_service_tag }}"
+guest_service_dimensions: "{{ default_container_dimensions }}"
+guest_service_default_volumes:
+  - "{{ config_directory }}/guest-service:/etc/guest-service"
+  - "{{ config_directory }}/libvirt/vdi:/etc/vdi"
+  - "/etc/localtime:/etc/localtime"
+  - "/run/:/run/:shared"
+  - "libvirtd:/var/lib/libvirt"

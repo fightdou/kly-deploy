@@ -12,7 +12,8 @@ config_directory: "/etc/klcloud"
 # Global Config
 ###############
 # 默认预留内存和 CPU
-internal_vip_address: 10.2.36.221
+internal_vip_address: 192.168.0.220
+external_vip_address: 10.2.36.229
 api_interface_address: "{{ 'api' | kolla_address }}"
 network_address_family: "ipv4"
 api_address_family: "{{ network_address_family }}"
@@ -25,7 +26,18 @@ reserved_osd_memory_mb: 4096
 reserved_mon_memory_mb: 2048
 reserved_mds_memory_mb: 2048
 reseverd_system_memory_mb: 16384
-
+# 系统用户名
+system_username: root
+# 系统密码
+system_password: Troila12#$
+# ipmi 厂商
+ipmi_vendor: HUAWEI
+# ipmi 连接用户名
+ipmi_username: root
+# ipmi 连接密码
+ipmi_password: Troila12#$
+host_username: root
+host_password: Troila12#$
 
 ####################
 # Docker options
@@ -64,6 +76,7 @@ enable_prometheus: true
 enable_guest_service: true
 enable_fsd: true
 enable_btserver: true
+enable_lvm: false
 enable_ceph: "{% if only_deploy_voi %}false{% else %}true{% endif %}"
 
 ##########
@@ -80,7 +93,8 @@ ceph_rbd_secret_uuid: e2338e01-6f82-4236-885b-056847028c77
 ceph_rbd_admin_user: client.admin
 hugepages_size: 2M
 enable_hugepages: "{% if only_deploy_voi %}false{% else %}true{% endif %}"
-libvirt_image_tag: 2.0.0
+libvirt_tag: 2.0.0
+guest_service_tag: 2.0.0
 
 #################
 # Haproxy Options
@@ -91,16 +105,49 @@ haproxy_password: admin
 haproxy_monitor_port: 61313
 haproxy_tag: 2.0.0
 
-#################
-# Haproxy Options
-#################
+####################
+# keepalived Options
+####################
 keepalived_tag: 2.0.0
 
 ##############
 # Emqx Options
 ##############
-emqx_mqtt_port: 1883
+emqx_external_mqtt_port: 1883
+emqx_internal_mqtt_port: 11883
 emqx_mgmt_port: 8081
 emqx_mqttssl_port: 8883
 emqx_ws_port: 8083
 emqx_wss_port: 8084
+
+
+####################
+# Prometheus Options
+####################
+prometheus_pushgateway_port: 9099
+
+
+mariadb_listen_port: 3306
+mariadb_root_password: 123456
+mariadb_root_username: root
+
+###################
+# Trochilus Options
+###################
+trochilus_support_flat_network: true
+trochilus_support_vlan_network: true
+trochilus_libvirt_driver: kvm
+trochilus_api_listen_port: 9001
+trochilus_agent_listen_port: 9002
+trochilus_base_path: "{{ desktop_mount_dir }}"
+trochilus_voi_base_path: "{{ desktop_mount_dir }}/voi"
+trochilus_tag: 2.0.0
+# 如果vdi盒子和管理网不在同一个网段，就填管理网网关ip。如果vdi盒子和管理网在同一个网段，就啥也不填
+trochilus_detected_mgmt_net_ip: 10.2.36.254
+trochilus_ha_base_dir_path: /etc/trochilus/ha
+trochilus_dhcp_confs: /etc/trochilus/dhcp
+trochilus_enable_reserved_core: false
+trochilus_reserved_cores_num: 2
+trochilus_mariadb_username: trochilus
+trochilus_mariadb_password: 123456
+trochilus_mariadb_dataname: trochilus

@@ -1,0 +1,97 @@
+[DEFAULT]
+debug = false
+[agent_rest_client]
+[agent_settings]
+bind_host = {{ inventory_hostname }}
+bind_port = {{ trochilus_agent_listen_port }}
+reserved_cores_num = {{ trochilus_reserved_cores_num }}
+enable_reserved_core = false
+ipmi_username = {{ ipmi_username }}
+ipmi_password = {{ ipmi_password }}
+ipmi_vendor = {{ ipmi_vendor }}
+host_username = {{ host_username }}
+host_password = {{ host_password }}
+agent_lock_file = /etc/trochilus/trochilus-agent-lock
+system = {{ ansible_distribution }}
+version = {{ ansible_distribution_version }}
+role = compute,control,storage
+nic = 
+[api_settings]
+bind_host = {{ inventory_hostname }}
+bind_port = {{ trochilus_api_listen_port }}
+supported_instance_metadatas = k1, k2
+
+{% if enable_ceph %}
+enabled_volume_backends = rbd1
+{% elif enable_lvm %}
+enabled_volume_backends = lvm1
+{% endif %}
+
+[database]
+connection = mysql+pymysql://{{ trochilus_mariadb_username }}:{{ trochilus_mariadb_password }}@{{ internal_vip_address }}:{{ mariadb_listen_port }}/{{ trochilus_mariadb_dataname }}
+
+{% if enable_ceph %}
+[rbd1]
+rbd_ceph_conf = /etc/ceph/ceph.conf
+rbd_pool = volumes
+rbd_user = admin
+rbd_keyring_conf = /etc/ceph/ceph.client.admin.keyring
+rados_connect_timeout = -1
+volume_driver = trochilus.agent.storage.volume.drivers.rbd.RBDVolumeDriver
+enabled_image_store = rbd
+rbd_store_config_file = /etc/ceph/ceph.conf
+rbd_store_user = admin
+rbd_store_pool = images
+rbd_store_chunk_size = 8
+rbd_store_conn_timeout = 0
+rbd_store_thin_provisioning = true
+{%- endif %}
+
+{% if enable_lvm %}
+[image_settings]
+enabled_image_store = filesystem
+filesystem_store_chunk_size = 65536
+filesystem_store_datadir = /var/lib/trochilus/images
+[lvm1]
+volume_driver = lvm1
+volume_group = vg_name
+thin_pool_lv = data_pool
+lv_type = thin
+{% endif %}
+
+[network_settings]
+disable_linux_bridge_stp = false
+dhcp_confs = /etc/trochilus/dhcp
+support_flat_physicals = {{ flat_physicals }}
+physical_vlan_ranges = {{ vlan_range }}
+physical_interface_mappings = {{ physical_interface_mappings }}
+
+[vm_settings]
+virt_type = kvm
+default_root_disk_backend = {% if enable_ceph | bool %}rbd1{% elif enable_lvm %}lvm1{% endif %}
+
+rbd_secret_uuid = {{ ceph_rbd_secret_uuid }}
+vnc_enabled = true
+vnc_server_listen = 0.0.0.0
+spice_enabled = true
+spice_server_listen = 0.0.0.0
+[voi_settings]
+voi_image_base_path = /var/lib/trochilus/voi/images
+voi_vm_base_path = /var/lib/trochilus/voi/vms
+vm_name_template = voi-%s
+[ha_settings]
+detected_mgmt_net_ip = {{ trochilus_detected_mgmt_net_ip }}
+ha_base_dir_path = /etc/trochilus/ha
+[system_settings]
+cgroup_path = /sys/fs/cgroup
+[webhook_settings]
+target_host = fsd-tcp
+target_port = 9010
+target_path = /api/v1/webhook/
+method = post
+auth_token = abc123
+max_retries = 5
+retry_interval = 5
+request_conn_timeout = 10
+request_read_timeout = 60
+expected_codes = 200,202,204

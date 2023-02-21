@@ -1,0 +1,35 @@
+- name: Restart trochilus api container
+  vars:
+    service_name: "trochilus-api"
+    service: "{{ trochilus_services[service_name] }}"
+  become: true
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    pid_mode: "{{ service.pid_mode | default('') }}"
+    privileged: "{{ service.privileged | default(False) }}"
+    volumes: "{{ service.volumes|reject('equalto', '')|list }}"
+    dimensions: "{{ service.dimensions }}"
+  when:
+    - inventory_hostname in groups[service.group]
+    - service.enabled | bool
+
+- name: Restart trochilus agent container
+  vars:
+    service_name: "trochilus-agent"
+    service: "{{ trochilus_services[service_name] }}"
+  become: true
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    pid_mode: "{{ service.pid_mode | default('') }}"
+    privileged: "{{ service.privileged | default(False) }}"
+    volumes: "{{ service.volumes|reject('equalto', '')|list }}"
+    dimensions: "{{ service.dimensions }}"
+  when:
+    - inventory_hostname in groups[service.group]
+    - service.enabled | bool

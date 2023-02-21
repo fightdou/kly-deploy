@@ -6,7 +6,6 @@
   become: true
   when:
     - inventory_hostname in groups['keepalived']
-    - inventory_hostname in groups[service_name]
     - enable_keepalived | bool
   notify:
     - "Restart keepalived container"
