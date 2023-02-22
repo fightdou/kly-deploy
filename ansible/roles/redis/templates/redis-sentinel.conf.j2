@@ -1,0 +1,12 @@
+{% set redis_master_address = 'api' | kolla_address(groups['redis'][0]) %}
+daemonize no
+pidfile "/var/run/redis/redis-sentinel.pid"
+logfile "/var/log/redis/redis-sentinel.log"
+bind {{ api_interface_address }}
+port {{ redis_sentinel_port }}
+sentinel myid {{ inventory_hostname | hash('sha1') }}
+sentinel monitor mymaster {{ redis_master_address }} {{ redis_port }} 2
+sentinel auth-pass mymaster {{ redis_master_password }}
+sentinel down-after-milliseconds mymaster 10000
+sentinel failover-timeout mymaster 180000
+sentinel parallel-syncs mymaster 1

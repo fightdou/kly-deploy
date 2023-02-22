@@ -1,0 +1,40 @@
+---
+project_name: "redis"
+
+redis_services:
+  redis:
+    container_name: redis
+    group: redis
+    enabled: "{{ enable_redis | bool }}"
+    image: "{{ redis_image_full }}"
+    volumes: "{{ redis_default_volumes }}"
+    dimensions: "{{ redis_dimensions }}"
+  redis-sentinel:
+    container_name: redis-sentinel
+    group: redis
+    enabled: "{{ enable_redis | bool }}"
+    image: "{{ redis_sentinel_image_full }}"
+    volumes: "{{ redis_sentinel_default_volumes }}"
+    dimensions: "{{ redis_sentinel_dimensions }}"
+
+####################
+# Docker
+####################
+redis_image: "{{ docker_image_repository }}/redis"
+redis_tag: "{{ redis_tag }}"
+redis_image_full: "{{ redis_image }}:{{ redis_tag }}"
+
+redis_sentinel_image: "{{ docker_image_repository }}/redis"
+redis_sentinel_tag: "{{ redis_tag }}"
+redis_sentinel_image_full: "{{ redis_sentinel_image }}:{{ redis_tag }}"
+redis_dimensions: "{{ default_container_dimensions }}"
+redis_sentinel_dimensions: "{{ default_container_dimensions }}"
+
+redis_default_volumes:
+  - "{{ config_directory }}/redis/:/etc/redis/"
+  - "/etc/localtime:/etc/localtime:ro"
+  - "/var/log/redis/:/var/log/redis/"
+redis_sentinel_default_volumes:
+  - "{{ config_directory }}/redis-sentinel/:/etc/redis/"
+  - "/etc/localtime:/etc/localtime:ro"
+  - "/var/log/redis/:/var/log/redis/"
