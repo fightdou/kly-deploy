@@ -37,10 +37,10 @@ frontend status
 {% if enable_emqx | bool %}
 listen emqx
     mode tcp
-    bind {{ internal_vip_address }}:{{ emqx_mqtt_port }}
+    bind 0.0.0.0:{{ emqx_external_mqtt_port }}
     balance source
     option tcplog
 {% for host in (groups['emqx']) %}
-    server {{ host }} {{ 'api' | filter_address(host) }}:{{ emqx_mqtt_port }} check inter 2000 rise 2 fall 5
+    server {{ host }} {{ 'api' | filter_address(host) }}:{{ emqx_internal_mqtt_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 {% endif %}

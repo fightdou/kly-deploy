@@ -1,0 +1,54 @@
+---
+project_name: "trochilus"
+
+trochilus_services:
+  trochilus-api:
+    container_name: trochilus-api
+    group: "trochilus-api"
+    enabled: true
+    image: "{{ trochilus_api_image_full }}"
+    privileged: True
+    volumes: "{{ trochilus_default_volumes }}"
+    dimensions: "{{ trochilus_dimensions }}"
+  trochilus-agent:
+    container_name: trochilus-agent
+    group: "trochilus-agent"
+    enabled: true
+    image: "{{ trochilus_agent_image_full }}"
+    privileged: True
+    pid_mode: "host"
+    volumes: "{{ trochilus_default_volumes }}"
+    dimensions: "{{ trochilus_dimensions }}"
+
+trochilus_api_image: "{{ docker_image_repository }}/trochilus-api"
+trochilus_api_image_full: "{{ trochilus_api_image }}:{{ trochilus_tag }}"
+trochilus_dimensions: "{{ default_container_dimensions }}"
+trochilus_agent_image: "{{ docker_image_repository }}/trochilus-agent"
+trochilus_agent_image_full: "{{ trochilus_agent_image }}:{{ trochilus_tag }}"
+trochilus_dimensions: "{{ default_container_dimensions }}"
+
+trochilus_default_volumes:
+  - "{{ config_directory }}/libvirt/:/etc/libvirt/"
+  - "{{ config_directory }}/trochilus:/etc/trochilus"
+  - "/etc/localtime:/etc/localtime"
+  - "/etc/machine-id:/etc/machine-id"
+  - "/etc/sysctl.d/:/etc/sysctl.d/"
+  - "/sys/fs/cgroup/:/sys/fs/cgroup/:rw"
+  - "/dev/:/dev/"
+  - "/run/:/run/:shared"
+  - "/var/run/system_bus_socket:/var/run/system_bus_socket"
+  - "/var/run/dbus/:/var/run/dbus/"
+  - "/lib/modules/:/lib/modules/:rw"
+  - "/etc/ceph/:/etc/ceph/"
+  - "libvirtd:/var/lib/libvirt"
+  - "/var/log/trochilus/:/var/log/trochilus/"
+  - "{{ desktop_mount_dir }}:/var/lib/trochilus/"
+
+
+support_flat_physicals: "{% for host in groups['trochilus-agent'] -%}{% set flat_interface_list = hostvars[host]['flat_network_interface'] %} {% for flat in flat_interface_list %}{{ 'flat' + loop.index | string }}{% if not loop.last %},{% endif %}{% endfor %}{% endfor %}"
+physical_vlan_ranges: "{% for vlan,vlan_ranges in vlan_network_interface.items() %}{% set index = loop.index %}{% for vlan_range in vlan_ranges %}{{ 'vlan' + index | string }}:{{ vlan_range }}{% if not loop.last %},{% endif %}{% endfor %}{% endfor %}"
+physical_vlan_interface: "{% for vlan_interface,vlan_range in vlan_interface_dict.items() %}{% if vlan_interface == api_interface %}{{ 'vlan' + loop.index | string }}:voi0{% else %}{{ 'vlan' + loop.index | string }}:{{ vlan_interface }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}" 
+physical_flat_interface: "{% for flat_interface in flat_network_interface %}{% if flat_interface == api_interface %}{{'flat' + loop.index | string }}:voi0{% else %}{{ 'flat' + loop.index | string }}:{{ flat_interface }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
+
+
+physical_interface_mappings: "{% if trochilus_support_flat_network and trochilus_support_vlan_network %}{{ physical_flat_interface }},{{ physical_vlan_interface }} {% elif trochilus_support_flat_network %} {{ physical_flat_interface }}{% elif trochilus_support_vlan_network %} {{ physical_vlan_interface }} {% endif %}"

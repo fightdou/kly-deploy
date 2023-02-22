@@ -76,6 +76,7 @@
       - tcpdump
       - bash-completion
       - bridge-utils
+      - python3-PyMySQL
 
 - name: Delete fstab swap config
   lineinfile:
