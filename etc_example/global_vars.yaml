@@ -71,7 +71,6 @@ enable_redis: true
 enable_emqx: true
 enable_libvirt: true
 enable_trochilus: true
-enable_websockify: true
 enable_prometheus: true
 enable_guest_service: true
 enable_fsd: true
@@ -151,3 +150,15 @@ trochilus_reserved_cores_num: 2
 trochilus_mariadb_username: trochilus
 trochilus_mariadb_password: 123456
 trochilus_mariadb_dataname: trochilus
+websockify_internal_port: 9003
+websockify_tag: 2.0.0
+
+##############
+# FSD Options
+##############
+fsd_internal_nginx_port: 19000
+fsd_external_nginx_port: 9000
+fsd_job_port: 9011
+fsd_tcp_port: 9012
+fsd_tcp_file_port: 9013
+fsd_webhook_token: abc123

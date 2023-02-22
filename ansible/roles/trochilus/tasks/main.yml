@@ -103,3 +103,4 @@
   notify: 
     - Restart trochilus api container
     - Restart trochilus agent container
+    - Restart websockify container

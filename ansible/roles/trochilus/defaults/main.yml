@@ -19,6 +19,13 @@ trochilus_services:
     pid_mode: "host"
     volumes: "{{ trochilus_default_volumes }}"
     dimensions: "{{ trochilus_dimensions }}"
+  websockify:
+    container_name: websockify
+    group: "websockify"
+    enabled: true
+    image: "{{ websockify_image_full }}"
+    volumes: "{{ websockify_default_volumes }}"
+    dimensions: "{{ websockify_dimensions }}"
 
 trochilus_api_image: "{{ docker_image_repository }}/trochilus-api"
 trochilus_api_image_full: "{{ trochilus_api_image }}:{{ trochilus_tag }}"
@@ -26,6 +33,9 @@ trochilus_dimensions: "{{ default_container_dimensions }}"
 trochilus_agent_image: "{{ docker_image_repository }}/trochilus-agent"
 trochilus_agent_image_full: "{{ trochilus_agent_image }}:{{ trochilus_tag }}"
 trochilus_dimensions: "{{ default_container_dimensions }}"
+websockify_image: "{{ docker_image_repository }}/websockify"
+websockify_image_full: "{{ websockify_image }}:{{ websockify_tag }}"
+websockify_dimensions: "{{ default_container_dimensions }}"
 
 trochilus_default_volumes:
   - "{{ config_directory }}/libvirt/:/etc/libvirt/"
@@ -44,6 +54,8 @@ trochilus_default_volumes:
   - "/var/log/trochilus/:/var/log/trochilus/"
   - "{{ desktop_mount_dir }}:/var/lib/trochilus/"
 
+websockify_default_volumes:
+  - "/etc/localtime:/etc/localtime"
 
 support_flat_physicals: "{% for host in groups['trochilus-agent'] -%}{% set flat_interface_list = hostvars[host]['flat_network_interface'] %} {% for flat in flat_interface_list %}{{ 'flat' + loop.index | string }}{% if not loop.last %},{% endif %}{% endfor %}{% endfor %}"
 physical_vlan_ranges: "{% for vlan,vlan_ranges in vlan_network_interface.items() %}{% set index = loop.index %}{% for vlan_range in vlan_ranges %}{{ 'vlan' + index | string }}:{{ vlan_range }}{% if not loop.last %},{% endif %}{% endfor %}{% endfor %}"
