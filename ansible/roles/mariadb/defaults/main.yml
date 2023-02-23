@@ -1,2 +1,34 @@
 ---
 # defaults file for baremetal
+project_name: "mariadb"
+
+mariadb_services:
+  mariadb:
+    container_name: mariadb
+    image: "{{ mariadb_image_full }}"
+    volumes: "{{ mariadb_default_volumes }}"
+
+mariadb_port: "3306"
+mariadb_wsrep_port: "4567"
+mariadb_ist_port: "4568"
+mariadb_sst_port: "4444"
+database_max_timeout: 600
+
+database_user: "root"
+database_password: "{{ mariadb_root_password }}"
+############
+# images
+############
+mariadb_image: "{{ docker_image_repository }}/mariadb"
+mariadb_tag: "{{ mariadb_default_tag }}"
+mariadb_image_full: "{{ mariadb_image }}:{{ mariadb_tag }}"
+mariadb_service: "{{ mariadb_services['mariadb'] }}"
+
+############
+# volume
+############
+mariadb_default_volumes:
+  - "{{ config_directory }}/mariadb/:/var/lib/config_files/:rw"
+  - "/etc/localtime:/etc/localtime:ro"
+  - "mariadb:/var/lib/mysql"
+  - "log:/var/log/mariadb/"

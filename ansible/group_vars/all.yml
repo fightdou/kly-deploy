@@ -8,6 +8,21 @@ enable_destroy_images: True
 #配置文件目录
 config_directory: "/etc/klcloud"
 
+#镜像版本tag
+klcould_tag: 2.0.1
+
+#网络ip
+api_interface_address: "{{ 'api' | filter_address }}"
+
+#mariadb
+## root密码
+database_root_password: "123456"
+
+
+docker_common_options: 
+  environment: 
+    aaa: "aaa"
+  restart_policy: "unless-stopped"
 ##########
 # role开关
 ##########
