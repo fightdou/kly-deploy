@@ -33,3 +33,21 @@
   when:
     - inventory_hostname in groups[service.group]
     - service.enabled | bool
+
+- name: Restart websockify container
+  vars:
+    service_name: "websockify"
+    service: "{{ trochilus_services[service_name] }}"
+  become: true
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    privileged: "{{ service.privileged | default(False) }}"
+    image: "{{ service.image }}"
+    volumes: "{{ service.volumes|reject('equalto', '')|list }}"
+    dimensions: "{{ service.dimensions }}"
+    command: websockify {{ inventory_hostname }}:{{ websockify_internal_port }} --token-plugin=trochilus.websockify.token_plugin.Base64JsonTokenRemoteApi --token-source=http://{{ internal_vip_address}}:{{ fsd_internal_nginx_port }}/api/v1
+  when:
+    - inventory_hostname in groups[service.group]
+    - service.enabled | bool

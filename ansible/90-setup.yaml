@@ -67,15 +67,6 @@
         tags: trochilus,
         when: enable_trochilus| bool }
 
-- name: Apply role websockify
-  gather_facts: false
-  hosts:
-    - websockify
-  roles:
-    - { role: websockify,
-        tags: websockify,
-        when: enable_websockify| bool }
-
 - name: Apply role prometheus
   gather_facts: false
   hosts:

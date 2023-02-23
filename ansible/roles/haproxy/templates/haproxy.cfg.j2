@@ -34,13 +34,31 @@ frontend status
     mode http
     monitor-uri /
 
-{% if enable_emqx | bool %}
-listen emqx
+{% if enable_trochilus | bool %}
+listen trochilus-api
     mode tcp
-    bind 0.0.0.0:{{ emqx_external_mqtt_port }}
+    bind {{ internal_vip_address }}:{{ trochilus_api_listen_port }}
     balance source
     option tcplog
-{% for host in (groups['emqx']) %}
-    server {{ host }} {{ 'api' | filter_address(host) }}:{{ emqx_internal_mqtt_port }} check inter 2000 rise 2 fall 5
+{% for host in (groups['trochilus-api']) %}
+    server {{ host }} {{ 'api' | filter_address(host) }}:{{ trochilus_api_listen_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+
+listen trochilus-agent
+    mode tcp
+    bind {{ internal_vip_address }}:{{ trochilus_agent_listen_port }}
+    balance source
+    option tcplog
+{% for host in (groups['trochilus-agent']) %}
+    server {{ host }} {{ 'api' | filter_address(host) }}:{{ trochilus_agent_listen_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+
+listen websockify
+    mode tcp
+    bind {{ internal_vip_address }}:{{ websockify_internal_port }}
+    balance source
+    option tcplog
+{% for host in (groups['websockify']) %}
+    server {{ host }} {{ 'api' | filter_address(host) }}:{{ websockify_internal_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 {% endif %}
