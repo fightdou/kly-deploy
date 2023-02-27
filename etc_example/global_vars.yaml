@@ -112,23 +112,31 @@ keepalived_tag: 2.0.0
 ##############
 # Emqx Options
 ##############
+emqx_default_tag: 2.0.0
 emqx_external_mqtt_port: 1883
-emqx_internal_mqtt_port: 11883
+#emqx_internal_mqtt_port: 11883
 emqx_mgmt_port: 8081
 emqx_mqttssl_port: 8883
 emqx_ws_port: 8083
 emqx_wss_port: 8084
+
+####################
+# mariadb Options
+####################
+mariadb_listen_port: 3306
+mariadb_wsrep_port: "4567"
+mariadb_ist_port: "4568"
+mariadb_sst_port: "4444"
+database_max_timeout: 600
+mariadb_root_password: 123456
+mariadb_root_username: root
+mariadb_default_tag: 2.0.0
 
 
 ####################
 # Prometheus Options
 ####################
 prometheus_pushgateway_port: 9099
-
-
-mariadb_listen_port: 3306
-mariadb_root_password: 123456
-mariadb_root_username: root
 
 ###################
 # Trochilus Options

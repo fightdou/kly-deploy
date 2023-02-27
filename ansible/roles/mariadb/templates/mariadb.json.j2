@@ -1,0 +1,23 @@
+{
+    "command": "/usr/bin/mysqld_safe",
+    "config_files": [
+        {
+            "source": "/var/lib/config_files/galera.cnf",
+            "dest": "/etc/my.cnf",
+            "owner": "mysql",
+            "perm": "0655"
+        }
+    ],
+    "permissions": [
+        {
+            "path": "/var/log/mariadb",
+            "owner": "mysql:mysql",
+            "recurse": true
+        },
+        {
+            "path": "/var/lib/mysql",
+            "owner": "mysql:mysql",
+            "recurse": true
+        }
+    ]
+}
