@@ -728,6 +728,7 @@ class DockerWorker(object):
             'name': self.params.get('name'),
             'volumes': volumes,
             'tty': self.params.get('tty'),
+            'user': self.params.get('user'),
         }
 
     def create_container(self):
@@ -970,6 +971,7 @@ def generate_module():
         dimensions=dict(required=False, type='dict', default=dict()),
         tty=dict(required=False, type='bool', default=False),
         client_timeout=dict(required=False, type='int', default=120),
+        user=dict(required=False, type='str', default=None),
     )
     required_if = [
         ['action', 'pull_image', ['image']],

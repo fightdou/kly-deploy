@@ -1,0 +1,12 @@
+---
+- name: Check emqx containers
+  become: true
+  kolla_docker:
+    action: "compare_container"
+    common_options: "{{ docker_common_options }}"
+    name: "emqx"
+    image: "{{ item.value.image }}"
+    volumes: "{{ item.value.volumes }}"
+  with_dict: "{{ emqx_services }}"
+  notify:
+    - "Restart {{ item.key }} container"

@@ -112,8 +112,9 @@ keepalived_tag: 2.0.0
 ##############
 # Emqx Options
 ##############
+emqx_default_tag: 2.0.0
 emqx_external_mqtt_port: 1883
-emqx_internal_mqtt_port: 11883
+#emqx_internal_mqtt_port: 11883
 emqx_mgmt_port: 8081
 emqx_mqttssl_port: 8883
 emqx_ws_port: 8083
