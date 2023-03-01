@@ -120,6 +120,14 @@ emqx_mqttssl_port: 8883
 emqx_ws_port: 8083
 emqx_wss_port: 8084
 
+##############
+# Redis Options
+##############
+redis_tag: 2.0.1
+redis_port: 6379
+redis_master_password: 123456
+redis_sentinel_port: 26379
+
 ####################
 # mariadb Options
 ####################

@@ -1,0 +1,25 @@
+---
+- name: Ensuring config directories exist
+  file:
+    path: "{{ config_directory }}/{{ item.key }}"
+    state: "directory"
+    mode: "0775"
+  become: true
+  when:
+    - inventory_hostname in groups[item.value.group]
+    - item.value.enabled | bool
+  with_dict: "{{ redis_services }}"
+
+- name: Copying over redis config files
+  template:
+    src: "{{ item.key }}.conf.j2"
+    dest: "{{ config_directory }}/{{ item.key }}/redis.conf"
+    mode: "664"
+  when:
+    - inventory_hostname in groups[item.value.group]
+    - item.value.enabled | bool
+  with_dict: "{{ redis_services }}"
+  notify:
+    - Restart {{ item.key }} container
+
+- include_tasks: check-containers.yml
