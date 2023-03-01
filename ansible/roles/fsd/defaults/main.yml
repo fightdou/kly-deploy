@@ -1,0 +1,56 @@
+fsd_services:
+  fsd:
+    enabled: True
+    container_name: fsd
+    image: "{{ fsd_image_full }}"
+    volumes: "{{ fsd_default_volumes }}"
+  fsd-job:
+    enabled: True
+    container_name: fsd_job
+    image: "{{ fsd_job_image_full }}"
+    volumes: "{{ fsd_job_default_volumes }}"
+  fsd-nginx:
+    enabled: True
+    container_name: fsd_nginx
+    image: "{{ fsd_nginx_image_full }}"
+    volumes: "{{ fsd_nginx_default_volumes }}"
+  fsd-init:
+    enabled: False
+    container_name: fsd_init
+    image: "{{ fsd_init_image_full }}"
+    volumes: "{{ fsd_init_default_volumes }}"
+
+
+####################
+# fsd
+####################
+fsd_image: "{{ docker_image_repository }}/fsd"
+fsd_tag: "{{ fsd_default_tag }}"
+fsd_image_full: "{{ fsd_image }}:{{ fsd_tag }}"
+fsd_default_volumes:
+  - /var/lib/trochilus:/var/lib/trochilus:rw
+  - "{{ config_directory }}/fsd/application-docker.yml:/home/static/java/application-docker.yml:rw"
+  - "/etc/localtime:/etc/localtime:ro"
+
+####################
+# fsd-job
+####################
+fsd-job_image: "{{ docker_image_repository }}/fsd-job"
+fsd-job_tag: "{{ fsd_default_tag }}"
+fsd-job_image_full: "{{ fsd_image }}:{{ fsd_tag }}"
+fsd-job_default_volumes: "{{ fsd_default_volumes }}"
+
+####################
+# fsd-nginx
+####################
+fsd-nginx_image: "{{ docker_image_repository }}/fsd-nginx"
+fsd-nginx_tag: "{{ fsd_default_tag }}"
+fsd-nginx_image_full: "{{ fsd_image }}:{{ fsd_tag }}"
+# fsd-nginx_default_volumes: "{{ fsd_default_volumes }}"
+
+####################
+# fsd-init
+####################
+fsd-init_image: "{{ docker_image_repository }}/fsd-init"
+fsd-init_tag: "{{ fsd_default_tag }}"
+fsd-init_image_full: "{{ fsd_image }}:{{ fsd_tag }}"

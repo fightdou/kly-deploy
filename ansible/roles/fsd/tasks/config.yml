@@ -1,0 +1,16 @@
+---
+- name: Ensuring config directories exist
+  file:
+    path: "{{ config_directory }}/fsd"
+    state: "directory"
+    mode: "0770"
+  become: true
+
+- name: Copying over fsd.conf
+  template:
+    src: "fsd.yml.j2"
+    dest: "{{ config_directory }}/fsd/application-docker.yml"
+    mode: "0660"
+  become: true
+  notify:
+    - Restart fsd container

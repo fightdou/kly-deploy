@@ -190,8 +190,11 @@ fsd_external_nginx_port: 9000
 fsd_job_port: 9011
 fsd_tcp_port: 9012
 fsd_tcp_file_port: 9013
+fsd_console_port: 9040
+fsd_main_port: 9010
 fsd_webhook_token: abc123
 fsd_webhook_port: 9010
+fsd_default_tag: 2.0.0
 
 ##################
 # Btserver Options
