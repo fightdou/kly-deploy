@@ -1,0 +1,126 @@
+---
+- name: Restart prometheus container
+  vars:
+    service_name: "prometheus"
+    service: "{{ prometheus_services[service_name] }}"
+  become: true
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    volumes: "{{ service.volumes }}"
+    command: "{{ service.command }}"
+    dimensions: "{{ service.dimensions }}"
+
+- name: Restart pushgateway container
+  vars:
+    service_name: "prometheus-pushgateway"
+    service: "{{ prometheus_services[service_name] }}"
+  become: true
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    command: "{{ service.command }}"
+    volumes: "{{ service.volumes }}"
+    dimensions: "{{ service.dimensions }}"
+
+- name: Restart alertmanager container
+  vars:
+    service_name: "prometheus-alertmanager"
+    service: "{{ prometheus_services[service_name] }}"
+  become: true
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    volumes: "{{ service.volumes }}"
+    command: "{{ service.command }}"
+    dimensions: "{{ service.dimensions }}"
+
+- name: Restart node-exporter container
+  vars:
+    service_name: "prometheus-node-exporter"
+    service: "{{ prometheus_services[service_name] }}"
+  become: true
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    command: "{{ service.command }}"
+    volumes: "{{ service.volumes }}"
+    dimensions: "{{ service.dimensions }}"
+
+- name: Restart collectd-exporter container
+  vars:
+    service_name: "prometheus-collectd-exporter"
+    service: "{{ prometheus_services[service_name] }}"
+  become: true
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    command: "{{ service.command }}"
+    volumes: "{{ service.volumes }}"
+    dimensions: "{{ service.dimensions }}"
+
+- name: Restart host-exporter container
+  vars:
+    service_name: "prometheus-host-exporter"
+    service: "{{ prometheus_services[service_name] }}"
+  become: true
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    command: "{{ service.command }}"
+    volumes: "{{ service.volumes }}"
+    dimensions: "{{ service.dimensions }}"
+
+- name: Restart consul container
+  vars:
+    service_name: "prometheus-consul"
+    service: "{{ prometheus_services[service_name] }}"
+  become: true
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    command: "{{ service.command }}"
+    volumes: "{{ service.volumes }}"
+    dimensions: "{{ service.dimensions }}"
+
+- name: Restart thanos-sidecar container
+  vars:
+    service_name: "prometheus-thanos-sidecar"
+    service: "{{ prometheus_services[service_name] }}"
+  become: true
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    command: "{{ service.command }}"
+    volumes: "{{ service.volumes }}"
+    dimensions: "{{ service.dimensions }}"
+
+- name: Restart thanos-query container
+  vars:
+    service_name: "prometheus-thanos-query"
+    service: "{{ prometheus_services[service_name] }}"
+  become: true
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    command: "{{ service.command }}"
+    volumes: "{{ service.volumes }}"
+    dimensions: "{{ service.dimensions }}"

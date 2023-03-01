@@ -71,9 +71,9 @@
   gather_facts: false
   hosts:
     - prometheus
-    - prometheus-node-exporter
-    - prometheus-collectd-exporter
-    - prometheus-host-exporter
+    - node-exporter
+    - collectd-exporter
+    - host-exporter
   roles:
     - { role: prometheus,
         tags: prometheus,

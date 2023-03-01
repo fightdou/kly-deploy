@@ -1,0 +1,76 @@
+global:
+  scrape_interval: 20s
+  scrape_timeout: 20s
+  evaluation_interval: 20s
+  external_labels:
+    monitor: '{{ ansible_hostname }}'
+
+rule_files:
+- /etc/prometheus/rules/*rule.yml
+- /mnt/prometheus/rules/*rule.yaml
+
+scrape_configs:
+  - job_name: node
+    static_configs:
+{% for host in groups['node-exporter'] %}
+      - targets:
+        - '{{ host }}:{{ node_exporter_port }}'
+        labels:
+          host: '{{ hostvars[host]['ansible_hostname'] }}'
+          host_ip: '{{ host }}'
+{% endfor %}
+
+  - job_name: collectd
+    static_configs:
+{% for host in groups['collectd-exporter'] %}
+      - targets:
+        - '{{ host }}:{{ collectd_exporter_port }}'
+        labels:
+          host: '{{ hostvars[host]['ansible_hostname'] }}'
+          host_ip: '{{ host }}'
+{% endfor %}
+
+  - job_name: host
+    static_configs:
+{% for host in groups['host-exporter'] %}
+      - targets:
+        - '{{ host }}:{{ host_exporter_port }}'
+        labels:
+          host: '{{ hostvars[host]['ansible_hostname'] }}'
+          host_ip: '{{ host }}'
+{% endfor %}
+
+{% if enable_pushgateway | bool %}
+  - job_name: pushgateway
+    honor_labels: true
+    static_configs:
+      - targets:
+        - '{{ internal_vip_address }}:{{ pushgateway_port }}'
+        labels:
+          host: '{{ ansible_hostname }}'
+          host_ip: '{{ api_interface_address }}'
+{% endif %}
+
+  - job_name: consul
+    scrape_timeout: 10s
+    consul_sd_configs:
+{% for host in groups['prometheus'] %}
+    - server: '{{ host }}:{{ consul_port }}'
+      services: []
+{% endfor %}
+    relabel_configs:
+    - source_labels: ["__meta_consul_service_port"]
+      regex: ".*8300.*"
+      action: drop
+
+alerting:
+  alert_relabel_configs:
+  - source_labels:
+    regex: "monitor"
+    action: labeldrop
+  alertmanagers:
+  - static_configs:
+    - targets:
+{% for host in groups["alertmanager"] %}
+        - '{{ host }}:{{ alertmanager_port }}'
+{% endfor %}

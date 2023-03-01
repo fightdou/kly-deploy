@@ -62,3 +62,23 @@ listen websockify
     server {{ host }} {{ 'api' | filter_address(host) }}:{{ websockify_internal_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 {% endif %}
+
+{% if enable_prometheus | bool %}
+listen prometheus
+    mode tcp
+    bind {{ internal_vip_address }}:{{ thanos_query_port }}
+    balance source
+    option tcplog
+{% for host in (groups['prometheus']) %}
+    server {{ host }} {{ 'api' | filter_address(host) }}:{{ thanos_query_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+
+listen alertmanager
+    mode tcp
+    bind {{ internal_vip_address }}:{{ alertmanager_port }}
+    balance source
+    option tcplog
+{% for host in (groups['alertmanager']) %}
+    server {{ host }} {{ 'api' | filter_address(host) }}:{{ alertmanager_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+{% endif %}

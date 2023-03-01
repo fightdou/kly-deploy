@@ -1,0 +1,38 @@
+groups:
+  - name: voi.rule
+    rules:
+    - record: TWatch:VM::CPUAverageUsedUtilization
+      expr: avg by (virt) (irate(windows_cpu_time_total{mode="idle"}[2m]))
+
+    - record: TWatch:VM::MemoryUsedInPercent
+      expr: 100 - 100 * windows_os_physical_memory_free_bytes / windows_cs_physical_memory_bytes
+
+    - record: TWatch:VM::DiskUsageRate
+      expr: 100 - (windows_logical_disk_free_bytes{volume="C:"} / windows_logical_disk_size_bytes{volume="C:"}) * 100
+
+    - record: TWatch:VM::NetworkAllInBytes
+      expr: sum by(virt) (irate(windows_net_bytes_received_total{nic!~'isatap.*|VPN.*'}[2m])) * 8
+
+    - record: TWatch:VM::NetworkAllOutBytes
+      expr: sum by(virt) (irate(windows_net_bytes_sent_total{nic!~'isatap.*|VPN.*'}[2m])) * 8
+
+    - record: TWatch:VM::DiskAllWriteOps
+      expr: sum by (virt) (irate(windows_logical_disk_write_bytes_total[2m]))
+
+    - record: TWatch:VM::DiskAllReadOps
+      expr: sum by (virt) (irate(windows_logical_disk_read_bytes_total[2m]))
+
+    - record: TWatch:VM::CPUTemperature
+      expr: windows_cpu_temperature
+
+    - record: Twatch:VM:NetworkSentBytes
+      expr: sum by (virt) (windows_net_bytes_sent_total{nic!~'isatap.*|VPN.*'}) / 1024 
+
+    - record: Twatch:VM:NetworkReceivedBytes
+      expr: sum by (virt) (windows_net_bytes_received_total{nic!~'isatap.*|VPN.*'}) / 1024 
+
+    - record: Twatch:VM:NetworkSentRate
+      expr:  (irate(windows_net_bytes_sent_total{nic!~'isatap.*|VPN.*'}[1m])) / 1024
+
+    - record: Twatch:VM:NetworkReceivedRate
+      expr:  (irate(windows_net_bytes_received_total{nic!~'isatap.*|VPN.*'}[1m])) / 1024

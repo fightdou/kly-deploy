@@ -72,6 +72,7 @@ enable_emqx: true
 enable_libvirt: true
 enable_trochilus: true
 enable_prometheus: true
+enable_pushgateway: true
 enable_guest_service: true
 enable_fsd: true
 enable_btserver: true
@@ -107,7 +108,7 @@ haproxy_tag: 2.0.0
 ####################
 # keepalived Options
 ####################
-keepalived_tag: 2.0.0
+keepalived_tag: 2.0.1
 
 ##############
 # Emqx Options
@@ -129,8 +130,25 @@ redis_master_password: 123456
 redis_sentinel_port: 26379
 
 ####################
-# mariadb Options
+# prometheus Options
 ####################
+prometheus_port: 9090
+thanos_query_port: 19191
+pushgateway_port: 9099
+thanos_sidecar_grpc_port: 19091
+thanos_sidecar_http_port: 19092
+alertmanager_port: 9093
+alertmanager_cluster_port: 9094
+node_exporter_port: 9010
+host_exporter_port: 9104
+collectd_exporter_port: 9013
+collectd_udp_port: 25826
+consul_port: 8500
+prometheus_tag: 2.0.0
+
+##################
+# Mariadb Options
+##################
 mariadb_listen_port: 3306
 mariadb_wsrep_port: "4567"
 mariadb_ist_port: "4568"
@@ -140,11 +158,6 @@ mariadb_root_password: 123456
 mariadb_root_username: root
 mariadb_default_tag: 2.0.0
 
-
-####################
-# Prometheus Options
-####################
-prometheus_pushgateway_port: 9099
 
 ###################
 # Trochilus Options
@@ -178,3 +191,4 @@ fsd_job_port: 9011
 fsd_tcp_port: 9012
 fsd_tcp_file_port: 9013
 fsd_webhook_token: abc123
+fsd_webhook_port: 9010
