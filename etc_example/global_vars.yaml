@@ -2,7 +2,7 @@ docker_register_domain: kunlunyun
 docker_register_port: 5002
 offline_deb_repo_port: 9865
 docker_namespace_name: kubernetes
-docker_image_repository: "{{ docker_register_domain }}:{{ docker_register_port }}/{{ docker_namespace_name }}"
+docker_image_repository: "172.18.28.6/klcloud_x86"
 docker_image_tag: 2.0.0
 #配置文件目录
 config_directory: "/etc/klcloud"
@@ -103,12 +103,12 @@ haproxy_stats_port: 1984
 haproxy_user: admin
 haproxy_password: admin
 haproxy_monitor_port: 61313
-haproxy_tag: 2.0.0
+haproxy_tag: latest
 
 ####################
 # keepalived Options
 ####################
-keepalived_tag: 2.0.1
+keepalived_tag: latest
 
 ##############
 # Emqx Options
@@ -192,3 +192,18 @@ fsd_tcp_port: 9012
 fsd_tcp_file_port: 9013
 fsd_webhook_token: abc123
 fsd_webhook_port: 9010
+
+##################
+# Btserver Options
+##################
+bt_server_external_port: 9019
+bt_server_internal_port: 19019
+bt_tracker_external_port: 9020
+bt_tracker_internal_port: 19020
+bt_download_external_port_start: 6880
+bt_download_internal_port_start: 16880
+bt_download_external_port_end: 6889
+bt_download_internal_port_end: 16889
+btserver_external_listen_ports: "{{ bt_download_external_port_start }}-{{ bt_download_external_port_end }}"
+btserver_internal_listen_ports: "{{ bt_download_internal_port_start }}-{{ bt_download_internal_port_end }}"
+btserver_tag: latest

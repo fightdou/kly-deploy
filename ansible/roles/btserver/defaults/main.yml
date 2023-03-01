@@ -1,0 +1,39 @@
+---
+project_name: "btserver"
+
+btserver_services:
+  btserver:
+    container_name: btserver
+    group: btserver
+    enabled: true
+    image: "{{ btserver_image_full }}"
+    pid_mode: "host"
+    privileged: True
+    volumes: "{{ btserver_default_volumes }}"
+    dimensions: "{{ btserver_dimensions }}"
+  btserver_tracker:
+    container_name: btserver_tracker
+    group: btserver_tracker
+    enabled: true
+    image: "{{ btserver_tracker_image_full }}"
+    pid_mode: "host"
+    privileged: True
+    volumes: "{{ btserver_tracker_default_volumes }}"
+    dimensions: "{{ btserver_tracker_dimensions }}"
+
+btserver_image: "{{ docker_image_repository }}/btserver"
+btserver_image_full: "{{ btserver_image }}:{{ btserver_tag }}"
+btserver_tracker_image: "{{ docker_image_repository }}/btserver_track"
+btserver_tracker_image_full: "{{ btserver_tracker_image }}:{{ btserver_tag }}"
+btserver_dimensions: "{{ default_container_dimensions }}"
+btserver_tracker_dimensions: "{{ default_container_dimensions }}"
+btserver_default_volumes:
+  - "{{ config_directory }}/btserver/torrent.ini:/opt/torrent_server_bin/torrent.ini"
+  - "{{ config_directory }}/btserver/opentracker.conf:/opt/torrent_server_bin/opentracker.conf"
+  - "{{ desktop_mount_dir }}/voi:{{ desktop_mount_dir }}/voi"
+  - "/etc/localtime:/etc/localtime"
+btserver_tracker_default_volumes:
+  - "{{ config_directory }}/btserver/torrent.ini:/opt/torrent_server_bin/torrent.ini"
+  - "{{ config_directory }}/btserver/opentracker.conf:/opt/torrent_server_bin/opentracker.conf"
+  - "{{ desktop_mount_dir }}/voi:{{ desktop_mount_dir }}/voi"
+  - "/etc/localtime:/etc/localtime"
