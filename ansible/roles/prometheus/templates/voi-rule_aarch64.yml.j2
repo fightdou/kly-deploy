@@ -1,0 +1,38 @@
+groups:
+  - name: voi.rule
+    rules:
+    - record: TWatch:VM::CPUAverageUsedUtilization
+      expr: (1 - avg(rate(node_cpu_seconds_total{mode="idle"}[2m])) by (virt))*100
+ 
+    - record: TWatch:VM::MemoryUsedInPercent
+      expr: (1 - (node_memory_MemAvailable_bytes / (node_memory_MemTotal_bytes)))* 100
+ 
+    - record: TWatch:VM::DiskUsageRate
+      expr: (node_filesystem_size_bytes{mountpoint="/"}-node_filesystem_free_bytes{mountpoint="/"}) * 100/(node_filesystem_avail_bytes{mountpoint="/"}+(node_filesystem_size_bytes{mountpoint="/"}-node_filesystem_free_bytes{mountpoint="/"}))
+ 
+    - record: TWatch:VM::NetworkAllInBytes
+      expr: sum by(virt)(irate(node_network_receive_bytes_total{device!~'tap.*|veth.*|br.*|docker.*|virbr*|lo*'}[2m])*8)
+ 
+    - record: TWatch:VM::NetworkAllOutBytes
+      expr: sum by(virt)(irate(node_network_transmit_bytes_total{device!~'tap.*|veth.*|br.*|docker.*|virbr*|lo*'}[2m])*8)
+ 
+    - record: TWatch:VM::DiskAllWriteOps
+      expr: sum by (virt)(rate(node_disk_writes_completed_total[2m]))
+ 
+    - record: TWatch:VM::DiskAllReadOps
+      expr: sum by (virt)(rate(node_disk_reads_completed_total[2m]))
+ 
+    - record: TWatch:VM::CPUTemperature
+      expr: node_cpu_temperature
+ 
+    - record: Twatch:VM:NetworkSentBytes
+      expr: sum by (virt) (node_network_transmit_bytes_total{device!~'tap.*|veth.*|br.*|docker.*|virbr*|lo*'}) / 1024
+ 
+    - record: Twatch:VM:NetworkReceivedBytes
+      expr: sum by (virt) (node_network_receive_bytes_total{device!~'tap.*|veth.*|br.*|docker.*|virbr*|lo*'}) / 1024
+ 
+    - record: Twatch:VM:NetworkSentRate
+      expr:  (irate(node_network_transmit_bytes_total{device!~'tap.*|veth.*|br.*|docker.*|virbr*|lo*'}[1m])) / 1024
+ 
+    - record: Twatch:VM:NetworkReceivedRate
+      expr:  (irate(node_network_receive_bytes_total{device!~'tap.*|veth.*|br.*|docker.*|virbr*|lo*'}[1m])) / 1024

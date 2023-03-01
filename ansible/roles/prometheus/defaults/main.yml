@@ -1,0 +1,151 @@
+---
+project_name: "prometheus"
+
+prometheus_services:
+  prometheus:
+    container_name: prometheus
+    group: prometheus
+    enabled: "{{ enable_prometheus | bool }}"
+    image: "{{ prometheus_image_full }}"
+    volumes: "{{ prometheus_default_volumes }}"
+    dimensions: "{{ prometheus_dimensions }}"
+    command: --web.listen-address=0.0.0.0:{{ prometheus_port }} --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/etc/prometheus/data --web.enable-lifecycle --web.enable-admin-api --storage.tsdb.no-lockfile --query.max-concurrency=1000 --web.route-prefix=/ --storage.tsdb.retention.time=7d
+  prometheus-pushgateway:
+    container_name: pushgateway
+    group: pushgateway
+    enabled: "{{ enable_prometheus | bool }}"
+    image: "{{ pushgateway_image_full }}"
+    pid_mode: "host"
+    volumes: "{{ pushgateway_default_volumes }}"
+    dimensions: "{{ pushgateway_dimensions }}"
+    command: --web.listen-address={{ inventory_hostname }}:{{ pushgateway_port }}
+  prometheus-alertmanager:
+    container_name: alertmanager
+    group: alertmanager
+    enabled: "{{ enable_prometheus | bool }}"
+    image: "{{ alertmanager_image_full }}"
+    volumes: "{{ alertmanager_default_volumes }}"
+    dimensions: "{{ alertmanager_dimensions }}"
+    command: --web.listen-address={{ inventory_hostname }}:{{ alertmanager_port }} --cluster.listen-address={{ inventory_hostname }}:{{ alertmanager_cluster_port }} --config.file=/etc/alertmanager/alertmanager.yml --storage.path=/alertmanager --data.retention=120h --web.route-prefix=/ --cluster.reconnect-timeout=5m {% for host in groups['alertmanager'] %}--cluster.peer={{ host }}:{{ alertmanager_cluster_port }}{% endfor %}
+  prometheus-node-exporter:
+    container_name: node-exporter
+    group: node-exporter
+    enabled: "{{ enable_prometheus | bool }}"
+    image: "{{ node_exporter_image_full }}"
+    pid_mode: "host"
+    volumes: "{{ node_exporter_default_volumes }}"
+    dimensions: "{{ node_exporter_dimensions }}"
+    command: --web.listen-address={{ inventory_hostname }}:{{ node_exporter_port }} --path.procfs=/host/proc --path.sysfs=/host/sys --path.rootfs=/host/root --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+)($|/) --collector.filesystem.ignored-fs-types=^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs)$
+  prometheus-collectd-exporter:
+    container_name: collectd-exporter
+    group: collectd-exporter
+    enabled: "{{ enable_prometheus | bool }}"
+    image: "{{ collectd_exporter_image_full }}"
+    pid_mode: "host"
+    volumes: "{{ collectd_exporter_default_volumes }}"
+    dimensions: "{{ collectd_exporter_dimensions }}"
+    command: --web.listen-address={{ inventory_hostname }}:{{ collectd_exporter_port }} --collectd.listen-address=:25826
+  prometheus-host-exporter:
+    container_name: host-exporter
+    group: host-exporter
+    enabled: "{{ enable_prometheus | bool }}"
+    image: "{{ host_exporter_image_full }}"
+    pid_mode: "host"
+    volumes: "{{ host_exporter_default_volumes }}"
+    dimensions: "{{ host_exporter_dimensions }}"
+    command: --web.listen-address={{ inventory_hostname }}:{{ host_exporter_port }} --ipmi.timeout=10s --config.path=/opt/config.yml
+  prometheus-consul: 
+    container_name: "consul"
+    group: "consul"
+    enabled: "{% if only_deploy_voi %}true{% else %}false{% endif %}"
+    image: "{{ consul_image_full }}"
+    volumes: "{{ consul_default_volumes }}"
+    dimensions: "{{ consul_dimensions }}"
+    command: agent -dev -client=0.0.0.0 -ui
+  prometheus-thanos-sidecar:
+    container_name: thanos-sidecar
+    group: thanos-sidecar
+    enabled: "{{ enable_prometheus | bool }}"
+    image: "{{ thanos_image_full }}"
+    volumes: "{{ thanos_sidecar_default_volumes }}"
+    dimensions: "{{ thanos_dimensions }}"
+    command: sidecar --prometheus.url=http://{{ internal_vip_address }}:{{ prometheus_port }} --tsdb.path=/etc/prometheus/data --http-address=0.0.0.0:{{ thanos_sidecar_http_port }} --grpc-address=0.0.0.0:{{ thanos_sidecar_grpc_port }}
+  prometheus-thanos-query:
+    container_name: thanos-query
+    group: thanos-query
+    enabled: "{{ enable_prometheus | bool }}"
+    image: "{{ thanos_image_full }}"
+    volumes: "{{ thanos_query_default_volumes }}"
+    dimensions: "{{ thanos_dimensions }}"
+    command: query --query.replica-label=monitor --query.auto-downsampling --http-address={{ inventory_hostname }}:{{ thanos_query_port }} {% for host in groups['prometheus-thanos-query'] %} --store {{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }}:{{ thanos_sidecar_grpc_port }} {% endfor %}
+
+
+prometheus_image: "{{ docker_image_repository }}/prometheus"
+prometheus_image_full: "{{ prometheus_image }}:{{ prometheus_tag }}"
+
+pushgateway_image: "{{ docker_image_repository }}/pushgateway"
+pushgateway_image_full: "{{ pushgateway_image }}:{{ prometheus_tag }}"
+
+alertmanager_image: "{{ docker_image_repository }}/alertmanager"
+alertmanager_image_full: "{{ alertmanager_image }}:{{ prometheus_tag }}"
+
+node_exporter_image: "{{ docker_image_repository }}/node-exporter"
+node_exporter_image_full: "{{ node_exporter_image }}:{{ prometheus_tag }}"
+
+collectd_exporter_image: "{{ docker_image_repository }}/collectd-exporter"
+collectd_exporter_image_full: "{{ collectd_exporter_image }}:{{ prometheus_tag }}"
+
+host_exporter_image: "{{ docker_image_repository }}/host-exporter"
+host_exporter_image_full: "{{ host_exporter_image }}:{{ prometheus_tag }}"
+
+consul_image: "{{ docker_image_repository }}/consul"
+consul_image_full: "{{ consul_image }}:{{ prometheus_tag }}"
+
+thanos_image: "{{ docker_image_repository }}/thanos"
+thanos_image_full: "{{ thanos_image }}:{{ prometheus_tag }}"
+
+prometheus_default_volumes: 
+  - "{{ config_directory }}/prometheus/:/etc/prometheus/:rw"
+  - "{{ config_directory }}/prometheus/data:/etc/prometheus/data:rw"
+  - "/etc/localtime:/etc/localtime:ro"
+  - "{{ desktop_mount_dir }}/prometheus/rules:/mnt/prometheus/rules"
+
+pushgateway_default_volumes:
+  - "/etc/localtime:/etc/localtime:ro"
+
+alertmanager_default_volumes:
+  - "{{ desktop_mount_dir }}/prometheus/alertmanager/:/etc/alertmanager/:rw"
+  - "/etc/localtime:/etc/localtime:ro"
+
+node_exporter_default_volumes:
+  - "/etc/localtime:/etc/localtime:ro"
+  - "/sys:/host/sys"
+  - "/proc:/host/proc"
+  - "/:/host/root"
+
+collectd_exporter_default_volumes:
+  - "/etc/localtime:/etc/localtime:ro"
+
+host_exporter_default_volumes:
+  - "/etc/localtime:/etc/localtime:ro"
+  - "/dev:/dev"
+  - "/sys:/sys"
+  - "{{ config_directory }}/host-exporter/config.yml:/opt/config.yml:ro"
+
+consul_default_volumes:
+  - "/etc/localtime:/etc/localtime:ro"
+
+thanos_sidecar_default_volumes:
+  - "/etc/localtime:/etc/localtime:ro"
+  - "{{ config_directory }}/prometheus/data/:/etc/prometheus/data"
+thanos_query_default_volumes:
+  - "/etc/localtime:/etc/localtime:ro"
+
+prometheus_dimensions: "{{ default_container_dimensions }}"
+pushgateway_dimensions: "{{ default_container_dimensions }}"
+alertmanager_dimensions: "{{ default_container_dimensions }}"
+node_exporter_dimensions: "{{ default_container_dimensions }}"
+collectd_exporter_dimensions: "{{ default_container_dimensions }}"
+host_exporter_dimensions: "{{ default_container_dimensions }}"
+consul_dimensions: "{{ default_container_dimensions }}"
+thanos_dimensions: "{{ default_container_dimensions }}"

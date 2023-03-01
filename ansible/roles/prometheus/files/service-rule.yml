@@ -1,0 +1,62 @@
+groups:
+  - name: service.rule
+    rules:
+    - record: TWatch:Service::Opentracker
+      expr: node_systemd_unit_state{name="opentracker.service", state="active"}
+
+    - record: TWatch:Service::Torrent
+      expr: node_systemd_unit_state{name="torrent.service", state="active"}
+
+    - record: TWatch:Service::Emqx
+      expr: node_systemd_unit_state{name="emqx.service", state="active"}
+
+    - record: TWatch:Service::FsdJob
+      expr: node_systemd_unit_state{name="fsd-job.service", state="active"}
+
+    - record: TWatch:Service::FsdWeb
+      expr: node_systemd_unit_state{name="fsd-web.service", state="active"}
+
+    - record: TWatch:Service::Mariadb
+      expr: node_systemd_unit_state{name="mariadb.service", state="active"}
+
+    - record: TWatch:Service::Websockify
+      expr: node_systemd_unit_state{name="websockify.service", state="active"}
+
+    - record: TWatch:Service::Collectd
+      expr: node_systemd_unit_state{name="collectd.service", state="active"}
+
+    - record: TWatch:Service::Redis
+      expr: node_systemd_unit_state{name="redis-server.service", state="active"}
+
+    - record: TWatch:Service::Smbd
+      expr: node_systemd_unit_state{name="smbd.service", state="active"}
+
+    - record: TWatch:Service::Nginx
+      expr: node_systemd_unit_state{name="nginx.service", state="active"}
+
+    - record: TWatch:Service::TrochilusApi
+      expr: node_systemd_unit_state{name="trochilus-api.service", state="active"}
+
+    - record: TWatch:Service::TrochilusAgent
+      expr: node_systemd_unit_state{name="trochilus-agent.service", state="active"}
+
+    - record: TWatch:Service::Libvirtd
+      expr: node_systemd_unit_state{name="libvirtd.service", state="active"}
+
+    - record: TWatch:Service::Dnsmasq
+      expr: node_systemd_unit_state{name="dnsmasq.service", state="active"}
+
+    - record: TWatch:Service::Prometheus
+      expr: node_systemd_unit_state{name="prometheus.service", state="active"}
+
+    - record: TWatch:Service::NodeExporter
+      expr: node_systemd_unit_state{name="prometheus-node-exporter.service", state="active"}
+
+    - record: TWatch:Service::Alertmanager
+      expr: node_systemd_unit_state{name="prometheus-alertmanager.service", state="active"}
+
+    - record: TWatch:Service::Pushgateway
+      expr: node_systemd_unit_state{name="pushgateway.service", state="active"}
+
+    - record: TWatch:Service::Consul
+      expr: node_systemd_unit_state{name="consul.service", state="active"}
