@@ -9,6 +9,10 @@ keepalived_services:
     image: "{{ keepalived_image_full }}"
     pid_mode: "host"
     privileged: True
+    cap_add: 
+      - NET_ADMIN 
+      - NET_BROADCAST
+      - NET_RAW
     volumes: "{{ keepalived_default_volumes }}"
     dimensions: "{{ keepalived_dimensions }}"
 
@@ -27,7 +31,7 @@ keepalived_image_full: "{{ keepalived_image }}:{{ keepalived_tag }}"
 keepalived_traffic_mode: "unicast"
 keepalived_dimensions: "{{ default_container_dimensions }}"
 keepalived_default_volumes:
-  - "{{ config_directory }}/keepalived/:/usr/local/etc/keepalived/"
+  - "{{ config_directory }}/keepalived/:/etc/keepalived/"
   - "/etc/localtime:/etc/localtime:ro"
   - "{{ '/etc/timezone:/etc/timezone:ro' if ansible_os_family == 'Debian' else '' }}"
   - "/lib/modules:/lib/modules:ro"

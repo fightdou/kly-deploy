@@ -9,6 +9,7 @@
     common_options: "{{ docker_common_options }}"
     name: "{{ service.container_name }}"
     image: "{{ service.image }}"
+    cap_add: "{{ service.cap_add }}"
     pid_mode: "{{ service.pid_mode | default('') }}"
     privileged: "{{ service.privileged | default(False) }}"
     volumes: "{{ service.volumes }}"

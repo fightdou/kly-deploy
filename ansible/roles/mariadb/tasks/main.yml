@@ -1,0 +1,4 @@
+---
+# tasks file for baremetal
+
+- include_tasks: "deploy.yml"

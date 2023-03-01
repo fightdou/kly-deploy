@@ -71,7 +71,6 @@ enable_redis: true
 enable_emqx: true
 enable_libvirt: true
 enable_trochilus: true
-enable_websockify: true
 enable_prometheus: true
 enable_guest_service: true
 enable_fsd: true
@@ -113,8 +112,9 @@ keepalived_tag: 2.0.0
 ##############
 # Emqx Options
 ##############
+emqx_default_tag: 2.0.0
 emqx_external_mqtt_port: 1883
-emqx_internal_mqtt_port: 11883
+#emqx_internal_mqtt_port: 11883
 emqx_mgmt_port: 8081
 emqx_mqttssl_port: 8883
 emqx_ws_port: 8083
@@ -129,14 +129,22 @@ redis_master_password: 123456
 redis_sentinel_port: 26379
 
 ####################
+# mariadb Options
+####################
+mariadb_listen_port: 3306
+mariadb_wsrep_port: "4567"
+mariadb_ist_port: "4568"
+mariadb_sst_port: "4444"
+database_max_timeout: 600
+mariadb_root_password: 123456
+mariadb_root_username: root
+mariadb_default_tag: 2.0.0
+
+
+####################
 # Prometheus Options
 ####################
 prometheus_pushgateway_port: 9099
-
-
-mariadb_listen_port: 3306
-mariadb_root_password: 123456
-mariadb_root_username: root
 
 ###################
 # Trochilus Options
@@ -158,3 +166,15 @@ trochilus_reserved_cores_num: 2
 trochilus_mariadb_username: trochilus
 trochilus_mariadb_password: 123456
 trochilus_mariadb_dataname: trochilus
+websockify_internal_port: 9003
+websockify_tag: 2.0.0
+
+##############
+# FSD Options
+##############
+fsd_internal_nginx_port: 19000
+fsd_external_nginx_port: 9000
+fsd_job_port: 9011
+fsd_tcp_port: 9012
+fsd_tcp_file_port: 9013
+fsd_webhook_token: abc123

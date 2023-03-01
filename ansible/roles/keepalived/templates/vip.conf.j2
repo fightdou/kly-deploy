@@ -1,7 +1,7 @@
 ! Configuration File for keepalived
 
 vrrp_script check_script_{{ service_name }} {
-  script "/usr/local/etc/keepalived/scripts/check_script_{{ service_name }}.sh"
+  script "/etc/keepalived/scripts/check_script_{{ service_name }}.sh"
   interval 2
   fall 2
   rise 10

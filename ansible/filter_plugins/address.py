@@ -162,10 +162,37 @@ def filter_interface_name(context, network_name, hostname=None):
 
     return interface_name
 
+def put_address_in_context(address, context):
+    """puts address in context
+
+    :param address: the address to contextify
+    :param context: describes context in which the address appears,
+                    either 'url' or 'memcache',
+                    affects only IPv6 addresses format
+    :returns: string with address in proper context
+    """
+
+    if context not in ['url', 'memcache']:
+        raise AnsibleFilterError("Unknown context '{context}'"
+                          .format(context=context))
+
+    if ':' not in address:
+        return address
+
+    # must be IPv6 raw address
+
+    if context == 'url':
+        return '[{address}]'.format(address=address)
+    elif context == 'memcache':
+        return 'inet6:[{address}]'.format(address=address)
+
+    return address
+
 class FilterModule(object):
 
     def filters(self):
         return {
             'filter_interface_name': filter_interface_name,
-            'filter_address': filter_address
+            'filter_address': filter_address,
+            'put_address_in_context': put_address_in_context,
             }
