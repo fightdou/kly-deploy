@@ -1,9 +1,9 @@
-docker_register_domain: kunlunyun
+docker_register_domain: 172.18.28.6
 docker_register_port: 5002
 offline_deb_repo_port: 9865
-docker_namespace_name: kubernetes
-docker_image_repository: "172.18.28.6/klcloud_x86"
-docker_image_tag: 2.0.0
+docker_namespace_name: klcloud_x86
+docker_image_repository: "{{ docker_register_domain }}/{{ docker_namespace_name }}"
+docker_image_tag: latest
 #配置文件目录
 config_directory: "/etc/klcloud"
 
@@ -12,8 +12,8 @@ config_directory: "/etc/klcloud"
 # Global Config
 ###############
 # 默认预留内存和 CPU
-internal_vip_address: 192.168.0.220
-external_vip_address: 10.2.36.229
+internal_vip_address: 192.166.0.220
+external_vip_address: 172.27.123.251
 api_interface_address: "{{ 'api' | kolla_address }}"
 network_address_family: "ipv4"
 api_address_family: "{{ network_address_family }}"
@@ -43,7 +43,7 @@ host_password: Troila12#$
 # Docker options
 ####################
 # Valid options are [ no, on-failure, always, unless-stopped ]
-docker_restart_policy: "no"
+docker_restart_policy: "unless-stopped"
 # '0' means unlimited retries (applies only to 'on-failure' policy)
 docker_restart_policy_retry: "10"
 # Timeout after Docker sends SIGTERM before sending SIGKILL.
@@ -92,9 +92,9 @@ voi_data_directory: "{{ desktop_mount_dir }}"
 ceph_rbd_secret_uuid: e2338e01-6f82-4236-885b-056847028c77
 ceph_rbd_admin_user: client.admin
 hugepages_size: 2M
-enable_hugepages: "{% if only_deploy_voi %}false{% else %}true{% endif %}"
-libvirt_tag: 2.0.0
-guest_service_tag: 2.0.0
+enable_hugepages: false"
+libvirt_tag: latest
+guest_service_tag: latest
 
 #################
 # Haproxy Options
@@ -113,9 +113,9 @@ keepalived_tag: latest
 ##############
 # Emqx Options
 ##############
-emqx_default_tag: 2.0.0
+emqx_default_tag: latest
 emqx_external_mqtt_port: 1883
-#emqx_internal_mqtt_port: 11883
+emqx_internal_mqtt_port: 11883
 emqx_mgmt_port: 8081
 emqx_mqttssl_port: 8883
 emqx_ws_port: 8083
@@ -156,7 +156,7 @@ mariadb_sst_port: "4444"
 database_max_timeout: 600
 mariadb_root_password: 123456
 mariadb_root_username: root
-mariadb_default_tag: 2.0.0
+mariadb_default_tag: latest
 
 
 ###################
@@ -169,7 +169,7 @@ trochilus_api_listen_port: 9001
 trochilus_agent_listen_port: 9002
 trochilus_base_path: "{{ desktop_mount_dir }}"
 trochilus_voi_base_path: "{{ desktop_mount_dir }}/voi"
-trochilus_tag: 2.0.0
+trochilus_tag: latest
 # 如果vdi盒子和管理网不在同一个网段，就填管理网网关ip。如果vdi盒子和管理网在同一个网段，就啥也不填
 trochilus_detected_mgmt_net_ip: 10.2.36.254
 trochilus_ha_base_dir_path: /etc/trochilus/ha
@@ -180,7 +180,7 @@ trochilus_mariadb_username: trochilus
 trochilus_mariadb_password: 123456
 trochilus_mariadb_dataname: trochilus
 websockify_internal_port: 9003
-websockify_tag: 2.0.0
+websockify_tag: latest
 
 ##############
 # FSD Options
@@ -194,7 +194,11 @@ fsd_console_port: 9040
 fsd_main_port: 9010
 fsd_webhook_token: abc123
 fsd_webhook_port: 9010
-fsd_default_tag: 2.0.0
+fsd_default_tag: latest
+fsd_deploy_mode: all
+fsd_deploy_node_type: cluster
+fsd_share_root_path: {{ desktop_mount_dir }}
+fsd_cloud_disk_root_path: "{{ fsd_share_root_path }}/111"
 
 ##################
 # Btserver Options

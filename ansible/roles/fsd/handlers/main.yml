@@ -10,7 +10,6 @@
     name: "{{ service.container_name }}"
     image: "{{ service.image }}"
     volumes: "{{ service.volumes }}"
-    user: "{{ service.user }}"
   
 - name: Restart fsd-nginx container
   vars:
@@ -23,7 +22,6 @@
     name: "{{ service.container_name }}"
     image: "{{ service.image }}"
     volumes: "{{ service.volumes }}"
-    user: "{{ service.user }}"
 
 - name: Restart fsd-job container
   vars:
@@ -36,4 +34,3 @@
     name: "{{ service.container_name }}"
     image: "{{ service.image }}"
     volumes: "{{ service.volumes }}"
-    user: "{{ service.user }}"

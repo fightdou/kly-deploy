@@ -1,5 +1,5 @@
 node {
-  name = "emqx@{{ 'api' | filter_address(inventory_hostname) }}"
+  name = "emqx@{{ inventory_hostname }}"
   cookie = "emqxsecretcookie"
   data_dir = "data"
 }
@@ -13,15 +13,15 @@ cluster {
   name = emqxcl
   discovery_strategy = static
   static {
-    seeds = [{% for host in groups['emqx'] %}emqx@{{ 'api' | filter_address(host) }}{% if not loop.last %},{% endif %}{% endfor %}]
+    seeds = [{% for host in groups['emqx'] %}emqx@{{ host }}{% if not loop.last %},{% endif %}{% endfor %}]
   }
 }
 listeners.tcp.default {
-  bind = "0.0.0.0:1883"
+  bind = "{{ inventory_hostname }}:{{ emqx_internal_mqtt_port }}"
   max_connections = 1024000
 }
 listeners.ssl.default {
-  bind = "0.0.0.0:8883"
+  bind = "{{ inventory_hostname }}:{{ emqx_mqttssl_port }}"
   max_connections = 512000
   ssl_options {
     keyfile = "etc/certs/key.pem"
@@ -30,12 +30,12 @@ listeners.ssl.default {
   }
 }
 listeners.ws.default {
-  bind = "0.0.0.0:8083"
+  bind = "{{ inventory_hostname }}:{{ emqx_ws_port }}"
   max_connections = 1024000
   websocket.mqtt_path = "/mqtt"
 }
 listeners.wss.default {
-  bind = "0.0.0.0:8084"
+  bind = "{{ inventory_hostname }}:{{ emqx_wss_port }}"
   max_connections = 512000
   websocket.mqtt_path = "/mqtt"
   ssl_options {

@@ -14,3 +14,12 @@
   become: true
   notify:
     - Restart fsd container
+
+- name: Copying over fsd_nginx.conf
+  template:
+    src: "fsd_nginx.conf.j2"
+    dest: "{{ config_directory }}/fsd/fsd.conf"
+    mode: "0660"
+  become: true
+  notify:
+    - Restart fsd-nginx container

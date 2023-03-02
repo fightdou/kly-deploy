@@ -4,18 +4,19 @@ spring:
 custom:
   spring_datasource_password: e2c851c6a9b84fc18911827e6458d3f4
   spring_redis_password: zhuolang@Troila@123
-  spring_redis_sentinel_nodes: {% for host in groups['redis'] %}{{ 'api' | filter_address(host) }}:26379{% if not loop.last %},{% endif %}{% endfor %}
+  spring_redis_sentinel_nodes: {% for host in groups['redis'] %}{{ host }}:26379{% if not loop.last %},{% endif %}{% endfor %}
+
   fsd_common_netty_codec_mac: 60f81dad19ae
   fsd_biz_deploy_inner_vip: "{{ internal_vip_address }}"
-  fsd_biz_deploy_mode: all
-  fsd_biz_deploy_node_type: cluster
-  fsd_biz_path_shareRootPath: /data/fsd
-  fsd_biz_clouddisk_rootPath: /data/fsd/111
+  fsd_biz_deploy_mode: {{ fsd_deploy_mode }}
+  fsd_biz_deploy_node_type: {{ fsd_deploy_node_type }}
+  fsd_biz_path_shareRootPath: {{ fsd_share_root_path }}
+  fsd_biz_clouddisk_rootPath: {{ fsd_cloud_disk_root_path }}
   fsd_biz_clouddisk_sharedDiskMapPath: shareA
   fsd_biz_clouddisk_cloudDiskUsername: troila
   fsd_biz_clouddisk_cloudDiskPassword: Troila12
   port_mysql: {{ mariadb_listen_port }}
-  port_mqtt: {{ emqx_external_mqtt_port }}
+  port_mqtt: {{ emqx_internal_mqtt_port }}
   port_prometheus_server: 9090
   port_prometheus_alert: 9093
   port_prometheus_pushgateway: 9091

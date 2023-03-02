@@ -18,7 +18,7 @@
 - block:
     - name: Check MariaDB service port liveness
       wait_for:
-        host: "{{ api_interface_address }}"
+        host: "{{ inventory_hostname }}"
         port: "{{ mariadb_port }}"
         connect_timeout: 1
         timeout: 10
