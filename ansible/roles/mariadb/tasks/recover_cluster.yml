@@ -146,7 +146,7 @@
 
 - name: Wait for first MariaDB container
   wait_for:
-    host: "{{ api_interface_address }}"
+    host: "{{ inventory_hostname }}"
     port: "{{ mariadb_port }}"
     connect_timeout: 1
     timeout: 60
@@ -200,7 +200,7 @@
 
 - name: Wait for slave MariaDB
   wait_for:
-    host: "{{ api_interface_address }}"
+    host: "{{ inventory_hostname }}"
     port: "{{ mariadb_port }}"
     connect_timeout: 1
     timeout: 60
@@ -230,7 +230,7 @@
 
 - name: Wait for master mariadb
   wait_for:
-    host: "{{ api_interface_address }}"
+    host: "{{ inventory_hostname }}"
     port: "{{ mariadb_port }}"
     connect_timeout: 1
     timeout: 60

@@ -1,23 +1,30 @@
 
 # 网卡配置，存在bond时，指定bond名称与对应物理网卡信息；不存在bond时，ip地址后跟随角色
-# 格式，存在bond时：nic_info = ["bond1:172.18.31.124:0011:ens4,ens5"] (bond名称:bond的IP地址:网卡角色(管理网，外网，业务网，存储网）有则为1，无则为0:组成bond的网卡名称);
+# 格式，存在bond时：nic_info = ["bond1:172.18.31.124:0011:enp98s0f1,ens5"] (bond名称:bond的IP地址:网卡角色(管理网，外网，业务网，存储网）有则为1，无则为0:组成bond的网卡名称);
 # 多个bond时，则需配置多个nic记录
-# 没有bond时：nic_info = ["ens3:172.18.31.124:1100"] (网卡名称:IP地址:网卡角色(管理网，外网，业务网，存储网）有则为1，无则为0)
+# 没有bond时：nic_info = ["eno0:172.18.31.124:1100"] (网卡名称:IP地址:网卡角色(管理网，外网，业务网，存储网）有则为1，无则为0)
 # ceph 有ssd时: bcache_map_list=[{'cache':'/dev/nvme0n1','data':'/dev/sda /dev/sdb /dev/sdc'},{'cache':'/dev/nvme1n1','data':'/dev/sdb /dev/sdc /dev/sdd'}]
 
 [allnodes]
-# 172.18.31.124 hostname=control1 api_interface=ens3 ceph_public_interface=ens3 ceph_cluster_interface=ens3 flat_network_interface="['ens4']" vlan_network_interface="{'ens4': '1:100'}" ceph_volume_data="['/dev/vdb','/dev/vdc']" nic_info="['ens3:172.18.31.124:1100', 'ens4::0100']"
-# 172.18.30.139 hostname=control2 api_interface=ens3 ceph_public_interface=ens3 ceph_cluster_interface=ens3 flat_network_interface="['ens4']" vlan_network_interface="{'ens4': '1:100'}" ceph_volume_data="['/dev/vdb','/dev/vdc']" nic_info="['ens3:172.18.31.124:1100', 'ens4::0100']"
-192.168.0.212  hostname=control1  api_interface=ens3  ceph_public_interface=ens3  ceph_cluster_interface=ens3  nic_info="['ens3:192.168.0.212:1000','ens3:10.2.11.127:0010','ens3:192.168.0.212:0001','ens4:null:0100']" flat_network_interface="['ens4']"   ceph_volume_data="['/dev/sda','/dev/sdb','/dev/sdc','/dev/sdd']"  vlan_network_interface="{'ens4':['1:4094']}"
+# 172.18.30.139 hostname=control2 api_interface=eno0 ceph_public_interface=eno0 ceph_cluster_interface=eno0 flat_network_interface="['enp98s0f1']" vlan_network_interface="{'enp98s0f1': '1:100'}" ceph_volume_data="['/dev/vdb','/dev/vdc']" nic_info="['eno0:172.18.31.124:1100', 'enp98s0f1::0100']"
+192.166.0.111  hostname=control1  api_interface=eno0  ceph_public_interface=eno0  ceph_cluster_interface=eno0  nic_info="['eno0:192.166.0.111:1000','eno0:192.166.0.111:0010','eno0:192.166.0.111:0001','enp98s0f1:null:0100']" flat_network_interface="['enp98s0f1']"   ceph_volume_data="['/dev/sdb','/dev/sdc','/dev/sdd']"  vlan_network_interface="{'enp98s0f1':['1:4094']}"
+192.166.0.112  hostname=control2  api_interface=eno0  ceph_public_interface=eno0  ceph_cluster_interface=eno0  nic_info="['eno0:192.166.0.112:1000','eno0:192.166.0.112:0010','eno0:192.166.0.112:0001','enp98s0f1:null:0100']" flat_network_interface="['enp98s0f1']"   ceph_volume_data="['/dev/sdb','/dev/sdc','/dev/sdd']"  vlan_network_interface="{'enp98s0f1':['1:4094']}"
+192.166.0.113  hostname=control3  api_interface=eno0  ceph_public_interface=eno0  ceph_cluster_interface=eno0  nic_info="['eno0:192.166.0.113:1000','eno0:192.166.0.113:0010','eno0:192.166.0.113:0001','enp98s0f1:null:0100']" flat_network_interface="['enp98s0f1']"   ceph_volume_data="['/dev/sdb','/dev/sdc','/dev/sdd']"  vlan_network_interface="{'enp98s0f1':['1:4094']}"
 
 [control]
-192.168.0.212
+192.166.0.111
+192.166.0.112
+192.166.0.113
 
 [compute]
-192.168.0.212
+192.166.0.111
+192.166.0.112
+192.166.0.113
 
 [storage]
-192.168.0.212
+192.166.0.111
+192.166.0.112
+192.166.0.113
 
 [ceph:children]
 ceph-mons
@@ -110,4 +117,7 @@ compute
 control
 
 [btserver:children]
+control
+
+[btserver_tracker:children]
 control

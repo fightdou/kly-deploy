@@ -9,7 +9,7 @@ default-character-set=utf8
 
 [mysqld]
 basedir=/usr
-bind-address={{ api_interface_address }}
+bind-address={{ inventory_hostname }}
 port={{ mariadb_port }}
 log_warnings=2
 
@@ -27,12 +27,12 @@ character-set-server = utf8
 
 datadir=/var/lib/mysql/
 
-wsrep_cluster_address=gcomm://{% if (groups['mariadb'] | length) > 1 %}{% for host in groups['mariadb'] %}{{ 'api' | filter_address(host) | put_address_in_context('url') }}:{{ mariadb_wsrep_port }}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}
+wsrep_cluster_address=gcomm://{% if (groups['mariadb'] | length) > 1 %}{% for host in groups['mariadb'] %}{{ host | put_address_in_context('url') }}:{{ mariadb_wsrep_port }}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}
 
-wsrep_provider_options=gmcast.listen_addr=tcp://{{ api_interface_address | put_address_in_context('url') }}:{{ mariadb_wsrep_port }};ist.recv_addr={{ api_interface_address | put_address_in_context('url') }}:{{ mariadb_ist_port }};
+wsrep_provider_options=gmcast.listen_addr=tcp://{{ inventory_hostname | put_address_in_context('url') }}:{{ mariadb_wsrep_port }};ist.recv_addr={{ inventory_hostname | put_address_in_context('url') }}:{{ mariadb_ist_port }};
 
-wsrep_node_address={{ api_interface_address | put_address_in_context('url') }}:{{ mariadb_wsrep_port }}
-wsrep_sst_receive_address={{ api_interface_address | put_address_in_context('url') }}:{{ mariadb_sst_port }}
+wsrep_node_address={{ inventory_hostname | put_address_in_context('url') }}:{{ mariadb_wsrep_port }}
+wsrep_sst_receive_address={{ inventory_hostname | put_address_in_context('url') }}:{{ mariadb_sst_port }}
 wsrep_provider={{ wsrep_driver }}
 wsrep_cluster_name="klcloud"
 wsrep_node_name={{ ansible_hostname }}

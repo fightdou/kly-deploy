@@ -34,6 +34,28 @@ frontend status
     mode http
     monitor-uri /
 
+{% if enable_mariadb | bool %}
+listen mariadb
+    mode tcp
+    bind {{ internal_vip_address }}:{{ mariadb_listen_port }}
+    balance source
+    option tcplog
+{% for host in (groups['mariadb']) %}
+    server {{ host }} {{ host }}:{{ mariadb_listen_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+{% endif %}
+
+{% if enable_emqx | bool %}
+listen emqx
+    mode tcp
+    bind 0.0.0.0:{{ emqx_external_mqtt_port }}
+    balance source
+    option tcplog
+{% for host in (groups['emqx']) %}
+    server {{ host }} {{ host }}:{{ emqx_internal_mqtt_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+{% endif %}
+
 {% if enable_trochilus | bool %}
 listen trochilus-api
     mode tcp
@@ -41,7 +63,7 @@ listen trochilus-api
     balance source
     option tcplog
 {% for host in (groups['trochilus-api']) %}
-    server {{ host }} {{ 'api' | filter_address(host) }}:{{ trochilus_api_listen_port }} check inter 2000 rise 2 fall 5
+    server {{ host }} {{ host }}:{{ trochilus_api_listen_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 
 listen trochilus-agent
@@ -50,7 +72,7 @@ listen trochilus-agent
     balance source
     option tcplog
 {% for host in (groups['trochilus-agent']) %}
-    server {{ host }} {{ 'api' | filter_address(host) }}:{{ trochilus_agent_listen_port }} check inter 2000 rise 2 fall 5
+    server {{ host }} {{ host }}:{{ trochilus_agent_listen_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 
 listen websockify
@@ -59,7 +81,7 @@ listen websockify
     balance source
     option tcplog
 {% for host in (groups['websockify']) %}
-    server {{ host }} {{ 'api' | filter_address(host) }}:{{ websockify_internal_port }} check inter 2000 rise 2 fall 5
+    server {{ host }} {{ host }}:{{ websockify_internal_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 {% endif %}
 
@@ -70,7 +92,7 @@ listen prometheus
     balance source
     option tcplog
 {% for host in (groups['prometheus']) %}
-    server {{ host }} {{ 'api' | filter_address(host) }}:{{ thanos_query_port }} check inter 2000 rise 2 fall 5
+    server {{ host }} {{ host }}:{{ thanos_query_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 
 listen alertmanager
@@ -79,6 +101,36 @@ listen alertmanager
     balance source
     option tcplog
 {% for host in (groups['alertmanager']) %}
-    server {{ host }} {{ 'api' | filter_address(host) }}:{{ alertmanager_port }} check inter 2000 rise 2 fall 5
+    server {{ host }} {{ host }}:{{ alertmanager_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+{% endif %}
+
+
+{% if enable_btserver | bool %}
+listen btserver-torrent
+    mode tcp
+    bind 0.0.0.0:{{ btserver_external_listen_ports }}
+    balance source
+    option tcplog
+{% for host in (groups['btserver']) %}
+    server {{ host }} {{ host }}:{{ bt_download_internal_port_start }},{{ bt_download_internal_port_end }} check inter 2000 rise 2 fall 5
+{% endfor %}
+
+listen btserver
+    mode tcp
+    bind 0.0.0.0:{{ bt_server_external_port }}
+    balance source
+    option tcplog
+{% for host in (groups['btserver']) %}
+    server {{ host }} {{ host }}:{{ bt_server_internal_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+
+listen btserver-tracker
+    mode tcp
+    bind 0.0.0.0:{{ bt_tracker_external_port }}
+    balance source
+    option tcplog
+{% for host in (groups['btserver']) %}
+    server {{ host }} {{ host }}:{{ bt_tracker_internal_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 {% endif %}
