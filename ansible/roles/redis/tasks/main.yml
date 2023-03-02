@@ -1,1 +1,5 @@
+- include_tasks: "{{ redis_action }}.yml"
+  when: redis_action == "deploy"
+
 - import_tasks: "config.yml"
+  when: redis_action == ""
