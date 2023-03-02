@@ -12,7 +12,7 @@ config_directory: "/etc/klcloud"
 # Global Config
 ###############
 # 默认预留内存和 CPU
-internal_vip_address: 192.166.0.220
+internal_vip_address: 172.18.29.212
 external_vip_address: 172.27.123.251
 api_interface_address: "{{ 'api' | kolla_address }}"
 network_address_family: "ipv4"
@@ -83,6 +83,7 @@ enable_ceph: "{% if only_deploy_voi %}false{% else %}true{% endif %}"
 # VOI 配置
 ##########
 only_deploy_voi: false
+voi_storage_num: 100
 voi_data_device: "/dev/vdb"
 voi_data_directory: "{{ desktop_mount_dir }}"
 
@@ -126,7 +127,7 @@ emqx_wss_port: 8084
 ##############
 redis_tag: 2.0.1
 redis_port: 6379
-redis_master_password: 123456
+redis_master_password: zhuolang@Troila@123
 redis_sentinel_port: 26379
 
 ####################
@@ -197,8 +198,13 @@ fsd_webhook_port: 9010
 fsd_default_tag: latest
 fsd_deploy_mode: all
 fsd_deploy_node_type: cluster
-fsd_share_root_path: {{ desktop_mount_dir }}
+fsd_share_root_path: "{{ desktop_mount_dir }}"
 fsd_cloud_disk_root_path: "{{ fsd_share_root_path }}/111"
+fsd_proxy_ip: "{{ external_vip_address }}"
+vdi_desktop_num: 10000
+vdi_storage_num: 1000
+cloud_disk_num: 1000
+fsd_voi_version: edu
 
 ##################
 # Btserver Options

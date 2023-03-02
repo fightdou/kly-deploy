@@ -10,7 +10,7 @@ redis_services:
     volumes: "{{ redis_default_volumes }}"
     dimensions: "{{ redis_dimensions }}"
   redis-sentinel:
-    container_name: redis-sentinel
+    container_name: redis_sentinel
     group: redis
     enabled: "{{ enable_redis | bool }}"
     image: "{{ redis_sentinel_image_full }}"

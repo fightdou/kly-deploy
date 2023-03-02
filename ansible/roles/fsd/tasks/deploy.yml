@@ -1,4 +1,6 @@
 ---
+- import_tasks: get_node_data.yaml
+
 - import_tasks: config.yml
 
 - import_tasks: check-containers.yml
