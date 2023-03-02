@@ -1,0 +1,23 @@
+---
+- name: Load sql and static file
+  become: true
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "load_fsd_sql"
+    image: "{{ fsd_init_image_full }}"
+    volumes: "{{ fsd_init_default_volumes }}"
+    restart_policy: "no"
+  run_once: true
+
+- name: Wait sql and static file load complete
+  become: true
+  shell: docker wait load_fsd_sql
+  register: db_res
+
+- name: Check the result about sql and static file load
+  fail:
+    msg: "The load_fsd_sql container's exist code isn't 0, pleash check the image {{ fsd_init_image_full }}"
+  changed_when: false
+  when:
+    - db_res.rc != 0

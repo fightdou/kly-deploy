@@ -22,7 +22,7 @@
 # NOTE(yoctozepto): We have to loop this to avoid breaking on connection resets
 - name: Wait for first MariaDB service port liveness
   wait_for:
-    host: "{{ api_interface_address }}"
+    host: "{{ inventory_hostname }}"
     port: "{{ mariadb_port }}"
     connect_timeout: 1
     timeout: 60

@@ -1,0 +1,13 @@
+---
+- name: Check fsd containers
+  become: true
+  kolla_docker:
+    action: "compare_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ item.value.container_name }}"
+    image: "{{ item.value.image }}"
+    volumes: "{{ item.value.volumes }}"
+  with_dict: "{{ fsd_services }}"
+  when: item.value.enabled | bool
+  notify:
+    - "Restart {{ item.key }} container"

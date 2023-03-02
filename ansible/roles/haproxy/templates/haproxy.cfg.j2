@@ -34,6 +34,28 @@ frontend status
     mode http
     monitor-uri /
 
+{% if enable_mariadb | bool %}
+listen mariadb
+    mode tcp
+    bind {{ internal_vip_address }}:{{ mariadb_listen_port }}
+    balance source
+    option tcplog
+{% for host in (groups['mariadb']) %}
+    server {{ host }} {{ host }}:{{ mariadb_listen_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+{% endif %}
+
+{% if enable_emqx | bool %}
+listen emqx
+    mode tcp
+    bind 0.0.0.0:{{ emqx_external_mqtt_port }}
+    balance source
+    option tcplog
+{% for host in (groups['emqx']) %}
+    server {{ host }} {{ host }}:{{ emqx_internal_mqtt_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+{% endif %}
+
 {% if enable_trochilus | bool %}
 listen trochilus-api
     mode tcp

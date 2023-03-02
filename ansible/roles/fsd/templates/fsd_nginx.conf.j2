@@ -1,0 +1,77 @@
+server {
+  listen       {{ inventory_hostname }}:{{ fsd_internal_nginx_port }};
+  server_name  127.0.0.1;
+
+  #resolver 127.0.0.11 "valid=5s";
+  #resolver_timeout           10s;
+  
+  gzip on;
+  gzip_min_length 100;
+  gzip_types text/plain text/css application/xml application/javascript;
+  gzip_vary on;
+        
+  location / {
+    root    /usr/local/dist/;
+    index   index.php index.html index.htm;
+    #try_files $uri $uri/ /index.html;
+  }
+          
+  location /vms {
+    alias   /mnt/voi/vms/;
+    index   index.php index.html index.htm;
+  }
+	
+  location /backup_disk {
+    alias   /mnt/voi/backup_disk/;
+    index   index.php index.html index.htm;
+  }
+
+  location /images {
+    alias   /mnt/voi/images/;
+    index   index.php index.html index.htm;
+  }
+
+  location /share_disk {
+    alias   /mnt/voi/share_disk/;
+    index   index.php index.html index.htm;
+  }
+
+  location /share_image {
+    alias   /mnt/voi/share_image/;
+    index   index.php index.html index.htm;
+  }
+
+  #location /tcpdump {
+  #  alias   /mnt/tcpdump/;
+  #  index   index.php index.html index.htm;
+  #}
+
+  #location /snapshot {
+  #  alias   /mnt/snapshot/;
+  #  index   index.php index.html index.htm;
+  #}
+
+  #location /shop {
+  #  alias   /mnt/shop/;
+  #  index   index.php index.html index.htm;
+  #}
+  
+  #vue hash路由刷新页面会把第一个api接口赋予20080端口导致404，所以做一层转发
+  location /api/ {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header REMOTE-HOST $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_read_timeout 120;
+    proxy_pass http://{{ internal_vip_address }}:{{ fsd_main_port }}/api/;
+  }
+  location ^~ /trochilus/ {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header REMOTE-HOST $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_read_timeout 7200;
+    proxy_pass http://{{ internal_vip_address }}:9001/;
+  }
+
+}
