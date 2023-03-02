@@ -7,6 +7,9 @@ docker_image_tag: latest
 #配置文件目录
 config_directory: "/etc/klcloud"
 
+#部署通用版或者教育版
+deploy_edu: true
+deploy_all: false
 
 ###############
 # Global Config

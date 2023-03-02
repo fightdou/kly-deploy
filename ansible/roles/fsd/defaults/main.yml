@@ -22,10 +22,12 @@ fsd_services:
       fsd_init_db_vip: "{{ internal_vip_address }}" 
       fsd_init_db_password: "{{ mariadb_root_password }}"
 
+
+deploy_type: "{% if deploy_edu %}'_edu'{% else %}''{% endif %}"
 ####################
 # fsd
 ####################
-fsd_image: "{{ docker_image_repository }}/fsd"
+fsd_image: "{{ docker_image_repository }}/fsd{{ deploy_type }}"
 fsd_tag: "{{ fsd_default_tag }}"
 fsd_image_full: "{{ fsd_image }}:{{ fsd_tag }}"
 fsd_default_volumes:
@@ -36,7 +38,7 @@ fsd_default_volumes:
 ####################
 # fsd-job
 ####################
-fsd_job_image: "{{ docker_image_repository }}/fsd_job"
+fsd_job_image: "{{ docker_image_repository }}/fsd{{ deploy_type }}_job"
 fsd_job_tag: "{{ fsd_default_tag }}"
 fsd_job_image_full: "{{ fsd_job_image }}:{{ fsd_job_tag }}"
 fsd_job_default_volumes: 
@@ -45,7 +47,7 @@ fsd_job_default_volumes:
 ####################
 # fsd-nginx
 ####################
-fsd_nginx_image: "{{ docker_image_repository }}/fsd_nginx"
+fsd_nginx_image: "{{ docker_image_repository }}/fsd{{ deploy_type }}_nginx"
 fsd_nginx_tag: "{{ fsd_default_tag }}"
 fsd_nginx_image_full: "{{ fsd_nginx_image }}:{{ fsd_nginx_tag }}"
 fsd_nginx_default_volumes: 
@@ -55,7 +57,7 @@ fsd_nginx_default_volumes:
 ####################
 # fsd-init
 ####################
-fsd_init_image: "{{ docker_image_repository }}/fsd_init"
+fsd_init_image: "{{ docker_image_repository }}/fsd{{ deploy_type }}_init"
 fsd_init_tag: "{{ fsd_default_tag }}"
 fsd_init_image_full: "{{ fsd_init_image }}:{{ fsd_init_tag }}"
 fsd_init_default_volumes:
