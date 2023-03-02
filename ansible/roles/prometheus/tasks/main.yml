@@ -112,7 +112,7 @@
 - name: copy over prometheus voi rule yml
   template:
     src: "{{ item }}-rule_{{ ansible_architecture }}.yaml.j2"
-    dest: "{{ config_directory }}/prometheus/rules/{{ item }}-rule.yaml"
+    dest: "{{ config_directory }}/prometheus/rules/{{ item }}-rule.yml"
     mode: 0644
   with_items:
     - "voi"

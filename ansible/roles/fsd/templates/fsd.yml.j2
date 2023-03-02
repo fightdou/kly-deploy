@@ -2,8 +2,8 @@ spring:
   profiles: docker
 
 custom:
-  spring_datasource_password: e2c851c6a9b84fc18911827e6458d3f4
-  spring_redis_password: zhuolang@Troila@123
+  spring_datasource_password: {{ mariadb_root_password }}
+  spring_redis_password: {{ redis_master_password }}
   spring_redis_sentinel_nodes: {% for host in groups['redis'] %}{{ host }}:26379{% if not loop.last %},{% endif %}{% endfor %}
 
   fsd_common_netty_codec_mac: 60f81dad19ae
@@ -17,14 +17,14 @@ custom:
   fsd_biz_clouddisk_cloudDiskPassword: Troila12
   port_mysql: {{ mariadb_listen_port }}
   port_mqtt: {{ emqx_internal_mqtt_port }}
-  port_prometheus_server: 9090
-  port_prometheus_alert: 9093
-  port_prometheus_pushgateway: 9091
-  port_prometheus_thanos: 19191
-  port_bt_start: 6880
-  port_bt_end: 6889
-  port_bt_server: 9019
-  port_bt_tracker: 9020
+  port_prometheus_server: {{ prometheus_port }}
+  port_prometheus_alert: {{ alertmanager_port }}
+  port_prometheus_pushgateway: {{ pushgateway_port }}
+  port_prometheus_thanos: {{ thanos_query_port }}
+  port_bt_start: {{ bt_download_external_port_start }}
+  port_bt_end: {{ bt_download_external_port_end }}
+  port_bt_server: {{ bt_server_external_port }}
+  port_bt_tracker: {{ bt_tracker_external_port }}
   port_virtual_api: {{ trochilus_api_listen_port }}
   port_virtual_vnc: {{ websockify_internal_port }}
   port_java_front: {{ fsd_external_nginx_port }}
