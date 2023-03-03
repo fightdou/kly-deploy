@@ -3,20 +3,27 @@ spring:
 
 custom:
   spring_datasource_password: {{ mariadb_root_password }}
+  spring_redis_host: {{ default_internal_server_visit_ip }}
+  spring_redis_port: {{ redis_port }}
   spring_redis_password: {{ redis_master_password }}
-  spring_redis_sentinel_nodes: {% for host in groups['redis'] %}{{ host }}:26379{% if not loop.last %},{% endif %}{% endfor %}
-
   fsd_common_netty_codec_mac: 60f81dad19ae
-  fsd_biz_deploy_inner_vip: "{{ default_internal_server_visit_ip }}"
-  fsd_biz_deploy_mode: {{ fsd_deploy_mode }}
-  fsd_biz_deploy_node_type: {{ fsd_deploy_node_type }}
+  fsd_biz_deploy_scene: {{ fsd_voi_version }}
+  fsd_biz_deploy_inner_ip: {{ default_internal_server_visit_ip }}
+  fsd_biz_deploy_mode: all
+  fsd_biz_deploy_node_type: "single"
+  
+  fsd_biz_deploy_ssh_port: 22
   fsd_biz_path_shareRootPath: {{ fsd_share_root_path }}
+  fsd_biz_desktop_tracker_configFile: /opt/torrent_server_bin/
+  fsd_biz_front_frontDir: /var/www/html
+  fsd_biz_front_nginxConfigFile: /etc/nginx/conf.d/fsd.conf
+  fsd_biz_front_vipConfigFile: /etc/keepalived/keepalived.conf
   fsd_biz_clouddisk_rootPath: {{ fsd_cloud_disk_root_path }}
   fsd_biz_clouddisk_sharedDiskMapPath: shareA
   fsd_biz_clouddisk_cloudDiskUsername: troila
   fsd_biz_clouddisk_cloudDiskPassword: Troila12
   port_mysql: {{ mariadb_listen_port }}
-  port_mqtt: {{ emqx_internal_server_listen_port }}
+  port_mqtt: {{ emqx_internal_mqtt_port }}
   port_prometheus_server: {{ prometheus_port }}
   port_prometheus_alert: {{ alertmanager_port }}
   port_prometheus_pushgateway: {{ pushgateway_port }}

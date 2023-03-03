@@ -17,11 +17,11 @@ cluster {
   }
 }
 listeners.tcp.default {
-  bind = "{{ inventory_hostname }}:{{ emqx_internal_mqtt_port }}"
+  bind = "{{ default_internal_server_listen_ip }}:{{ emqx_internal_server_listen_port }}"
   max_connections = 1024000
 }
 listeners.ssl.default {
-  bind = "{{ inventory_hostname }}:{{ emqx_mqttssl_port }}"
+  bind = "{{ default_internal_server_listen_ip }}:{{ emqx_mqttssl_port }}"
   max_connections = 512000
   ssl_options {
     keyfile = "etc/certs/key.pem"
@@ -30,12 +30,12 @@ listeners.ssl.default {
   }
 }
 listeners.ws.default {
-  bind = "{{ inventory_hostname }}:{{ emqx_ws_port }}"
+  bind = "{{ default_internal_server_listen_ip }}:{{ emqx_ws_port }}"
   max_connections = 1024000
   websocket.mqtt_path = "/mqtt"
 }
 listeners.wss.default {
-  bind = "{{ inventory_hostname }}:{{ emqx_wss_port }}"
+  bind = "{{ default_internal_server_listen_ip }}:{{ emqx_wss_port }}"
   max_connections = 512000
   websocket.mqtt_path = "/mqtt"
   ssl_options {

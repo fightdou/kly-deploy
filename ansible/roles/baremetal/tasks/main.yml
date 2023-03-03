@@ -1,6 +1,7 @@
 - import_tasks: mount_cephfs.yml
   when:
     - enable_ceph | bool
+    - not deploy_edu | bool
 
 - import_tasks: hugepages_config.yml
   when:

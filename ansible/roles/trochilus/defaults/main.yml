@@ -63,3 +63,5 @@ physical_flat_interface: "{% for flat_interface in flat_network_interface %}{% i
 
 
 physical_interface_mappings: "{% if trochilus_support_flat_network and trochilus_support_vlan_network %}{{ physical_flat_interface }},{{ physical_vlan_interface }} {% elif trochilus_support_flat_network %} {{ physical_flat_interface }}{% elif trochilus_support_vlan_network %} {{ physical_vlan_interface }} {% endif %}"
+
+webhook_target_ip: "{% if enable_keepalived %}{{ internal_vip_address }}{% else %}0.0.0.0{% endif %}"
