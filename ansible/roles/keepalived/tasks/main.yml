@@ -1,8 +1,2 @@
 ---
-- include_tasks: "{{ keepalived_action }}.yml"
-  when:
-    - keepalived_action == "config-vip"
-
-- import_tasks: "config.yml"
-  when:
-    - keepalived_action == ""
+- include_tasks: "deploy.yml"

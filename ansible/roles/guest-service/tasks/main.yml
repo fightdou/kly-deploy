@@ -1,14 +1,2 @@
 ---
-- name: Ensuring guest-service config directories exist
-  file:
-    path: "{{ config_directory }}/guest-service"
-    state: "directory"
-    mode: "0775"
-  become: true
-
-- name: copy guest-service conf file
-  template:
-    src: guest_service.conf.j2
-    dest: "{{ config_directory }}/guest-service/guest_service.conf"
-  notify: 
-    - Restart guest-service container
+- include_tasks: "deploy.yml"

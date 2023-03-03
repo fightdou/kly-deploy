@@ -85,7 +85,7 @@ enable_ceph: "{% if only_deploy_voi %}false{% else %}true{% endif %}"
 ##########
 # VOI 配置
 ##########
-only_deploy_voi: false
+only_deploy_voi: true
 voi_storage_num: 100
 voi_data_device: "/dev/vdb"
 voi_data_directory: "{{ desktop_mount_dir }}"
@@ -128,7 +128,7 @@ emqx_wss_port: 8084
 ##############
 # Redis Options
 ##############
-redis_tag: 2.0.1
+redis_tag: latest
 redis_port: 6379
 redis_master_password: zhuolang@Troila@123
 redis_sentinel_port: 26379
@@ -148,7 +148,7 @@ host_exporter_port: 9104
 collectd_exporter_port: 9103
 collectd_udp_port: 25826
 consul_port: 8500
-prometheus_tag: 2.0.0
+prometheus_tag: latest
 
 ##################
 # Mariadb Options

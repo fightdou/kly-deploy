@@ -1,0 +1,20 @@
+---
+- name: Ensuring btserver config directories exist
+  file:
+    path: "{{ config_directory }}/btserver"
+    state: "directory"
+    mode: "0775"
+  become: true
+
+- name: copy opentracker.conf conf file
+  template:
+    src: opentracker.conf.j2
+    dest: "{{ config_directory }}/btserver/opentracker.conf"
+
+- name: copy torrent.ini conf file
+  template:
+    src: torrent.ini.j2
+    dest: "{{ config_directory }}/btserver/torrent.ini"
+  notify: 
+    - Restart btserver container
+    - Restart btserver_tracker container
