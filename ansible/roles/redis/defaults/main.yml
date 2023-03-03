@@ -1,6 +1,6 @@
 ---
 project_name: "redis"
-
+redis_action: ""
 redis_services:
   redis:
     container_name: redis
@@ -33,8 +33,9 @@ redis_sentinel_dimensions: "{{ default_container_dimensions }}"
 redis_default_volumes:
   - "{{ config_directory }}/redis/:/etc/redis/"
   - "/etc/localtime:/etc/localtime:ro"
-  - "/var/log/redis/:/var/log/redis/"
+  - "redis_data:/data"
+
 redis_sentinel_default_volumes:
   - "{{ config_directory }}/redis-sentinel/:/etc/redis/"
   - "/etc/localtime:/etc/localtime:ro"
-  - "/var/log/redis/:/var/log/redis/"
+  - "redis_data:/data"

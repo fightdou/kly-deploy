@@ -1,16 +1,36 @@
 ---
 - name: Check redis containers
   become: true
+  vars:
+    service_name: "redis"
+    service: "{{ redis_services[service_name] }}"
   kolla_docker:
     action: "compare_container"
     common_options: "{{ docker_common_options }}"
-    name: "{{ item.value.container_name }}"
-    image: "{{ item.value.image }}"
-    volumes: "{{ item.value.volumes }}"
-    dimensions: "{{ item.value.dimensions }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    volumes: "{{ service.volumes }}"
+    command: "redis-server /etc/redis/redis.conf"
   when:
-    - inventory_hostname in groups[item.value.group]
-    - item.value.enabled | bool
-  with_dict: "{{ redis_services }}"
+    - inventory_hostname in groups[service.group]
+    - service.enabled | bool
   notify:
-    - "Restart {{ item.key }} container"
+    - "Restart redis container"
+
+- name: Check redis-sentinel container
+  vars:
+    service_name: "redis-sentinel"
+    service: "{{ redis_services[service_name] }}"
+  become: true
+  kolla_docker:
+    action: "compare_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    volumes: "{{ service.volumes }}"
+    command: "redis-sentinel /etc/redis/redis.conf"
+  when:
+    - inventory_hostname in groups[service.group]
+    - service.enabled | bool
+  notify:
+    - Restart redis-sentinel container

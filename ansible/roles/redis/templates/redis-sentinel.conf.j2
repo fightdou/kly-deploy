@@ -1,8 +1,11 @@
-{% set redis_master_address = 'api' | kolla_address(groups['redis'][0]) %}
+{% set redis_master_address = groups['redis'][0] %}
 daemonize no
 pidfile "/var/run/redis/redis-sentinel.pid"
-logfile "/var/log/redis/redis-sentinel.log"
-bind {{ api_interface_address }}
+{% if (groups['redis'] | length) > 1 %}
+bind {{ inventory_hostname }}
+{% else %}
+bind 0.0.0.0
+{% endif %}
 port {{ redis_sentinel_port }}
 sentinel myid {{ inventory_hostname | hash('sha1') }}
 sentinel monitor mymaster {{ redis_master_address }} {{ redis_port }} 2

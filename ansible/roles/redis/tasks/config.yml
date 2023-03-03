@@ -1,4 +1,5 @@
 ---
+
 - name: Ensuring config directories exist
   file:
     path: "{{ config_directory }}/{{ item.key }}"
@@ -11,15 +12,33 @@
   with_dict: "{{ redis_services }}"
 
 - name: Copying over redis config files
+  vars:
+    service_name: "redis"
+    service: "{{ redis_services[service_name] }}"
   template:
-    src: "{{ item.key }}.conf.j2"
-    dest: "{{ config_directory }}/{{ item.key }}/redis.conf"
-    mode: "664"
+    src: "redis.conf.j2"
+    dest: "{{ config_directory }}/redis/redis.conf"
+    mode: "0664"
   when:
-    - inventory_hostname in groups[item.value.group]
-    - item.value.enabled | bool
-  with_dict: "{{ redis_services }}"
+    - inventory_hostname in groups[service.group]
+    - service.enabled | bool
   notify:
-    - Restart {{ item.key }} container
+    - Restart redis container
+  #   - Restart redis-sentinel container
+
+- name: Copying over redis-sentinel config files
+  vars:
+    service_name: "redis-sentinel"
+    service: "{{ redis_services[service_name] }}"
+  template:
+    src: "redis-sentinel.conf.j2"
+    dest: "{{ config_directory }}/redis-sentinel/redis.conf"
+    mode: "0664"
+  when:
+    - inventory_hostname in groups[service.group]
+    - service.enabled | bool
+  notify:
+    - Restart redis-sentinel container
 
 - include_tasks: check-containers.yml
+  when: redis_action != "config"
