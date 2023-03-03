@@ -7,6 +7,9 @@
     name: "load_fsd_sql"
     image: "{{ fsd_init_image_full }}"
     volumes: "{{ fsd_init_default_volumes }}"
+    environment:
+      fsd_init_db_vip: "{{ fsd_mysql_conn_ip }}" 
+      fsd_init_db_password: "{{ mariadb_root_password }}"
     restart_policy: "no"
   run_once: true
 

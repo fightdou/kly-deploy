@@ -34,6 +34,7 @@ frontend status
     mode http
     monitor-uri /
 
+{% if enable_keepalived | bool %}
 {% if enable_mariadb | bool %}
 listen mariadb
     mode tcp
@@ -104,7 +105,7 @@ listen alertmanager
     server {{ host }} {{ host }}:{{ alertmanager_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 {% endif %}
-
+{% endif %}
 
 {% if enable_btserver | bool %}
 listen btserver-torrent

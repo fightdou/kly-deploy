@@ -3,7 +3,7 @@ project_name: "trochilus"
 
 trochilus_services:
   trochilus-api:
-    container_name: trochilus-api
+    container_name: trochilus_api
     group: "trochilus-api"
     enabled: true
     image: "{{ trochilus_api_image_full }}"
@@ -11,7 +11,7 @@ trochilus_services:
     volumes: "{{ trochilus_default_volumes }}"
     dimensions: "{{ trochilus_dimensions }}"
   trochilus-agent:
-    container_name: trochilus-agent
+    container_name: trochilus_agent
     group: "trochilus-agent"
     enabled: true
     image: "{{ trochilus_agent_image_full }}"
@@ -32,7 +32,6 @@ trochilus_api_image_full: "{{ trochilus_api_image }}:{{ trochilus_tag }}"
 trochilus_dimensions: "{{ default_container_dimensions }}"
 trochilus_agent_image: "{{ docker_image_repository }}/trochilus-agent"
 trochilus_agent_image_full: "{{ trochilus_agent_image }}:{{ trochilus_tag }}"
-trochilus_dimensions: "{{ default_container_dimensions }}"
 websockify_image: "{{ docker_image_repository }}/websockify"
 websockify_image_full: "{{ websockify_image }}:{{ websockify_tag }}"
 websockify_dimensions: "{{ default_container_dimensions }}"
@@ -64,3 +63,5 @@ physical_flat_interface: "{% for flat_interface in flat_network_interface %}{% i
 
 
 physical_interface_mappings: "{% if trochilus_support_flat_network and trochilus_support_vlan_network %}{{ physical_flat_interface }},{{ physical_vlan_interface }} {% elif trochilus_support_flat_network %} {{ physical_flat_interface }}{% elif trochilus_support_vlan_network %} {{ physical_vlan_interface }} {% endif %}"
+
+webhook_target_ip: "{% if enable_keepalived %}{{ internal_vip_address }}{% else %}0.0.0.0{% endif %}"

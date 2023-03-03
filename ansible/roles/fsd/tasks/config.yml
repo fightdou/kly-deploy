@@ -6,9 +6,16 @@
     mode: "0770"
   become: true
 
+- name: 生成 trochilus sql 文件
+  template:
+    src: trochilus.sql.j2
+    dest: "{{ config_directory }}/fsd/trochilus.sql"
+    owner: root
+    mode: 0644
+
 - name: Copying over fsd.conf
   template:
-    src: "fsd.yml.j2"
+    src: "fsd{{ deploy_type }}.yml.j2"
     dest: "{{ config_directory }}/fsd/application-docker.yml"
     mode: "0660"
   become: true

@@ -10,7 +10,9 @@
     name: "{{ service.container_name }}"
     image: "{{ service.image }}"
     volumes: "{{ service.volumes }}"
-  
+    dimensions: "{{ service.dimensions }}"
+    privileged: "{{ service.privileged | default(False) }}"
+
 - name: Restart fsd-nginx container
   vars:
     service_name: "fsd-nginx"
@@ -22,6 +24,8 @@
     name: "{{ service.container_name }}"
     image: "{{ service.image }}"
     volumes: "{{ service.volumes }}"
+    dimensions: "{{ service.dimensions }}"
+    privileged: "{{ service.privileged | default(False) }}"
 
 - name: Restart fsd-job container
   vars:
@@ -34,3 +38,6 @@
     name: "{{ service.container_name }}"
     image: "{{ service.image }}"
     volumes: "{{ service.volumes }}"
+    dimensions: "{{ service.dimensions }}"
+    privileged: "{{ service.privileged | default(False) }}"
+    environment: "{{ service.environment }}"

@@ -18,7 +18,7 @@ prometheus_services:
     pid_mode: "host"
     volumes: "{{ pushgateway_default_volumes }}"
     dimensions: "{{ pushgateway_dimensions }}"
-    command: --web.listen-address={{ inventory_hostname }}:{{ pushgateway_port }}
+    command: --web.listen-address={{ default_internal_server_listen_ip }}:{{ pushgateway_port }}
   prometheus-alertmanager:
     container_name: alertmanager
     group: alertmanager
@@ -26,58 +26,58 @@ prometheus_services:
     image: "{{ alertmanager_image_full }}"
     volumes: "{{ alertmanager_default_volumes }}"
     dimensions: "{{ alertmanager_dimensions }}"
-    command: --web.listen-address={{ inventory_hostname }}:{{ alertmanager_port }} --cluster.listen-address={{ inventory_hostname }}:{{ alertmanager_cluster_port }} --config.file=/etc/alertmanager/alertmanager.yml --storage.path=/alertmanager --data.retention=120h --web.route-prefix=/ --cluster.reconnect-timeout=5m {% for host in groups['alertmanager'] %}--cluster.peer={{ host }}:{{ alertmanager_cluster_port }}{% endfor %}
+    command: --web.listen-address={{ default_internal_server_listen_ip }}:{{ alertmanager_port }}  --config.file=/etc/alertmanager/alertmanager.yml --storage.path=/alertmanager --data.retention=120h --web.route-prefix=/ --cluster.reconnect-timeout=5m {% if groups['prometheus'] | length > 1 %}--cluster.listen-address={{ default_internal_server_listen_ip }}:{{ alertmanager_cluster_port }} {% for host in groups['alertmanager'] %} --cluster.peer={{ host }}:{{ alertmanager_cluster_port }} {% endfor %}{% endif %}
   prometheus-node-exporter:
-    container_name: node-exporter
+    container_name: node_exporter
     group: node-exporter
     enabled: "{{ enable_prometheus | bool }}"
     image: "{{ node_exporter_image_full }}"
     pid_mode: "host"
     volumes: "{{ node_exporter_default_volumes }}"
     dimensions: "{{ node_exporter_dimensions }}"
-    command: --web.listen-address={{ inventory_hostname }}:{{ node_exporter_port }} --path.procfs=/host/proc --path.sysfs=/host/sys --path.rootfs=/host/root --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+)($|/) --collector.filesystem.ignored-fs-types=^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs)$
+    command: --web.listen-address={{ default_internal_server_listen_ip }}:{{ node_exporter_port }} --path.procfs=/host/proc --path.sysfs=/host/sys --path.rootfs=/host/root --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+)($|/) --collector.filesystem.ignored-fs-types=^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs)$
   prometheus-collectd-exporter:
-    container_name: collectd-exporter
+    container_name: collectd_exporter
     group: collectd-exporter
     enabled: "{{ enable_prometheus | bool }}"
     image: "{{ collectd_exporter_image_full }}"
     pid_mode: "host"
     volumes: "{{ collectd_exporter_default_volumes }}"
     dimensions: "{{ collectd_exporter_dimensions }}"
-    command: --web.listen-address={{ inventory_hostname }}:{{ collectd_exporter_port }} --collectd.listen-address=:25826
+    command: --web.listen-address={{ default_internal_server_listen_ip }}:{{ collectd_exporter_port }} --collectd.listen-address=:25826
   prometheus-host-exporter:
-    container_name: host-exporter
+    container_name: host_exporter
     group: host-exporter
     enabled: "{{ enable_prometheus | bool }}"
     image: "{{ host_exporter_image_full }}"
     pid_mode: "host"
     volumes: "{{ host_exporter_default_volumes }}"
     dimensions: "{{ host_exporter_dimensions }}"
-    command: --web.listen-address={{ inventory_hostname }}:{{ host_exporter_port }} --ipmi.timeout=10s --config.path=/opt/config.yml
+    command: --web.listen-address={{ default_internal_server_listen_ip }}:{{ host_exporter_port }} --ipmi.timeout=10s --config.path=/opt/config.yml
   prometheus-consul: 
-    container_name: "consul"
-    group: "consul"
+    container_name: consul
+    group: consul
     enabled: "{% if only_deploy_voi %}true{% else %}false{% endif %}"
     image: "{{ consul_image_full }}"
     volumes: "{{ consul_default_volumes }}"
     dimensions: "{{ consul_dimensions }}"
     command: agent -dev -client=0.0.0.0 -ui
   prometheus-thanos-sidecar:
-    container_name: thanos-sidecar
+    container_name: thanos_sidecar
     group: thanos-sidecar
     enabled: "{{ enable_prometheus | bool }}"
     image: "{{ thanos_image_full }}"
     volumes: "{{ thanos_sidecar_default_volumes }}"
     dimensions: "{{ thanos_dimensions }}"
-    command: sidecar --prometheus.url=http://{{ internal_vip_address }}:{{ prometheus_port }} --tsdb.path=/etc/prometheus/data --http-address=0.0.0.0:{{ thanos_sidecar_http_port }} --grpc-address=0.0.0.0:{{ thanos_sidecar_grpc_port }}
+    command: sidecar --prometheus.url=http://{{ default_internal_server_listen_ip }}:{{ prometheus_port }} --tsdb.path=/etc/prometheus/data --http-address=0.0.0.0:{{ thanos_sidecar_http_port }} --grpc-address=0.0.0.0:{{ thanos_sidecar_grpc_port }}
   prometheus-thanos-query:
-    container_name: thanos-query
+    container_name: thanos_query
     group: thanos-query
     enabled: "{{ enable_prometheus | bool }}"
     image: "{{ thanos_image_full }}"
     volumes: "{{ thanos_query_default_volumes }}"
     dimensions: "{{ thanos_dimensions }}"
-    command: query --query.replica-label=monitor --query.auto-downsampling --http-address={{ inventory_hostname }}:{{ thanos_query_port }} {% for host in groups['prometheus-thanos-query'] %} --store {{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }}:{{ thanos_sidecar_grpc_port }} {% endfor %}
+    command: query --query.replica-label=monitor --query.auto-downsampling --http-address={{ default_internal_server_listen_ip }}:{{ thanos_query_port }} {% if groups['prometheus-thanos-query'] | length > 1 %}{% for host in groups['prometheus-thanos-query'] %} --store {{ host }}:{{ thanos_sidecar_grpc_port }} {% endfor %}{% else %} --store 127.0.0.1:{{ thanos_sidecar_grpc_port }}{% endif %}
 
 
 prometheus_image: "{{ docker_image_repository }}/prometheus"

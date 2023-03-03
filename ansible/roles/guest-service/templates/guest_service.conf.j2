@@ -1,4 +1,4 @@
 [DEFAULT]
-mqtt_server = {{ internal_vip_address }}
-mqtt_port = {{ emqx_internal_mqtt_port }}
-prometheus_url = http://{{ internal_vip_address }}:{{ pushgateway_port }}/metrics/job/pushgateway/instance/
+mqtt_server = {{ default_internal_server_visit_ip }}
+mqtt_port = {{ emqx_internal_server_listen_port }}
+prometheus_url = http://{{ default_internal_server_visit_ip }}:{{ pushgateway_port }}/metrics/job/pushgateway/instance/

@@ -7,6 +7,8 @@
     name: "{{ item.value.container_name }}"
     image: "{{ item.value.image }}"
     volumes: "{{ item.value.volumes }}"
+    dimensions: "{{ item.value.dimensions }}"
+    privileged: "{{ item.value.privileged | default(False) }}"
   with_dict: "{{ fsd_services }}"
   when: item.value.enabled | bool
   notify:

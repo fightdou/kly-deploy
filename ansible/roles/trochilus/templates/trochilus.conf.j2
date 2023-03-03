@@ -2,7 +2,7 @@
 debug = false
 [agent_rest_client]
 [agent_settings]
-bind_host = {{ inventory_hostname }}
+bind_host = {{ default_internal_server_listen_ip }}
 bind_port = {{ trochilus_agent_listen_port }}
 reserved_cores_num = {{ trochilus_reserved_cores_num }}
 enable_reserved_core = false
@@ -15,9 +15,12 @@ agent_lock_file = /etc/trochilus/trochilus-agent-lock
 system = {{ ansible_distribution }}
 version = {{ ansible_distribution_version }}
 role = compute,control,storage
-nic = 
+{% for nic in nic_info %}
+nic = {{nic}}
+{% endfor %}
+
 [api_settings]
-bind_host = {{ inventory_hostname }}
+bind_host = {{ default_internal_server_listen_ip }}
 bind_port = {{ trochilus_api_listen_port }}
 supported_instance_metadatas = k1, k2
 
@@ -28,7 +31,7 @@ enabled_volume_backends = lvm1
 {% endif %}
 
 [database]
-connection = mysql+pymysql://{{ trochilus_mariadb_username }}:{{ trochilus_mariadb_password }}@{{ internal_vip_address }}:{{ mariadb_listen_port }}/{{ trochilus_mariadb_dataname }}
+connection = mysql+pymysql://{{ trochilus_mariadb_username }}:{{ trochilus_mariadb_password }}@{{ default_internal_server_visit_ip }}:{{ mariadb_listen_port }}/{{ trochilus_mariadb_dataname }}
 
 {% if enable_ceph %}
 [rbd1]
@@ -85,7 +88,7 @@ ha_base_dir_path = /etc/trochilus/ha
 [system_settings]
 cgroup_path = /sys/fs/cgroup
 [webhook_settings]
-target_host = fsd-tcp
+target_host = {{ webhook_target_ip }}
 target_port = 9010
 target_path = /api/v1/webhook/
 method = post
