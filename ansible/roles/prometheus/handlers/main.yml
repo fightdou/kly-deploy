@@ -13,7 +13,7 @@
     command: "{{ service.command }}"
     dimensions: "{{ service.dimensions }}"
 
-- name: Restart pushgateway container
+- name: Restart prometheus-pushgateway container
   vars:
     service_name: "prometheus-pushgateway"
     service: "{{ prometheus_services[service_name] }}"
@@ -27,7 +27,7 @@
     volumes: "{{ service.volumes }}"
     dimensions: "{{ service.dimensions }}"
 
-- name: Restart alertmanager container
+- name: Restart prometheus-alertmanager container
   vars:
     service_name: "prometheus-alertmanager"
     service: "{{ prometheus_services[service_name] }}"
@@ -41,7 +41,7 @@
     command: "{{ service.command }}"
     dimensions: "{{ service.dimensions }}"
 
-- name: Restart node-exporter container
+- name: Restart prometheus-node-exporter container
   vars:
     service_name: "prometheus-node-exporter"
     service: "{{ prometheus_services[service_name] }}"
@@ -55,7 +55,7 @@
     volumes: "{{ service.volumes }}"
     dimensions: "{{ service.dimensions }}"
 
-- name: Restart collectd-exporter container
+- name: Restart prometheus-collectd-exporter container
   vars:
     service_name: "prometheus-collectd-exporter"
     service: "{{ prometheus_services[service_name] }}"
@@ -69,7 +69,7 @@
     volumes: "{{ service.volumes }}"
     dimensions: "{{ service.dimensions }}"
 
-- name: Restart host-exporter container
+- name: Restart prometheus-host-exporter container
   vars:
     service_name: "prometheus-host-exporter"
     service: "{{ prometheus_services[service_name] }}"
@@ -83,7 +83,7 @@
     volumes: "{{ service.volumes }}"
     dimensions: "{{ service.dimensions }}"
 
-- name: Restart consul container
+- name: Restart prometheus-consul container
   vars:
     service_name: "prometheus-consul"
     service: "{{ prometheus_services[service_name] }}"
@@ -97,7 +97,7 @@
     volumes: "{{ service.volumes }}"
     dimensions: "{{ service.dimensions }}"
 
-- name: Restart thanos-sidecar container
+- name: Restart prometheus-thanos-sidecar container
   vars:
     service_name: "prometheus-thanos-sidecar"
     service: "{{ prometheus_services[service_name] }}"
@@ -111,7 +111,7 @@
     volumes: "{{ service.volumes }}"
     dimensions: "{{ service.dimensions }}"
 
-- name: Restart thanos-query container
+- name: Restart prometheus-thanos-query container
   vars:
     service_name: "prometheus-thanos-query"
     service: "{{ prometheus_services[service_name] }}"

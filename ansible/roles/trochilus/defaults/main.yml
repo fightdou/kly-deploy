@@ -23,6 +23,7 @@ trochilus_services:
     container_name: websockify
     group: "websockify"
     enabled: true
+    privileged: True
     image: "{{ websockify_image_full }}"
     volumes: "{{ websockify_default_volumes }}"
     dimensions: "{{ websockify_dimensions }}"

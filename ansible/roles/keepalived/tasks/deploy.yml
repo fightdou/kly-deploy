@@ -1,0 +1,13 @@
+---
+- include_tasks: "{{ keepalived_action }}.yml"
+  when:
+    - keepalived_action == "config-vip"
+
+- import_tasks: "config.yml"
+  when:
+    - keepalived_action == ""
+
+- import_tasks: check-containers.yml
+
+- name: Flush handlers
+  meta: flush_handlers
