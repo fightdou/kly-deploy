@@ -7,6 +7,13 @@
   hostname:
     name: "{{ hostvars[inventory_hostname]['hostname'] }}"
 
+- name: openEuler disable firewalld
+  become: True
+  service:
+    name: firewalld
+    enabled: false
+    state: stopped
+
 - name: openEuler 设置防火墙规则
   shell: iptables -P FORWARD ACCEPT
 
