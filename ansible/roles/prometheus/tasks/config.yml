@@ -151,4 +151,4 @@
     src: host-exporter.yml.j2
     dest: "{{ config_directory }}/host-exporter/config.yml"
   notify:
-    - Restart host-exporter container
+    - Restart prometheus-host-exporter container
