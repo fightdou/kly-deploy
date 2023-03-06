@@ -8,7 +8,7 @@
 
 - name: create trochilus databases
   mysql_db: 
-    login_host: "{{ internal_vip_address }}"
+    login_host: "{{ default_internal_server_visit_ip }}"
     login_port: "{{ mariadb_listen_port }}"
     login_user: "{{ mariadb_root_username }}"
     login_password: "{{ mariadb_root_password }}"
@@ -20,7 +20,7 @@
 - name: create trochilus databases user
   become: true
   mysql_user:
-    login_host: "{{ internal_vip_address }}"
+    login_host: "{{ default_internal_server_visit_ip }}"
     login_port: "{{ mariadb_listen_port }}"
     login_user: "{{ mariadb_root_username }}"
     login_password: "{{ mariadb_root_password }}"
