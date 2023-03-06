@@ -67,7 +67,7 @@ default_container_dimensions: {}
 # role开关
 ##########
 enable_baremetal: true
-enable_haproxy: true
+enable_haproxy: "{% if deploy_edu | bool %}false{% else %}true{% endif %}"
 enable_keepalived: "{% if deploy_edu | bool %}false{% else %}true{% endif %}"
 enable_mariadb: true
 enable_redis: true
