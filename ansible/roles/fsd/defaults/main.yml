@@ -66,7 +66,7 @@ fsd_edu_volumes:
 fsd_job_image: "{{ docker_image_repository }}/fsd{{ deploy_type }}_job"
 fsd_job_tag: "{{ fsd_default_tag }}"
 fsd_job_image_full: "{{ fsd_job_image }}:{{ fsd_job_tag }}"
-fsd_job_default_volumes: 
+fsd_job_default_volumes:
   - "/etc/localtime:/etc/localtime:ro"
 
 ####################
