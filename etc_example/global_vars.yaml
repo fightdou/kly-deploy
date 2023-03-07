@@ -191,13 +191,16 @@ websockify_tag: latest
 ##############
 fsd_internal_nginx_port: 19000
 fsd_external_nginx_port: 9000
-fsd_job_port: 9011
-fsd_tcp_port: 9012
-fsd_tcp_file_port: 9013
+fsd_job_port: 19011
+fsd_internal_job_port: 9011
+fsd_tcp_port: 19012
+fsd_internal_tcp_port: 9012
+fsd_tcp_file_port: 19013
+fsd_internal_tcp_file_port: 9013
 fsd_console_port: 9040
-fsd_main_port: 9010
+fsd_main_port: 19010
+fsd_internal_main_port: 9010
 fsd_webhook_token: abc123
-fsd_webhook_port: 9010
 fsd_default_tag: latest
 fsd_deploy_mode: all
 fsd_deploy_node_type: cluster

@@ -10,7 +10,7 @@ route:
 receivers:
   - name: "web.hook"
     webhook_configs:
-    - url: "http://:{{ fsd_webhook_port }}/api/v1/alarm/log/webhook"
+    - url: "http://{{ default_internal_server_visit_ip }}:{{ fsd_main_port }}/api/v1/alarm/log/webhook"
 inhibit_rules:
   - source_match:
       severity: "critical"

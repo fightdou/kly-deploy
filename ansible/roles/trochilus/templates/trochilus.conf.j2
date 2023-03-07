@@ -23,6 +23,7 @@ nic = {{nic}}
 bind_host = {{ default_internal_server_listen_ip }}
 bind_port = {{ trochilus_api_listen_port }}
 supported_instance_metadatas = k1, k2
+internal_ip = {{ default_internal_server_listen_ip }}
 
 {% if enable_ceph %}
 enabled_volume_backends = rbd1
@@ -89,7 +90,7 @@ ha_base_dir_path = /etc/trochilus/ha
 cgroup_path = /sys/fs/cgroup
 [webhook_settings]
 target_host = {{ webhook_target_ip }}
-target_port = 9010
+target_port = {{ fsd_main_port }}
 target_path = /api/v1/webhook/
 method = post
 auth_token = abc123

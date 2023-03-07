@@ -135,3 +135,50 @@ listen btserver-tracker
     server {{ host }} {{ host }}:{{ bt_tracker_internal_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 {% endif %}
+
+{% if enable_fsd | bool %}
+listen fsd_nginx
+    mode tcp
+    bind 0.0.0.0:{{ fsd_external_nginx_port }}
+    balance source
+    option tcplog
+{% for host in (groups['fsd']) %}
+    server {{ host }} {{ host }}:{{ fsd_internal_nginx_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+
+listen fsd_job
+    mode tcp
+    bind {{ internal_vip_address }}:{{ fsd_job_port }}
+    balance source
+    option tcplog
+{% for host in (groups['fsd']) %}
+    server {{ host }} {{ host }}:{{ fsd_internal_job_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+
+listen fsd_tcp
+    mode tcp
+    bind {{ internal_vip_address }}:{{ fsd_tcp_port }}
+    balance source
+    option tcplog
+{% for host in (groups['fsd']) %}
+    server {{ host }} {{ host }}:{{ fsd_internal_tcp_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+
+listen fsd_tcp_file
+    mode tcp
+    bind {{ internal_vip_address }}:{{ fsd_tcp_file_port }}
+    balance source
+    option tcplog
+{% for host in (groups['fsd']) %}
+    server {{ host }} {{ host }}:{{ fsd_internal_tcp_file_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+
+listen fsd
+    mode tcp
+    bind {{ internal_vip_address }}:{{ fsd_main_port }}
+    balance source
+    option tcplog
+{% for host in (groups['fsd']) %}
+    server {{ host }} {{ host }}:{{ fsd_internal_main_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+{% endif %}

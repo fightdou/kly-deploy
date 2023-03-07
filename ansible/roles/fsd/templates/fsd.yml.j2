@@ -28,8 +28,8 @@ custom:
   port_virtual_api: {{ trochilus_api_listen_port }}
   port_virtual_vnc: {{ websockify_internal_port }}
   port_java_front: {{ fsd_external_nginx_port }}
-  port_java_main: {{ fsd_main_port }}
-  port_java_job: {{ fsd_job_port }}
-  port_java_tcp: {{ fsd_tcp_port }}
-  port_java_file: {{ fsd_tcp_file_port }}
+  port_java_main: {{ fsd_internal_main_port }}
+  port_java_job: {{ fsd_internal_job_port }}
+  port_java_tcp: {{ fsd_internal_tcp_port }}
+  port_java_file: {{ fsd_internal_tcp_file_port }}
   port_java_console: {{ fsd_console_port }}
