@@ -203,7 +203,7 @@ fsd_internal_main_port: 9010
 fsd_webhook_token: abc123
 fsd_default_tag: latest
 fsd_deploy_mode: all
-fsd_deploy_node_type: cluster
+fsd_deploy_node_type: "{% if groups['fsd'] | length > 1 %}cluster{% else %}single{% endif %}"
 fsd_share_root_path: "{{ desktop_mount_dir }}"
 fsd_cloud_disk_root_path: "{{ fsd_share_root_path }}/111"
 proxy_ip: ""

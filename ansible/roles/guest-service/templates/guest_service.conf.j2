@@ -1,4 +1,4 @@
 [DEFAULT]
 mqtt_server = {{ default_internal_server_visit_ip }}
-mqtt_port = {{ emqx_internal_server_listen_port }}
+mqtt_port = {{ emqx_external_mqtt_port }}
 prometheus_url = http://{{ default_internal_server_visit_ip }}:{{ pushgateway_port }}/metrics/job/pushgateway/instance/
