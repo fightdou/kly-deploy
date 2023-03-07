@@ -35,7 +35,7 @@ fsd_services:
     privileged: True
 
 
-deploy_type: "{% if deploy_edu %}_edu{% else %}''{% endif %}"
+deploy_type: "{% if deploy_edu %}_edu{% else %}{% endif %}"
 fsd_proxy_ip: "{% if proxy_ip != '' %}{{ proxy_ip }}{% elif enable_keepalived | bool %}{{ external_vip_address }}{% else %}{{ inventory_hostname }}{% endif %}"
 fsd_ngxin_proxy_pass: "{{ default_internal_server_visit_ip }}"
 fsd_mysql_conn_ip: "{{ default_internal_server_visit_ip }}"
