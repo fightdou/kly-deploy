@@ -68,7 +68,7 @@ default_container_dimensions: {}
 ##########
 enable_baremetal: true
 enable_haproxy: "{% if deploy_edu | bool %}false{% else %}true{% endif %}"
-enable_keepalived: "{% if deploy_edu | bool %}false{% else %}true{% endif %}"
+enable_keepalived: "{% if deploy_edu | bool or groups['keepalived'] == 1 %}false{% else %}true{% endif %}"
 enable_mariadb: true
 enable_redis: true
 enable_emqx: true
@@ -80,7 +80,7 @@ enable_guest_service: true
 enable_fsd: true
 enable_btserver: true
 enable_lvm: false
-enable_ceph: "{% if only_deploy_voi %}false{% else %}true{% endif %}"
+enable_ceph: "{% if only_deploy_voi | bool or deploy_edu | bool %}false{% else %}true{% endif %}"
 
 ##########
 # VOI 配置
@@ -129,7 +129,8 @@ emqx_wss_port: 8084
 # Redis Options
 ##############
 redis_tag: latest
-redis_port: 6379
+redis_external_server_port: 6379
+redis_internal_server_port: 16379
 redis_master_password: zhuolang@Troila@123
 redis_sentinel_port: 26379
 
@@ -137,23 +138,28 @@ redis_sentinel_port: 26379
 # prometheus Options
 ####################
 prometheus_port: 9090
-thanos_query_port: 19191
-pushgateway_port: 9099
+thanos_external_query_port: 19191
+thanos_internal_query_port: 9191
+pushgateway_external_port: 9099
+pushgateway_internal_port: 19099
 thanos_sidecar_grpc_port: 19091
 thanos_sidecar_http_port: 19092
-alertmanager_port: 9093
+alertmanager_external_port: 9093
+alertmanager_internal_port: 19093
 alertmanager_cluster_port: 9094
 node_exporter_port: 9100
 host_exporter_port: 9104
 collectd_exporter_port: 9103
 collectd_udp_port: 25826
-consul_port: 8500
+consul_external_port: 8500
+consul_internal_port: 18500
 prometheus_tag: latest
 
 ##################
 # Mariadb Options
 ##################
-mariadb_listen_port: 3306
+mariadb_external_listen_port: 3306
+mariadb_internal_listen_port: 13306
 mariadb_wsrep_port: "4567"
 mariadb_ist_port: "4568"
 mariadb_sst_port: "4444"
@@ -169,8 +175,10 @@ mariadb_default_tag: latest
 trochilus_support_flat_network: true
 trochilus_support_vlan_network: true
 trochilus_libvirt_driver: kvm
-trochilus_api_listen_port: 9001
-trochilus_agent_listen_port: 9002
+trochilus_external_api_listen_port: 9001
+trochilus_internal_api_listen_port: 19001
+trochilus_external_agent_listen_port: 9002
+trochilus_internal_agent_listen_port: 19002
 trochilus_base_path: "{{ desktop_mount_dir }}"
 trochilus_voi_base_path: "{{ desktop_mount_dir }}/voi"
 trochilus_tag: latest
@@ -183,23 +191,24 @@ trochilus_reserved_cores_num: 2
 trochilus_mariadb_username: trochilus
 trochilus_mariadb_password: 123456
 trochilus_mariadb_dataname: trochilus
-websockify_internal_port: 9003
+websockify_external_port: 9003
+websockify_internal_port: 19003
 websockify_tag: latest
 
 ##############
 # FSD Options
 ##############
-fsd_internal_nginx_port: 19000
 fsd_external_nginx_port: 9000
-fsd_job_port: 19011
-fsd_internal_job_port: 9011
-fsd_tcp_port: 19012
-fsd_internal_tcp_port: 9012
-fsd_tcp_file_port: 19013
-fsd_internal_tcp_file_port: 9013
+fsd_internal_nginx_port: 19000
+fsd_external_job_port: 9011
+fsd_internal_job_port: 19011
+fsd_external_tcp_port: 9012
+fsd_internal_tcp_port: 19012
+fsd_external_tcp_file_port: 9013
+fsd_internal_tcp_file_port: 19013
 fsd_console_port: 9040
-fsd_main_port: 19010
-fsd_internal_main_port: 9010
+fsd_external_main_port: 9010
+fsd_internal_main_port: 19010
 fsd_webhook_token: abc123
 fsd_default_tag: latest
 fsd_deploy_mode: all

@@ -1,5 +1,5 @@
 targets: 
-{% if groups['host-exporter'] | length > 1 %}
+{% if enable_internal_communication | bool %}
 {% for host in groups['host-exporter'] %}
   - {{ host }}
 {% endfor %}

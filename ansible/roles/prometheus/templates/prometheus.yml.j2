@@ -12,7 +12,7 @@ rule_files:
 scrape_configs:
   - job_name: node
     static_configs:
-{% if groups['node-exporter'] | length > 1 %}
+{% if enable_internal_communication | bool %}
 {% for host in groups['node-exporter'] %}
       - targets:
         - '{{ host }}:{{ node_exporter_port }}'
@@ -30,7 +30,7 @@ scrape_configs:
 
   - job_name: collectd
     static_configs:
-{% if groups['collectd-exporter'] | length > 1 %}
+{% if enable_internal_communication | bool %}
 {% for host in groups['collectd-exporter'] %}
       - targets:
         - '{{ host }}:{{ collectd_exporter_port }}'
@@ -48,7 +48,7 @@ scrape_configs:
 
   - job_name: host
     static_configs:
-{% if groups['host-exporter'] | length > 1 %}
+{% if enable_internal_communication | bool %}
 {% for host in groups['host-exporter'] %}
       - targets:
         - '{{ host }}:{{ host_exporter_port }}'
@@ -69,7 +69,7 @@ scrape_configs:
     honor_labels: true
     static_configs:
       - targets:
-        - '{{ default_internal_server_visit_ip }}:{{ pushgateway_port }}'
+        - '{{ default_internal_server_visit_ip }}:{{ pushgateway_listen_server_port }}'
         labels:
           host: '{{ ansible_hostname }}'
           host_ip: '{{ default_internal_server_listen_ip }}'
@@ -79,10 +79,10 @@ scrape_configs:
     scrape_timeout: 10s
     consul_sd_configs:
 {% for host in groups['prometheus'] %}
-{% if groups['prometheus'] | length == 1 %}
+{% if not enable_internal_communication | bool %}
 {% set host = '127.0.0.1' %}
 {% endif %}
-    - server: '{{ host }}:{{ consul_port }}'
+    - server: '{{ host }}:{{ consul_listen_server_port }}'
       services: []
 {% endfor %}
     relabel_configs:
@@ -99,8 +99,8 @@ alerting:
   - static_configs:
     - targets:
 {% for host in groups["alertmanager"] %}
-{% if groups['prometheus'] | length == 1 %}
+{% if not enable_internal_communication | bool %}
 {% set host = '127.0.0.1' %}
 {% endif %}
-        - '{{ host }}:{{ alertmanager_port }}'
+        - '{{ host }}:{{ alertmanager_listen_server_port }}'
 {% endfor %}

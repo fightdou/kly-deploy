@@ -1,5 +1,58 @@
 ---
-default_internal_server_listen_ip: "{% if enable_keepalived | bool %}{{ inventory_hostname }}{% else %}0.0.0.0{% endif %}"
-default_internal_server_visit_ip: "{% if enable_keepalived | bool %}{{ internal_vip_address }}{% else %}127.0.0.1{% endif %}"
+enable_internal_communication: "{% if enable_comm | bool %}true{% else %}false{% endif %}"
+
+default_internal_server_listen_ip: "{% if enable_internal_communication | bool %}{{ inventory_hostname }}{% else %}0.0.0.0{% endif %}"
+default_internal_server_visit_ip: "{% if enable_internal_communication | bool %}{% if enable_keepalived | bool %}{{ internal_vip_address }}{% else %}{{ inventory_hostname }}{% endif %}{% else %}127.0.0.1{% endif %}"
 nginx_internal_server_listen_port: "{% if enable_keepalived | bool %}{{ fsd_internal_nginx_port }}{% else %}{{ fsd_external_nginx_port }}{% endif %}"
-emqx_internal_server_listen_port: "{% if enable_keepalived | bool %}{{ emqx_internal_mqtt_port }}{% else %}{{ emqx_external_mqtt_port }}{% endif %}"
+
+##############
+# btserver
+##############
+bt_listen_server_port: "{% if enable_internal_communication | bool %}{{ bt_server_internal_port }}{% else %}{{ bt_server_external_port }}{% endif %}"
+bt_listen_tracker_port: "{% if enable_internal_communication | bool %}{{ bt_tracker_internal_port }}{% else %}{{ bt_tracker_external_port }}{% endif %}"
+bt_listen_download_port_start: "{% if enable_internal_communication | bool %}{{ bt_download_internal_port_start }}{% else %}{{ bt_download_external_port_start }}{% endif %}"
+bt_listen_download_port_end: "{% if enable_internal_communication | bool %}{{ bt_download_internal_port_end }}{% else %}{{ bt_download_external_port_end }}{% endif %}"
+
+###############
+# emqx
+###############
+emqx_listen_server_port: "{% if enable_internal_communication | bool %}{{ emqx_internal_mqtt_port }}{% else %}{{ emqx_external_mqtt_port }}{% endif %}"
+
+###################
+# guest-service
+###################
+
+####################
+# redis
+####################
+redis_listen_server_port: "{% if enable_internal_communication | bool %}{{ redis_internal_server_port }}{% else %}{{ redis_external_server_port }}{% endif %}"
+
+####################
+# mariadb
+####################
+mariadb_listen_server_port: "{% if enable_internal_communication | bool %}{{ mariadb_internal_listen_port }}{% else %}{{ mariadb_external_listen_port }}{% endif %}"
+
+
+###################
+# prometheus
+###################
+pushgateway_listen_server_port: "{% if enable_internal_communication | bool %}{{ pushgateway_internal_port }}{% else %}{{ pushgateway_external_port }}{% endif %}"
+thanos_listen_query_port: "{% if enable_internal_communication | bool %}{{ thanos_internal_query_port }}{% else %}{{ thanos_external_query_port }}{% endif %}"
+alertmanager_listen_server_port: "{% if enable_internal_communication | bool %}{{ alertmanager_internal_port }}{% else %}{{ alertmanager_external_port }}{% endif %}"
+consul_listen_server_port: "{% if enable_internal_communication | bool %}{{ consul_internal_port }}{% else %}{{ consul_external_port }}{% endif %}"
+
+###################
+# Trochilus
+###################
+trochilus_listen_agent_port: "{% if enable_internal_communication | bool %}{{ trochilus_internal_agent_listen_port }}{% else %}{{ trochilus_external_agent_listen_port }}{% endif %}"
+trochilus_listen_api_port: "{% if enable_internal_communication | bool %}{{ trochilus_internal_api_listen_port }}{% else %}{{ trochilus_external_api_listen_port }}{% endif %}"
+websockify_listen_server_port: "{% if enable_internal_communication | bool %}{{ websockify_internal_port }}{% else %}{{ websockify_external_port }}{% endif %}"
+
+####################
+# fsd
+####################
+fsd_listen_main_port: "{% if enable_internal_communication | bool %}{{ fsd_internal_main_port }}{% else %}{{ fsd_external_main_port }}{% endif %}"
+fsd_listen_nginx_port: "{% if enable_internal_communication | bool %}{{ fsd_internal_nginx_port }}{% else %}{{ fsd_external_nginx_port }}{% endif %}"
+fsd_listen_job_port: "{% if enable_internal_communication | bool %}{{ fsd_internal_job_port }}{% else %}{{ fsd_external_job_port }}{% endif %}"
+fsd_listen_tcp_port: "{% if enable_internal_communication | bool %}{{ fsd_internal_tcp_port }}{% else %}{{ fsd_external_tcp_port }}{% endif %}"
+fsd_listen_tcp_file_port: "{% if enable_internal_communication | bool %}{{ fsd_internal_tcp_file_port }}{% else %}{{ fsd_external_tcp_file_port }}{% endif %}"

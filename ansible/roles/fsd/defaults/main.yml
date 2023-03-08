@@ -37,6 +37,7 @@ fsd_services:
 
 deploy_type: "{% if deploy_edu %}_edu{% else %}{% endif %}"
 fsd_proxy_ip: "{% if proxy_ip != '' %}{{ proxy_ip }}{% elif enable_keepalived | bool %}{{ external_vip_address }}{% else %}{{ inventory_hostname }}{% endif %}"
+fsd_vip: "{% if enable_keepalived | bool %}{{ external_vip_address }}{% else %}{{ inventory_hostname }}{% endif %}"
 fsd_ngxin_proxy_pass: "{{ default_internal_server_visit_ip }}"
 fsd_mysql_conn_ip: "{{ default_internal_server_visit_ip }}"
 ####################
@@ -58,7 +59,7 @@ fsd_edu_volumes:
   - "{{ config_directory }}/btserver/torrent.ini:/opt/torrent_server_bin/torrent.ini:rw"
   - "{{ config_directory }}/btserver/opentracker.conf:/opt/torrent_server_bin/opentracker.conf:rw"
   - "{{ config_directory }}/keepalived/conf.d/external.conf:/etc/keepalived/keepalived.conf:rw"
-  - "{{ desktop_mount_dir }}/static://var/www/html:rw"
+  - "{{ desktop_mount_dir }}/static:/var/www/html/static:rw"
 
 ####################
 # fsd-job

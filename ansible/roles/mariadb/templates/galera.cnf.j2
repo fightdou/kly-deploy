@@ -10,7 +10,7 @@ default-character-set=utf8
 [mysqld]
 basedir=/usr
 bind-address={{ default_internal_server_listen_ip }}
-port={{ mariadb_port }}
+port={{ mariadb_listen_server_port }}
 log_warnings=2
 
 log-error=/var/log/mariadb/mariadb.log
