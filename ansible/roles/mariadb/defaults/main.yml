@@ -8,7 +8,7 @@ mariadb_services:
     image: "{{ mariadb_image_full }}"
     volumes: "{{ mariadb_default_volumes }}"
 
-mariadb_port: "{{ mariadb_listen_port }}"
+mariadb_port: "{{ mariadb_listen_server_port }}"
 
 database_user: "{{ mariadb_root_username }}"
 database_password: "{{ mariadb_root_password }}"

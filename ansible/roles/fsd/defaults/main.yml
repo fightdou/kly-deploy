@@ -12,6 +12,7 @@ fsd_services:
     image: "{{ fsd_job_image_full }}"
     volumes: "{{ fsd_job_default_volumes }}"
     environment:
+      SERVER_PORT: "{{ fsd_listen_job_port }}"
       ENV_FSD_COMMON_JOB_MYSQL_SVC: "{{ default_internal_server_visit_ip }}" 
       ENV_FSD_COMMON_JOB_MYSQL_USERNAME: "{{ mariadb_root_username }}"
       ENV_FSD_COMMON_JOB_MYSQL_PASSWORD: "{{ mariadb_root_password }}"
@@ -69,6 +70,7 @@ fsd_job_tag: "{{ fsd_default_tag }}"
 fsd_job_image_full: "{{ fsd_job_image }}:{{ fsd_job_tag }}"
 fsd_job_default_volumes:
   - "/etc/localtime:/etc/localtime:ro"
+  - "{{ config_directory }}/fsd/application-docker.yml:/home/static/java/application-docker.yml:rw"
 
 ####################
 # fsd-nginx
