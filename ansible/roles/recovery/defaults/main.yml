@@ -1,0 +1,34 @@
+---
+trochilus_api_image: "{{ docker_image_repository }}/trochilus-api"
+trochilus_api_image_full: "{{ trochilus_api_image }}:{{ trochilus_tag }}"
+trochilus_dimensions: "{{ default_container_dimensions }}"
+
+trochilus_default_volumes:
+  - "{{ config_directory }}/libvirt/:/etc/libvirt/"
+  - "{{ config_directory }}/trochilus:/etc/trochilus"
+  - "/etc/localtime:/etc/localtime"
+  - "/etc/machine-id:/etc/machine-id"
+  - "/etc/sysctl.d/:/etc/sysctl.d/"
+  - "/sys/fs/cgroup/:/sys/fs/cgroup/:rw"
+  - "/dev/:/dev/"
+  - "/run/:/run/:shared"
+  - "/var/run/system_bus_socket:/var/run/system_bus_socket"
+  - "/var/run/dbus/:/var/run/dbus/"
+  - "/lib/modules/:/lib/modules/:rw"
+  - "/etc/ceph/:/etc/ceph/"
+  - "libvirtd:/var/lib/libvirt"
+  - "/var/log/trochilus/:/var/log/trochilus/"
+  - "{{ desktop_mount_dir }}:/var/lib/trochilus/"
+
+####################
+# fsd-init
+####################
+fsd_mysql_conn_ip: "{{ default_internal_server_visit_ip }}"
+fsd_init_image: "{{ docker_image_repository }}/fsd{{ deploy_type }}_init"
+fsd_init_tag: "{{ fsd_default_tag }}"
+deploy_type: "{% if deploy_edu %}_edu{% else %}''{% endif %}"
+fsd_init_image_full: "{{ fsd_init_image }}:{{ fsd_init_tag }}"
+fsd_init_default_volumes:
+  - "/etc/localtime:/etc/localtime:ro"
+  - "{{ desktop_mount_dir }}/static:/home/tmp:rw"
+  - "{{ config_directory }}/fsd/trochilus.sql:/home/trochilus/trochilus.sql:rw"

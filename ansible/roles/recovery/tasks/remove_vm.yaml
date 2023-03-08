@@ -1,0 +1,19 @@
+- name: get all vm id
+  shell: "docker exec -it libvirt virsh list --all --uuid"
+  register: all_vm_uuid
+
+- name: destroy all vm
+  shell: "docker exec -it libvirt virsh destroy {{ item }} && virsh undefine {{ item }} --nvram"
+  with_items: "{{ all_vm_uuid.stdout_lines }}"
+
+- name: remove vm dir
+  file:
+    path: /var/lib/trochilus/voi/vms/{{ item }}
+    state: absent
+  with_items: "{{ all_vm_uuid.stdout_lines }}"
+
+- name: remove public-base-disks
+  file:
+    path: /var/lib/trochilus/voi/public-base-disk/{{ item }}
+    state: absent
+  with_items: "{{ all_vm_uuid.stdout_lines }}"

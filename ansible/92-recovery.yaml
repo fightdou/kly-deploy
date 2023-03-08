@@ -1,0 +1,7 @@
+---
+- name: Apply role recovery 
+  gather_facts: True
+  hosts: baremetal
+  roles:
+    - { role: recovery,
+        tags: recovery }

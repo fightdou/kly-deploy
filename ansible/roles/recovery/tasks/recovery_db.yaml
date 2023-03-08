@@ -1,0 +1,67 @@
+---
+- name: delete trochilus and fsd databases
+  mysql_db: 
+    login_host: "{{ default_internal_server_visit_ip }}"
+    login_port: "{{ mariadb_listen_port }}"
+    login_user: "{{ mariadb_root_username }}"
+    login_password: "{{ mariadb_root_password }}"
+    name: "{{ item }}"
+    state: "absent"
+  run_once: True
+  delegate_to: "{{ groups['trochilus-api'][0] }}"
+  loop:
+    - "{{ trochilus_mariadb_dataname }}"
+    - "klcloud_fsd_edu"
+    - "xxl_job"
+
+- name: create trochilus databases
+  mysql_db: 
+    login_host: "{{ default_internal_server_visit_ip }}"
+    login_port: "{{ mariadb_listen_port }}"
+    login_user: "{{ mariadb_root_username }}"
+    login_password: "{{ mariadb_root_password }}"
+    name: "{{ trochilus_mariadb_dataname }}"
+    state: "present"
+  run_once: True
+  delegate_to: "{{ groups['trochilus-api'][0] }}"
+
+- name: Running exec trochilus-db-manage container
+  become: true
+  kolla_docker:
+    action: "start_container"
+    common_options: "{{ docker_common_options }}"
+    name: "trochilus-db-manage"
+    command: "trochilus-db-manage upgrade head"
+    image: "{{ trochilus_api_image_full }}"
+    volumes: "{{ trochilus_default_volumes }}"
+    restart_policy: no
+    dimensions: "{{ trochilus_dimensions }}"
+    detach: False
+  run_once: True
+  delegate_to: "{{ groups['trochilus-api'][0] }}"
+
+- name: Load sql and static file
+  become: true
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "load_fsd_sql"
+    image: "{{ fsd_init_image_full }}"
+    volumes: "{{ fsd_init_default_volumes }}"
+    environment:
+      fsd_init_db_vip: "{{ fsd_mysql_conn_ip }}" 
+      fsd_init_db_password: "{{ mariadb_root_password }}"
+    restart_policy: "no"
+  run_once: true
+
+- name: Wait sql and static file load complete
+  become: true
+  shell: docker wait load_fsd_sql
+  register: db_res
+
+- name: Check the result about sql and static file load
+  fail:
+    msg: "The load_fsd_sql container's exist code isn't 0, pleash check the image {{ fsd_init_image_full }}"
+  changed_when: false
+  when:
+    - db_res.rc != 0
