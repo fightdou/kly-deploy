@@ -218,6 +218,19 @@ fsd_policy_codeRateRange: 1,100
 # 3. common 办公
 fsd_voi_version: edu
 
+tdesktop_path_name: 
+  - /opt/tdesktop/Win-TDesktop.exe
+  - /opt/tdesktop/kylin_ARM-TDesktop.deb
+  - /opt/tdesktop/UOS_ARM-TDesktop.deb
+  - /opt/tdesktop/UOS_X86-TDesktop.deb
+  - /opt/tdesktop/kylin_X86-TDesktop.deb
+
+##################
+# Samba
+##################
+samba_user: troila
+samba_passwd: Troila12
+ 
 ##################
 # Btserver Options
 ##################

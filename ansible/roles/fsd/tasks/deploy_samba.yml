@@ -1,0 +1,51 @@
+---
+- name: install samba service
+  package:
+    name: "{{ item }}"
+    state: present
+    update_cache: True
+  with_items:
+    - "samba"
+    - "samba-common"
+
+- name: useradd a user to samba
+  user:
+    user: "{{ samba_user }}"
+
+- name: copy sam.conf for samba
+  template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+    mode: 0644
+
+- name: Create Samba Script Dir
+  file:
+    path: "/var/lib/trochilus/111/samba/"
+    state: directory
+    mode: 0755
+    recurse: True
+  run_once: True
+
+- name: Create Samba Script
+  file:
+    path: "/var/lib/trochilus/111/samba/disksize"
+    state: touch
+    mode: 0777
+  run_once: True
+ 
+- name: Copy Samba Script
+  template:
+    src: "diskSize.sh.j2"
+    dest: "/var/lib/trochilus/111/samba/diskSize.sh"
+    mode: 0777
+  run_once: True
+
+- name: Init samba user
+  raw: |
+    echo -e '{{ samba_passwd }}\n{{ samba_passwd }}' | smbpasswd -a {{ samba_user }} -s
+
+- name: start or restart samba
+  systemd:
+    name: smb
+    state: restarted
+    enabled: True

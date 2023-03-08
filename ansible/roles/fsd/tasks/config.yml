@@ -13,6 +13,29 @@
     owner: root
     mode: 0644
 
+- name: Create Tdesktop app dir
+  file:
+    path: "{{ desktop_mount_dir }}/static/vdiUpgradePackage/"
+    state: "directory"
+    mode: "0777"
+    recurse: yes
+  when:
+    - not only_deploy_voi | bool
+    - deploy_comm | bool
+
+- name: Copy Tdesktop.exe to share path
+  become: true
+  copy:
+    src: "{{ item }}"
+    dest: "{{ desktop_mount_dir }}/static/vdiUpgradePackage/"
+    mode: "0644"
+  with_items: "{{ tdesktop_path_name }}"
+  when:
+    - not only_deploy_voi | bool
+    - deploy_comm | bool
+  notify:
+    - Restart fsd container
+
 - name: Copying over fsd.conf
   template:
     src: "fsd{{ deploy_type }}.yml.j2"
