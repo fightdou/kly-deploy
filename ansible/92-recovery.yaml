@@ -4,4 +4,6 @@
   hosts: baremetal
   roles:
     - { role: recovery,
-        tags: recovery }
+        tags: recovery,
+        when: deploy_edu | bool }
+  
