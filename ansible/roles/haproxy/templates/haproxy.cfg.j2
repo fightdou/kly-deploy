@@ -34,17 +34,27 @@ frontend status
     mode http
     monitor-uri /
 
-{% if enable_keepalived | bool %}
 {% if enable_mariadb | bool %}
 listen mariadb
     mode tcp
-    bind {{ internal_vip_address }}:{{ mariadb_listen_port }}
+    bind 0.0.0.0:{{ mariadb_external_listen_port }}
     balance source
     option tcplog
 {% for host in (groups['mariadb']) %}
-    server {{ host }} {{ host }}:{{ mariadb_listen_port }} check inter 2000 rise 2 fall 5
+    server {{ host }} {{ host }}:{{ mariadb_internal_listen_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 {% endif %}
+
+#{% if enable_redis | bool %}
+#listen redis
+#    mode tcp
+#    bind 0.0.0.0:{{ redis_external_server_port }}
+#    balance source
+#    option tcplog
+#{% for host in (groups['redis']) %}
+#    server {{ host }} {{ host }}:{{ redis_internal_server_port }} check inter 2000 rise 2 fall 5
+#{% endfor %}
+#{% endif %}
 
 {% if enable_emqx | bool %}
 listen emqx
@@ -60,25 +70,25 @@ listen emqx
 {% if enable_trochilus | bool %}
 listen trochilus-api
     mode tcp
-    bind {{ internal_vip_address }}:{{ trochilus_api_listen_port }}
+    bind 0.0.0.0:{{ trochilus_external_api_listen_port }}
     balance source
     option tcplog
 {% for host in (groups['trochilus-api']) %}
-    server {{ host }} {{ host }}:{{ trochilus_api_listen_port }} check inter 2000 rise 2 fall 5
+    server {{ host }} {{ host }}:{{ trochilus_internal_api_listen_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 
 listen trochilus-agent
     mode tcp
-    bind {{ internal_vip_address }}:{{ trochilus_agent_listen_port }}
+    bind 0.0.0.0:{{ trochilus_external_agent_listen_port }}
     balance source
     option tcplog
 {% for host in (groups['trochilus-agent']) %}
-    server {{ host }} {{ host }}:{{ trochilus_agent_listen_port }} check inter 2000 rise 2 fall 5
+    server {{ host }} {{ host }}:{{ trochilus_internal_agent_listen_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 
 listen websockify
     mode tcp
-    bind {{ internal_vip_address }}:{{ websockify_internal_port }}
+    bind 0.0.0.0:{{ websockify_external_port }}
     balance source
     option tcplog
 {% for host in (groups['websockify']) %}
@@ -89,22 +99,39 @@ listen websockify
 {% if enable_prometheus | bool %}
 listen prometheus
     mode tcp
-    bind {{ internal_vip_address }}:{{ thanos_query_port }}
+    bind 0.0.0.0:{{ thanos_external_query_port }}
     balance source
     option tcplog
 {% for host in (groups['prometheus']) %}
-    server {{ host }} {{ host }}:{{ thanos_query_port }} check inter 2000 rise 2 fall 5
+    server {{ host }} {{ host }}:{{ thanos_internal_query_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 
 listen alertmanager
     mode tcp
-    bind {{ internal_vip_address }}:{{ alertmanager_port }}
+    bind 0.0.0.0:{{ alertmanager_external_port }}
     balance source
     option tcplog
 {% for host in (groups['alertmanager']) %}
-    server {{ host }} {{ host }}:{{ alertmanager_port }} check inter 2000 rise 2 fall 5
+    server {{ host }} {{ host }}:{{ alertmanager_internal_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
-{% endif %}
+
+listen pushgateway
+    mode tcp
+    bind 0.0.0.0:{{ pushgateway_external_port }}
+    balance source
+    option tcplog
+{% for host in (groups['prometheus']) %}
+    server {{ host }} {{ host }}:{{ pushgateway_internal_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+
+listen consul
+    mode tcp
+    bind 0.0.0.0:{{ consul_external_port }}
+    balance source
+    option tcplog
+{% for host in (groups['prometheus']) %}
+    server {{ host }} {{ host }}:{{ consul_internal_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
 {% endif %}
 
 {% if enable_btserver | bool %}
@@ -148,7 +175,7 @@ listen fsd_nginx
 
 listen fsd_job
     mode tcp
-    bind {{ internal_vip_address }}:{{ fsd_job_port }}
+    bind 0.0.0.0:{{ fsd_external_job_port }}
     balance source
     option tcplog
 {% for host in (groups['fsd']) %}
@@ -157,7 +184,7 @@ listen fsd_job
 
 listen fsd_tcp
     mode tcp
-    bind {{ internal_vip_address }}:{{ fsd_tcp_port }}
+    bind 0.0.0.0:{{ fsd_external_tcp_port }}
     balance source
     option tcplog
 {% for host in (groups['fsd']) %}
@@ -166,7 +193,7 @@ listen fsd_tcp
 
 listen fsd_tcp_file
     mode tcp
-    bind {{ internal_vip_address }}:{{ fsd_tcp_file_port }}
+    bind 0.0.0.0:{{ fsd_external_tcp_file_port }}
     balance source
     option tcplog
 {% for host in (groups['fsd']) %}
@@ -175,7 +202,7 @@ listen fsd_tcp_file
 
 listen fsd
     mode tcp
-    bind {{ internal_vip_address }}:{{ fsd_main_port }}
+    bind 0.0.0.0:{{ fsd_external_main_port }}
     balance source
     option tcplog
 {% for host in (groups['fsd']) %}

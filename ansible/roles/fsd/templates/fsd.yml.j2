@@ -15,22 +15,22 @@ custom:
   fsd_biz_clouddisk_sharedDiskMapPath: shareA
   fsd_biz_clouddisk_cloudDiskUsername: {{ samba_user }}
   fsd_biz_clouddisk_cloudDiskPassword: {{ samba_passwd }}
-  port_mysql: {{ mariadb_listen_port }}
+  port_mysql: {{ mariadb_external_listen_port }}
   port_mqtt: {{ emqx_external_mqtt_port }}
   port_prometheus_server: {{ prometheus_port }}
-  port_prometheus_alert: {{ alertmanager_port }}
-  port_prometheus_pushgateway: {{ pushgateway_port }}
-  port_prometheus_thanos: {{ thanos_query_port }}
+  port_prometheus_alert: {{ alertmanager_external_port }}
+  port_prometheus_pushgateway: {{ pushgateway_external_port }}
+  port_prometheus_thanos: {{ thanos_external_query_port }}
   port_bt_start: {{ bt_download_external_port_start }}
   port_bt_end: {{ bt_download_external_port_end }}
   port_bt_server: {{ bt_server_external_port }}
   port_bt_tracker: {{ bt_tracker_external_port }}
-  port_virtual_api: {{ trochilus_api_listen_port }}
-  port_virtual_vnc: {{ websockify_internal_port }}
-  port_java_front: {{ fsd_external_nginx_port }}
-  port_java_main: {{ fsd_internal_main_port }}
-  port_java_job: {{ fsd_internal_job_port }}
-  port_java_tcp: {{ fsd_internal_tcp_port }}
-  port_java_file: {{ fsd_internal_tcp_file_port }}
+  port_virtual_api: {{ trochilus_external_api_listen_port }}
+  port_virtual_vnc: {{ websockify_external_port }}
+  port_java_front: {{ fsd_listen_nginx_port }}
+  port_java_main: {{ fsd_listen_main_port }}
+  port_java_job: {{ fsd_listen_job_port }}
+  port_java_tcp: {{ fsd_listen_tcp_port }}
+  port_java_file: {{ fsd_listen_tcp_file_port }}
   port_java_console: {{ fsd_console_port }}
-  policy_codeRateRange: {{ fsd_policy_codeRateRange }}
+  fsd_biz_parameter_policyCodeRateRange: {{ fsd_policy_codeRateRange }}

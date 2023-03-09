@@ -3,7 +3,7 @@ debug = false
 [agent_rest_client]
 [agent_settings]
 bind_host = {{ default_internal_server_listen_ip }}
-bind_port = {{ trochilus_agent_listen_port }}
+bind_port = {{ trochilus_listen_agent_port }}
 reserved_cores_num = {{ trochilus_reserved_cores_num }}
 enable_reserved_core = false
 ipmi_username = {{ ipmi_username }}
@@ -21,7 +21,7 @@ nic = {{nic}}
 
 [api_settings]
 bind_host = {{ default_internal_server_listen_ip }}
-bind_port = {{ trochilus_api_listen_port }}
+bind_port = {{ trochilus_listen_api_port }}
 supported_instance_metadatas = k1, k2
 internal_ip = {{ default_internal_server_listen_ip }}
 
@@ -32,7 +32,7 @@ enabled_volume_backends = lvm1
 {% endif %}
 
 [database]
-connection = mysql+pymysql://{{ trochilus_mariadb_username }}:{{ trochilus_mariadb_password }}@{{ default_internal_server_visit_ip }}:{{ mariadb_listen_port }}/{{ trochilus_mariadb_dataname }}
+connection = mysql+pymysql://{{ trochilus_mariadb_username }}:{{ trochilus_mariadb_password }}@{{ default_internal_server_visit_ip }}:{{ mariadb_external_listen_port }}/{{ trochilus_mariadb_dataname }}
 
 {% if enable_ceph %}
 [rbd1]
@@ -42,6 +42,7 @@ rbd_user = admin
 rbd_keyring_conf = /etc/ceph/ceph.client.admin.keyring
 rados_connect_timeout = -1
 volume_driver = trochilus.agent.storage.volume.drivers.rbd.RBDVolumeDriver
+[image_settings]
 enabled_image_store = rbd
 rbd_store_config_file = /etc/ceph/ceph.conf
 rbd_store_user = admin
@@ -90,7 +91,7 @@ ha_base_dir_path = /etc/trochilus/ha
 cgroup_path = /sys/fs/cgroup
 [webhook_settings]
 target_host = {{ webhook_target_ip }}
-target_port = {{ fsd_main_port }}
+target_port = {{ fsd_external_main_port }}
 target_path = /api/v1/webhook/
 method = post
 auth_token = abc123

@@ -18,7 +18,7 @@ prometheus_services:
     pid_mode: "host"
     volumes: "{{ pushgateway_default_volumes }}"
     dimensions: "{{ pushgateway_dimensions }}"
-    command: --web.listen-address={{ default_internal_server_listen_ip }}:{{ pushgateway_port }}
+    command: --web.listen-address={{ default_internal_server_listen_ip }}:{{ pushgateway_listen_server_port }}
   prometheus-alertmanager:
     container_name: alertmanager
     group: alertmanager
@@ -26,7 +26,7 @@ prometheus_services:
     image: "{{ alertmanager_image_full }}"
     volumes: "{{ alertmanager_default_volumes }}"
     dimensions: "{{ alertmanager_dimensions }}"
-    command: --web.listen-address={{ default_internal_server_listen_ip }}:{{ alertmanager_port }}  --config.file=/etc/alertmanager/alertmanager.yml --storage.path=/alertmanager --data.retention=120h --web.route-prefix=/ --cluster.reconnect-timeout=5m {% if groups['prometheus'] | length > 1 %}--cluster.listen-address={{ default_internal_server_listen_ip }}:{{ alertmanager_cluster_port }} {% for host in groups['alertmanager'] %} --cluster.peer={{ host }}:{{ alertmanager_cluster_port }} {% endfor %}{% endif %}
+    command: --web.listen-address={{ default_internal_server_listen_ip }}:{{ alertmanager_listen_server_port }}  --config.file=/etc/alertmanager/alertmanager.yml --storage.path=/alertmanager --data.retention=120h --web.route-prefix=/ --cluster.reconnect-timeout=5m {% if groups['prometheus'] | length > 1 %}--cluster.listen-address={{ default_internal_server_listen_ip }}:{{ alertmanager_cluster_port }} {% for host in groups['alertmanager'] %} --cluster.peer={{ host }}:{{ alertmanager_cluster_port }} {% endfor %}{% endif %}
   prometheus-node-exporter:
     container_name: node_exporter
     group: node-exporter
@@ -61,7 +61,7 @@ prometheus_services:
     image: "{{ consul_image_full }}"
     volumes: "{{ consul_default_volumes }}"
     dimensions: "{{ consul_dimensions }}"
-    command: agent -dev -client=0.0.0.0 -ui
+    command: agent -dev -client={{ default_internal_server_listen_ip }} -http-port {{ consul_listen_server_port }} -ui
   prometheus-thanos-sidecar:
     container_name: thanos_sidecar
     group: thanos-sidecar
@@ -77,7 +77,7 @@ prometheus_services:
     image: "{{ thanos_image_full }}"
     volumes: "{{ thanos_query_default_volumes }}"
     dimensions: "{{ thanos_dimensions }}"
-    command: query --query.replica-label=monitor --query.auto-downsampling --http-address={{ default_internal_server_listen_ip }}:{{ thanos_query_port }} {% if groups['prometheus-thanos-query'] | length > 1 %}{% for host in groups['prometheus-thanos-query'] %} --store {{ host }}:{{ thanos_sidecar_grpc_port }} {% endfor %}{% else %} --store 127.0.0.1:{{ thanos_sidecar_grpc_port }}{% endif %}
+    command: query --query.replica-label=monitor --query.auto-downsampling --http-address={{ default_internal_server_listen_ip }}:{{ thanos_listen_query_port }} {% if groups['prometheus-thanos-query'] | length > 1 %}{% for host in groups['prometheus-thanos-query'] %} --store {{ host }}:{{ thanos_sidecar_grpc_port }} {% endfor %}{% else %} --store 127.0.0.1:{{ thanos_sidecar_grpc_port }}{% endif %}
 
 
 prometheus_image: "{{ docker_image_repository }}/prometheus"

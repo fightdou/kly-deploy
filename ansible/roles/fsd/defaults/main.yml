@@ -12,6 +12,7 @@ fsd_services:
     image: "{{ fsd_job_image_full }}"
     volumes: "{{ fsd_job_default_volumes }}"
     environment:
+      SERVER_PORT: "{{ fsd_listen_job_port }}"
       ENV_FSD_COMMON_JOB_MYSQL_SVC: "{{ default_internal_server_visit_ip }}" 
       ENV_FSD_COMMON_JOB_MYSQL_USERNAME: "{{ mariadb_root_username }}"
       ENV_FSD_COMMON_JOB_MYSQL_PASSWORD: "{{ mariadb_root_password }}"
@@ -36,7 +37,8 @@ fsd_services:
 
 
 deploy_type: "{% if deploy_edu %}_edu{% else %}{% endif %}"
-fsd_proxy_ip: "{% if proxy_ip != '' %}{{ proxy_ip }}{% elif enable_keepalived | bool %}{{ external_vip_address }}{% else %}{{ inventory_hostname }}{% endif %}"
+fsd_proxy_ip: "{% if proxy_ip != '' %}{{ proxy_ip }}{% elif enable_keepalived | bool %}{{ external_vip_address }}{% else %}{{ api_interface_address }}{% endif %}"
+fsd_vip: "{% if enable_keepalived | bool %}{{ external_vip_address }}{% else %}{{ api_interface_address }}{% endif %}"
 fsd_ngxin_proxy_pass: "{{ default_internal_server_visit_ip }}"
 fsd_mysql_conn_ip: "{{ default_internal_server_visit_ip }}"
 ####################
@@ -58,7 +60,7 @@ fsd_edu_volumes:
   - "{{ config_directory }}/btserver/torrent.ini:/opt/torrent_server_bin/torrent.ini:rw"
   - "{{ config_directory }}/btserver/opentracker.conf:/opt/torrent_server_bin/opentracker.conf:rw"
   - "{{ config_directory }}/keepalived/conf.d/external.conf:/etc/keepalived/keepalived.conf:rw"
-  - "{{ desktop_mount_dir }}/static://var/www/html:rw"
+  - "{{ desktop_mount_dir }}/static:/var/www/html/static:rw"
 
 ####################
 # fsd-job
@@ -68,6 +70,7 @@ fsd_job_tag: "{{ fsd_default_tag }}"
 fsd_job_image_full: "{{ fsd_job_image }}:{{ fsd_job_tag }}"
 fsd_job_default_volumes:
   - "/etc/localtime:/etc/localtime:ro"
+  - "{{ config_directory }}/fsd/application-docker.yml:/home/static/java/application-docker.yml:rw"
 
 ####################
 # fsd-nginx
