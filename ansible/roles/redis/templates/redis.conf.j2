@@ -1,11 +1,11 @@
 protected-mode no
-bind {{ default_internal_server_listen_ip }}
-port {{ redis_listen_server_port }}
+bind 0.0.0.0
+port {{ redis_external_server_port }}
 tcp-backlog 511
 timeout 0
 tcp-keepalive 300
 supervised no
-pidfile /var/run/redis_{{ redis_listen_server_port }}.pid
+pidfile /var/run/redis_{{ redis_external_server_port }}.pid
 loglevel notice
 databases 16
 always-show-logo yes
@@ -61,5 +61,5 @@ masterauth {{ redis_master_password }}
 
 {% if inventory_hostname != groups['redis'][0] %}
 {% set redis_master_address = groups['redis'][0] %}
-slaveof {{ redis_master_address }} {{ redis_listen_server_port }}
+slaveof {{ redis_master_address }} {{ redis_external_server_port }}
 {% endif %}

@@ -68,7 +68,7 @@ default_container_dimensions: {}
 ##########
 enable_baremetal: true
 enable_haproxy: "{% if deploy_edu | bool %}false{% else %}true{% endif %}"
-enable_keepalived: "{% if deploy_edu | bool or groups['keepalived'] == 1 %}false{% else %}true{% endif %}"
+enable_keepalived: "{% if deploy_edu | bool or groups['keepalived'] | length == 1 %}false{% else %}true{% endif %}"
 enable_mariadb: true
 enable_redis: true
 enable_emqx: true
@@ -183,7 +183,7 @@ trochilus_base_path: "{{ desktop_mount_dir }}"
 trochilus_voi_base_path: "{{ desktop_mount_dir }}/voi"
 trochilus_tag: latest
 # 如果vdi盒子和管理网不在同一个网段，就填管理网网关ip。如果vdi盒子和管理网在同一个网段，就啥也不填
-trochilus_detected_mgmt_net_ip: 10.2.36.254
+trochilus_detected_mgmt_net_ip: ""
 trochilus_ha_base_dir_path: /etc/trochilus/ha
 trochilus_dhcp_confs: /etc/trochilus/dhcp
 trochilus_enable_reserved_core: false
