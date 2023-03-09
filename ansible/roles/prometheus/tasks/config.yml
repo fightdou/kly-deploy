@@ -141,6 +141,7 @@
     - Restart prometheus container
     - Restart prometheus-node-exporter container
     - Restart prometheus-collectd-exporter container
+    - Restart prometheus-docker-exporter container
     - Restart prometheus-consul container
     - Restart prometheus-thanos-sidecar container
     - Restart prometheus-thanos-query container

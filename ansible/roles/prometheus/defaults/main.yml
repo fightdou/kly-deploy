@@ -54,6 +54,13 @@ prometheus_services:
     volumes: "{{ host_exporter_default_volumes }}"
     dimensions: "{{ host_exporter_dimensions }}"
     command: --web.listen-address={{ default_internal_server_listen_ip }}:{{ host_exporter_port }} --ipmi.timeout=10s --config.path=/opt/config.yml
+  prometheus-docker-exporter:
+    container_name: docker_exporter
+    group: docker_exporter
+    enabled: "{{ enable_prometheus | bool }}"
+    image: "{{ docker_exporter_image_full }}"
+    volumes: "{{ docker_exporter_default_volumes }}"
+    dimensions: "{{ docker_exporter_dimensions }}"
   prometheus-consul: 
     container_name: consul
     group: consul
@@ -95,6 +102,9 @@ node_exporter_image_full: "{{ node_exporter_image }}:{{ prometheus_tag }}"
 collectd_exporter_image: "{{ docker_image_repository }}/collectd-exporter"
 collectd_exporter_image_full: "{{ collectd_exporter_image }}:{{ prometheus_tag }}"
 
+docker_exporter_image: "{{ docker_image_repository }}/docker-exporter"
+docker_exporter_image_full: "{{ docker_exporter_image }}:{{ prometheus_tag }}"
+
 host_exporter_image: "{{ docker_image_repository }}/host-exporter"
 host_exporter_image_full: "{{ host_exporter_image }}:{{ prometheus_tag }}"
 
@@ -126,6 +136,11 @@ node_exporter_default_volumes:
 collectd_exporter_default_volumes:
   - "/etc/localtime:/etc/localtime:ro"
 
+docker_exporter_default_volumes:
+  - "/etc/localtime:/etc/localtime:ro"
+  - "/var/lib/docker/:/var/lib/docker:ro"
+  - "/var/run:/var/run:ro"
+
 host_exporter_default_volumes:
   - "/etc/localtime:/etc/localtime:ro"
   - "/dev:/dev"
@@ -145,6 +160,7 @@ prometheus_dimensions: "{{ default_container_dimensions }}"
 pushgateway_dimensions: "{{ default_container_dimensions }}"
 alertmanager_dimensions: "{{ default_container_dimensions }}"
 node_exporter_dimensions: "{{ default_container_dimensions }}"
+docker_exporter_dimensions: "{{ default_container_dimensions }}"
 collectd_exporter_dimensions: "{{ default_container_dimensions }}"
 host_exporter_dimensions: "{{ default_container_dimensions }}"
 consul_dimensions: "{{ default_container_dimensions }}"

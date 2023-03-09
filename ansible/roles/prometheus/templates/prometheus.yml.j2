@@ -46,6 +46,26 @@ scrape_configs:
           host_ip: '127.0.0.1'
 {% endif %}
 
+{% if only_deploy_voi | bool or deploy_edu | bool %}
+  - job_name: docker
+    static_configs:
+{% if enable_internal_communication | bool %}
+{% for host in groups['docker-exporter'] %}
+      - targets:
+        - '{{ host }}:{{ docker_exporter_port }}'
+        labels:
+          host: '{{ hostvars[host]['ansible_hostname'] }}'
+          host_ip: '{{ host }}'
+{% endfor %}
+{% else %}
+      - targets:
+        - '127.0.0.1:{{ docker_exporter_port }}'
+        labels:
+          host: '{{ ansible_hostname }}'
+          host_ip: '127.0.0.1'
+{% endif %}
+{% endif %}
+
   - job_name: host
     static_configs:
 {% if enable_internal_communication | bool %}

@@ -31,6 +31,11 @@ server {
     index   index.php index.html index.htm;
   }
 
+  location /images/iso {
+    alias   /mnt/images/iso/;
+    index   index.php index.html index.htm;
+  }
+
   location /share_disk {
     alias   /mnt/voi/share_disk/;
     index   index.php index.html index.htm;
