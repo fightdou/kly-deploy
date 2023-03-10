@@ -3,7 +3,6 @@ enable_internal_communication: "{% if deploy_comm | bool %}true{% else %}false{%
 
 default_internal_server_listen_ip: "{% if enable_internal_communication | bool %}{{ inventory_hostname }}{% else %}0.0.0.0{% endif %}"
 default_internal_server_visit_ip: "{% if enable_internal_communication | bool %}{% if enable_keepalived | bool %}{{ internal_vip_address }}{% else %}{{ inventory_hostname }}{% endif %}{% else %}127.0.0.1{% endif %}"
-nginx_internal_server_listen_port: "{% if enable_keepalived | bool %}{{ fsd_internal_nginx_port }}{% else %}{{ fsd_external_nginx_port }}{% endif %}"
 
 ##############
 # btserver
