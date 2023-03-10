@@ -4,7 +4,7 @@ spring:
 custom:
   spring_datasource_password: {{ mariadb_root_password }}
   spring_redis_host: {{ default_internal_server_visit_ip }}
-  spring_redis_port: {{ redis_port }}
+  spring_redis_port: {{ redis_external_server_port }}
   spring_redis_password: {{ redis_master_password }}
   fsd_common_netty_codec_mac: 60f81dad19ae
   fsd_biz_deploy_scene: {{ fsd_voi_version }}
