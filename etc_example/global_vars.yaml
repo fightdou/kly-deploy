@@ -149,6 +149,7 @@ alertmanager_internal_port: 19093
 alertmanager_cluster_port: 9094
 node_exporter_port: 9100
 host_exporter_port: 9104
+docker_exporter_port: 9632
 collectd_exporter_port: 9103
 collectd_udp_port: 25826
 consul_external_port: 8500
