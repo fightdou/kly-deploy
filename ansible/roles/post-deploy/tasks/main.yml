@@ -13,6 +13,9 @@
   when:
     - enable_hugepages | bool
 
+- name: 设置 iptables 命令
+  shell: iptables -P FORWARD ACCEPT
+
 - name: 获取可分配的大页数量
   set_fact:
     hugepages_total: "{{ (ansible_memtotal_mb  - reserved_osd_memory_mb * osd_num.stdout | int - reserved_mds_memory_mb - reserved_mon_memory_mb - reseverd_system_memory_mb - reserved_host_memory_mb) // 2 | int }}"
