@@ -9,19 +9,19 @@
 
 ## 部署脚本
 首先加载离线资源
-```
+```bash
 cd kly-deploy
 ansible-playbook -i etc_example/hosts -e @etc_example/global_vars.yaml -e @etc_example/ceph-globals.yaml ansible/91-prepare.yaml
 ```
 
 部署 ceph 环境
-```
+```bash
 cd kly-deploy
 ansible-playbook -i etc_example/hosts -e @etc_example/global_vars.yaml -e @etc_example/ceph-globals.yaml ceph-ansible/ceph-deploy.yaml
 ```
 
 部署其他服务
-```
+```bash
 cd kly-deploy
 ansible-playbook -i etc_example/hosts -e @etc_example/global_vars.yaml -e @etc_example/ceph-globals.yaml ansible/90-setup.yaml
 ```
