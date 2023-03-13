@@ -191,14 +191,14 @@ listen fsd_tcp
     server {{ host }} {{ host }}:{{ fsd_internal_tcp_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 
-listen fsd_tcp_file
-    mode tcp
-    bind 0.0.0.0:{{ fsd_external_tcp_file_port }}
-    balance source
-    option tcplog
-{% for host in (groups['fsd']) %}
-    server {{ host }} {{ host }}:{{ fsd_internal_tcp_file_port }} check inter 2000 rise 2 fall 5
-{% endfor %}
+#listen fsd_tcp_file
+#    mode tcp
+#    bind 0.0.0.0:{{ fsd_external_tcp_file_port }}
+#    balance source
+#    option tcplog
+#{% for host in (groups['fsd']) %}
+#    server {{ host }} {{ host }}:{{ fsd_internal_tcp_file_port }} check inter 2000 rise 2 fall 5
+#{% endfor %}
 
 listen fsd
     mode tcp
