@@ -1,0 +1,11 @@
+[Unit]
+Description=Exec Iptables command
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash {{ config_directory }}/reboot-script.sh
+
+[Install]
+WantedBy=multi-user.target
