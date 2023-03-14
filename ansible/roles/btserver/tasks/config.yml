@@ -18,3 +18,21 @@
   notify: 
     - Restart btserver container
     - Restart btserver_tracker container
+
+- name: Ensuring btserver log directories exist
+  file:
+    path: "/var/log/btserver"
+    state: "directory"
+    mode: "0775"
+  become: true
+
+- name: Touch btserver log file and set permissions
+  file:
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+    state: touch
+  loop:
+    - /var/log/btserver/torrent.log
+    - /var/log/btserver/opentracker.log

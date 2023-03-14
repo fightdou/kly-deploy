@@ -40,3 +40,5 @@
     name: iptables-accept
     daemon_reload: true
     enabled: true
+
+- import_tasks: log_rotate.yml

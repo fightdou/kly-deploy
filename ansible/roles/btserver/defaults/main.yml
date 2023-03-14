@@ -21,7 +21,6 @@ btserver_services:
     volumes: "{{ btserver_tracker_default_volumes }}"
     dimensions: "{{ btserver_tracker_dimensions }}"
 
-
 btserver_image: "{{ docker_image_repository }}/btserver"
 btserver_image_full: "{{ btserver_image }}:{{ btserver_tag }}"
 btserver_tracker_image: "{{ docker_image_repository }}/btserver_track"
@@ -33,8 +32,10 @@ btserver_default_volumes:
   - "{{ config_directory }}/btserver/opentracker.conf:/opt/torrent_server_bin/opentracker.conf"
   - "{{ desktop_mount_dir }}/voi:{{ desktop_mount_dir }}/voi"
   - "/etc/localtime:/etc/localtime"
+  - "/var/log/btserver/torrent.log:/var/log/torrent.log"
 btserver_tracker_default_volumes:
   - "{{ config_directory }}/btserver/torrent.ini:/opt/torrent_server_bin/torrent.ini"
   - "{{ config_directory }}/btserver/opentracker.conf:/opt/torrent_server_bin/opentracker.conf"
   - "{{ desktop_mount_dir }}/voi:{{ desktop_mount_dir }}/voi"
   - "/etc/localtime:/etc/localtime"
+  - "/var/log/btserver/opentracker.log:/var/log/opentracker.log"

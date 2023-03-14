@@ -23,5 +23,6 @@ libvirt_default_volumes:
   - "/sys/fs/cgroup:/sys/fs/cgroup"
   - "libvirtd:/var/lib/libvirt"
   - "{{ desktop_mount_dir }}:{{ desktop_mount_dir }}"
+  - "/var/log/libvirt/:/var/log/libvirt/:rw"
 libvirt_image_full: "{{ libvirt_image }}:{{ libvirt_tag }}"
 libvirt_dimensions: "{{ default_container_dimensions }}"
