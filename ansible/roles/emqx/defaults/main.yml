@@ -18,4 +18,4 @@ emqx_default_volumes:
   - "{{ config_directory }}/emqx/emqx.conf:/opt/emqx/etc/emqx.conf:rw"
   # - "{{ config_directory }}/emqx/:/var/lib/config_files/:rw"
   - "/etc/localtime:/etc/localtime:ro"
-  # - "log:/opt/emqx/log/"
+  - "/var/log/emqx/:/opt/emqx/log/:rw"

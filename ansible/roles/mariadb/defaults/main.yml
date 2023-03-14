@@ -28,6 +28,6 @@ mariadb_default_volumes:
   - "/etc/localtime:/etc/localtime:ro"
   - "/var/log/mariadb/:/var/log/mariadb/:rw"
   - "mariadb:/var/lib/mysql"
-  # - "log:/var/log/mariadb/"
+  - "/var/log/mariadb/:/var/log/mariadb/:rw"
 
 mariadb_wsrap_ip: "{% if enable_keepalived | bool %}{{ inventory_hostname }}{% else %}127.0.0.1{% endif %}"

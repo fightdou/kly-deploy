@@ -34,8 +34,10 @@ redis_default_volumes:
   - "{{ config_directory }}/redis/:/etc/redis/"
   - "/etc/localtime:/etc/localtime:ro"
   - "redis_data:/data"
+  - "/var/log/redis/:/var/log/redis/:rw"
 
 redis_sentinel_default_volumes:
   - "{{ config_directory }}/redis-sentinel/:/etc/redis/"
   - "/etc/localtime:/etc/localtime:ro"
   - "redis_data:/data"
+  - "/var/log/redis/:/var/log/redis/:rw"
