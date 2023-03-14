@@ -1,23 +1,23 @@
 
 # 网卡配置，存在bond时，指定bond名称与对应物理网卡信息；不存在bond时，ip地址后跟随角色
-# 格式，存在bond时：nic_info = ["bond1:172.18.31.124:0011:enp98s0f1,ens5"] (bond名称:bond的IP地址:网卡角色(管理网，外网，业务网，存储网）有则为1，无则为0:组成bond的网卡名称);
+# 格式，存在bond时：nic_info = ["bond1:172.18.31.124:0011:enp125s0f1,ens5"] (bond名称:bond的IP地址:网卡角色(管理网，外网，业务网，存储网）有则为1，无则为0:组成bond的网卡名称);
 # 多个bond时，则需配置多个nic记录
-# 没有bond时：nic_info = ["eno0:172.18.31.124:1100"] (网卡名称:IP地址:网卡角色(管理网，外网，业务网，存储网）有则为1，无则为0)
+# 没有bond时：nic_info = ["enp125s0f0:172.18.31.124:1100"] (网卡名称:IP地址:网卡角色(管理网，外网，业务网，存储网）有则为1，无则为0)
 # ceph 有ssd时: bcache_map_list=[{'cache':'/dev/nvme0n1','data':'/dev/sda /dev/sdb /dev/sdc'},{'cache':'/dev/nvme1n1','data':'/dev/sdb /dev/sdc /dev/sdd'}]
 
 [allnodes]
-# 172.18.31.124 hostname=control1 api_interface=eno0 ceph_public_interface=eno0 ceph_cluster_interface=eno0 flat_network_interface="['enp98s0f1']" vlan_network_interface="{'enp98s0f1': '1:100'}" ceph_volume_data="['/dev/vdb','/dev/vdc']" nic_info="['eno0:172.18.31.124:1100', 'enp98s0f1::0100']"
-# 172.18.30.139 hostname=control2 api_interface=eno0 ceph_public_interface=eno0 ceph_cluster_interface=eno0 flat_network_interface="['enp98s0f1']" vlan_network_interface="{'enp98s0f1': '1:100'}" ceph_volume_data="['/dev/vdb','/dev/vdc']" nic_info="['eno0:172.18.31.124:1100', 'enp98s0f1::0100']"
-172.27.123.202  hostname=control1  api_interface=eno0  ceph_public_interface=eno0  ceph_cluster_interface=eno0  nic_info="['eno0:172.27.123.202:1011','enp98s0f1:null:0100']" flat_network_interface="['enp98s0f1']"   ceph_volume_data="['/dev/sda','/dev/sdb','/dev/sdc','/dev/sdd']"  vlan_network_interface="{'enp98s0f1':['1:4094']}"
+# 172.18.31.124 hostname=control1 api_interface=enp125s0f0 ceph_public_interface=enp125s0f0 ceph_cluster_interface=enp125s0f0 flat_network_interface="['enp125s0f1']" vlan_network_interface="{'enp125s0f1': '1:100'}" ceph_volume_data="['/dev/vdb','/dev/vdc']" nic_info="['enp125s0f0:172.18.31.124:1100', 'enp125s0f1::0100']"
+# 172.18.30.139 hostname=control2 api_interface=enp125s0f0 ceph_public_interface=enp125s0f0 ceph_cluster_interface=enp125s0f0 flat_network_interface="['enp125s0f1']" vlan_network_interface="{'enp125s0f1': '1:100'}" ceph_volume_data="['/dev/vdb','/dev/vdc']" nic_info="['enp125s0f0:172.18.31.124:1100', 'enp125s0f1::0100']"
+172.27.136.208  hostname=control1  api_interface=enp125s0f0  ceph_public_interface=enp125s0f0  ceph_cluster_interface=enp125s0f0  nic_info="['enp125s0f0:172.27.136.208:1011','enp125s0f1:null:0100']" flat_network_interface="['enp125s0f1']"   ceph_volume_data="['/dev/sda','/dev/sdb','/dev/sdc','/dev/sdd']"  vlan_network_interface="{'enp125s0f1':['1:4094']}"
 
 [control]
-172.27.123.202
+172.27.136.208
 
 [compute]
-172.27.123.202
+172.27.136.208
 
 [storage]
-172.27.123.202
+172.27.136.208
 
 [ceph:children]
 ceph-mons
