@@ -49,7 +49,7 @@
     image: "{{ service.image }}"
     volumes: "{{ service.volumes|reject('equalto', '')|list }}"
     dimensions: "{{ service.dimensions }}"
-    command: websockify {{ default_internal_server_listen_ip }}:{{ websockify_internal_port }} --token-plugin=trochilus.websockify.token_plugin.Base64JsonTokenRemoteApi --token-source=http://{{ default_internal_server_visit_ip}}:{{ fsd_external_nginx_port }}/api/v1{% if deploy_edu | bool %}/edu{% endif %}
+    command: websockify {{ default_internal_server_listen_ip }}:{{ websockify_listen_server_port }} --token-plugin=trochilus.websockify.token_plugin.Base64JsonTokenRemoteApi --token-source=http://{{ default_internal_server_visit_ip}}:{{ fsd_external_nginx_port }}/api/v1{% if deploy_edu | bool %}/edu{% endif %}
   when:
     - inventory_hostname in groups[service.group]
     - service.enabled | bool

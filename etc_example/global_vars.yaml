@@ -41,6 +41,11 @@ ipmi_username: root
 ipmi_password: Troila12#$
 host_username: root
 host_password: Troila12#$
+create_swap_file: false
+swap_file_path: /swapfile
+swap_file_block_size: 2M
+swap_file_true: 10240
+vm_swappiness: 10
 
 ####################
 # Docker options
@@ -75,8 +80,8 @@ enable_emqx: true
 enable_libvirt: true
 enable_trochilus: true
 enable_prometheus: true
-enable_pushgateway: true
-enable_guest_service: true
+enable_pushgateway: "{% if deploy_edu | bool or only_deploy_voi | bool %}false{% else %}true{% endif %}"
+enable_guest_service: "{% if deploy_edu | bool or only_deploy_voi | bool %}false{% else %}true{% endif %}"
 enable_fsd: true
 enable_btserver: true
 enable_lvm: false

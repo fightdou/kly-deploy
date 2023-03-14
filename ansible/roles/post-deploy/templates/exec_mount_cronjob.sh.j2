@@ -1,0 +1,16 @@
+#!/bin/bash
+while true
+do
+    mount_state=`timeout 5 ls -l {{ desktop_mount_dir }} | wc -l`
+    if [ $mount_state -le 4 ]
+    then
+        umount -l {{ desktop_mount_dir }}
+        mount -a
+        sleep 5
+        docker ps | grep -w fsd | awk -F' ' '{print $1}' | xargs -I {} docker restart {}
+        docker ps | grep -w fsd_nginx | awk -F' ' '{print $1}' | xargs -I {} docker restart {}
+        docker ps | grep -w trochilus_api | awk -F' ' '{print $1}' | xargs -I {} docker restart {}
+        docker ps | grep -w trochilus_agent | awk -F' ' '{print $1}' | xargs -I {} docker restart {}
+        break
+    fi
+done
