@@ -89,7 +89,7 @@ scrape_configs:
     honor_labels: true
     static_configs:
       - targets:
-        - '{{ default_internal_server_visit_ip }}:{{ pushgateway_listen_server_port }}'
+        - '{{ default_internal_server_visit_ip }}:{{ pushgateway_external_port }}'
         labels:
           host: '{{ ansible_hostname }}'
           host_ip: '{{ default_internal_server_listen_ip }}'
