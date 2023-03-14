@@ -22,6 +22,7 @@ libvirt_default_volumes:
   - "/dev/hugepages:/dev/hugepages"
   - "/sys/fs/cgroup:/sys/fs/cgroup"
   - "libvirtd:/var/lib/libvirt"
+  - "/var/log/libvirt:/var/log/libvirt:rw"
   - "{{ desktop_mount_dir }}:{{ desktop_mount_dir }}"
 libvirt_image_full: "{{ libvirt_image }}:{{ libvirt_tag }}"
 libvirt_dimensions: "{{ default_container_dimensions }}"
