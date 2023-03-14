@@ -1,7 +1,7 @@
 docker_register_domain: 172.18.28.6
 docker_register_port: 5002
 offline_deb_repo_port: 9865
-docker_namespace_name: klcloud_x86
+docker_namespace_name: klcloud_{{ ansible_architecture }}
 docker_image_repository: "{{ docker_register_domain }}/{{ docker_namespace_name }}"
 docker_image_tag: latest
 #配置文件目录
@@ -92,7 +92,7 @@ enable_ceph: "{% if only_deploy_voi | bool or deploy_edu | bool %}false{% else %
 ##########
 only_deploy_voi: true
 voi_storage_num: 100
-voi_data_device: "/dev/vdb"
+voi_data_device: "/dev/sda"
 voi_data_directory: "{{ desktop_mount_dir }}"
 
 #################
@@ -101,7 +101,7 @@ voi_data_directory: "{{ desktop_mount_dir }}"
 ceph_rbd_secret_uuid: e2338e01-6f82-4236-885b-056847028c77
 ceph_rbd_admin_user: client.admin
 hugepages_size: 2M
-enable_hugepages: false"
+enable_hugepages: false
 libvirt_tag: latest
 guest_service_tag: latest
 
