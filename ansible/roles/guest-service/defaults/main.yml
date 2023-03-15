@@ -21,3 +21,4 @@ guest_service_default_volumes:
   - "/etc/localtime:/etc/localtime"
   - "/run/:/run/:shared"
   - "libvirtd:/var/lib/libvirt"
+  - "/var/log/guest-service/:/var/log/guest-service/:rw"
