@@ -1,5 +1,13 @@
-# btserver log
-/var/log/btserver/*.log {
+/var/log/btserver/*.log 
+/var/log/emqx/*.log
+/var/log/libvirt/*.log
+/var/log/mariadb/*.log
+/var/log/trochilus/*.log
+{% if deploy_comm | bool %}
+/var/log/guest-service/*.log {
+}
+{% endif %}
+{
     daily
     rotate 30
     compress
@@ -9,48 +17,15 @@
     create 644 root root
 }
 
-# emqx log
-/var/log/emqx/*.log {
+/var/log/redis/*.log
+{
     daily
     rotate 30
     compress
     missingok
     notifempty
     delaycompress
-    create 644 root root
-}
-
-# libvirt log
-/var/log/libvirt/*.log {
-    daily
-    rotate 30
-    compress
-    missingok
-    notifempty
-    delaycompress
-    create 644 root root
-}
-
-# mariadb log
-/var/log/mariadb/*.log {
-    daily
-    rotate 30
-    compress
-    missingok
-    notifempty
-    delaycompress
-    create 644 root root
-}
-
-# redis log
-/var/log/redis/*.log {
-    daily
-    rotate 30
-    compress
-    missingok
-    notifempty
-    delaycompress
-    create 644 root root
+    create 666 root root
 }
 
 # trochilus dhcp log
@@ -63,27 +38,3 @@
     delaycompress
     create 640 dnsmasq root
 }
-
-# trochilus api and agent log
-/var/log/trochilus/*.log {
-    daily
-    rotate 30
-    compress
-    missingok
-    notifempty
-    delaycompress
-    create 644 root root
-}
-
-{% if deploy_comm | bool %}
-# guest-service log
-/var/log/guest-service/*.log {
-    daily
-    rotate 30
-    compress
-    missingok
-    notifempty
-    delaycompress
-    create 644 root root
-}
-{% endif %}
