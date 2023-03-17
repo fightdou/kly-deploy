@@ -53,3 +53,22 @@
   when:
     - inventory_hostname in groups[service.group]
     - service.enabled | bool
+
+- name: Restart virt_v2v container
+  vars:
+    service_name: "virt_v2v"
+    service: "{{ trochilus_services[service_name] }}"
+  become: true
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    privileged: "{{ service.privileged | default(False) }}"
+    image: "{{ service.image }}"
+    volumes: "{{ service.volumes|reject('equalto', '')|list }}"
+    dimensions: "{{ service.dimensions }}"
+    environment:
+      LIBGUESTFS_BACKEND: direct
+    command: /sbin/init
+  when:
+    - service.enabled | bool
