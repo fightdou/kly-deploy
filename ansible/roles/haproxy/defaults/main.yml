@@ -27,8 +27,8 @@ haproxy_defaults_max_connections: 10000
 haproxy_http_request_timeout: "10s"
 haproxy_queue_timeout: "1m"
 haproxy_connect_timeout: "10s"
-haproxy_client_timeout: "1m"
-haproxy_server_timeout: "1m"
+haproxy_client_timeout: "10h"
+haproxy_server_timeout: "10h"
 haproxy_check_timeout: "10s"
 
 haproxy_defaults_balance: "source"

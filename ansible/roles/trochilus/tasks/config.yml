@@ -1,4 +1,11 @@
 ---
+- name: create p2v dir
+  file:
+    path: "/var/lib/trochilus/p2v"
+    state: directory
+    mode: 0755
+  run_once: True
+
 - name: Ensuring trochilus config directories exist
   file:
     path: "{{ config_directory }}/trochilus"

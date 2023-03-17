@@ -1,7 +1,8 @@
 docker_register_domain: 172.18.28.6
 docker_register_port: 5002
 offline_deb_repo_port: 9865
-docker_namespace_name: klcloud_{{ ansible_architecture }}
+system_type: "{% if ansible_architecture == 'x86_64' %}x86{% else %}{{ ansible_architecture }}{% endif %}"
+docker_namespace_name: klcloud_{{ system_type }}
 docker_image_repository: "{{ docker_register_domain }}/{{ docker_namespace_name }}"
 docker_image_tag: latest
 #配置文件目录
@@ -188,6 +189,7 @@ trochilus_internal_agent_listen_port: 19002
 trochilus_base_path: "{{ desktop_mount_dir }}"
 trochilus_voi_base_path: "{{ desktop_mount_dir }}/voi"
 trochilus_tag: latest
+virt_v2v_tag: latest
 # 如果vdi盒子和管理网不在同一个网段，就填管理网网关ip。如果vdi盒子和管理网在同一个网段，就啥也不填
 trochilus_detected_mgmt_net_ip: ""
 trochilus_ha_base_dir_path: /etc/trochilus/ha
