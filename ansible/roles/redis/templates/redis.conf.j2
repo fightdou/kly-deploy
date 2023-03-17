@@ -7,6 +7,7 @@ tcp-keepalive 300
 supervised no
 pidfile /var/run/redis_{{ redis_external_server_port }}.pid
 loglevel notice
+logfile /var/log/redis/redis.log
 databases 16
 always-show-logo yes
 save 900 1

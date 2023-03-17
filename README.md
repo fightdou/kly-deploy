@@ -36,6 +36,6 @@ ansible-playbook -i etc_example/hosts -e @etc_example/global_vars.yaml -e @etc_e
 ```bash
 cd kly-deploy/tools/
 chmod +x update_ipaddress.sh
-update_ipaddress.sh --netcard ens3 --ipaddr 172.18.31.30 --prefix 22 --gateway 172.18.31.254
+./update_ipaddress.sh --netcard ens3 --ipaddr 172.18.31.30 --prefix 22 --gateway 172.18.31.254
 ```
 >  --netcard 网卡的名字  --ipaddr 新的IP地址  --prefix 新的子网掩码前缀 --gateway 新的网关 --dns 新的dns

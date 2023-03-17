@@ -40,5 +40,23 @@
   notify:
     - Restart redis-sentinel container
 
+- name: Ensuring redis log directories exist
+  file:
+    path: "/var/log/redis"
+    state: "directory"
+    mode: "0775"
+  become: true
+
+- name: Touch redis log file and set permissions
+  file:
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: 0666
+    state: touch
+  loop:
+    - /var/log/redis/redis.log
+    - /var/log/redis/redis-sentinel.log
+
 - include_tasks: check-containers.yml
   when: redis_action != "config"
