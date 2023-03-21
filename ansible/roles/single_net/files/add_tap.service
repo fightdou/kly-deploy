@@ -1,0 +1,11 @@
+[Unit]
+Description=add-tap
+After=network.target
+
+[Service]
+#Type=oneshot
+RemainAfterExit=yes
+ExecStart=-/bin/bash -c '/lib/modules/add_tap.sh'
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,27 @@
+---
+# tasks file for add-tap0
+- name: Install for add-tap
+  package:
+    name: "{{ item }}"
+    state: present
+    update_cache: True
+  with_items:
+    - tunctl
+
+- name: Copy add-tap.sh
+  copy:
+    src: add_tap.sh
+    dest: /lib/modules/add_tap.sh
+    mode: 0755
+
+- name: Copy add-tap.service.j2
+  copy:
+    src: add_tap.service
+    dest: /lib/systemd/system/add_tap.service
+    mode: 0755
+
+- name: start-enable
+  shell: |
+    systemctl daemon-reload
+    systemctl start add_tap.service
+    systemctl enable add_tap.service
