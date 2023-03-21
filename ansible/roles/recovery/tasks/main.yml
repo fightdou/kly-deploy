@@ -1,5 +1,16 @@
 ---
 - import_tasks: recovery_db.yaml
+
 - import_tasks: remove_vm.yaml
+
 - import_tasks: remove_image.yaml
+
 - import_tasks: remove_net.yaml
+
+- name: Apply role trochilus
+  import_role:
+    name: trochilus
+
+- name: Apply role fsd
+  import_role:
+    name: fsd

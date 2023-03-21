@@ -29,6 +29,7 @@ parse_params() {
   prefix=""
   gateway=""
   dns=""
+  global_vars_file=../etc_example/global_vars.yaml
 
   while :; do
     case "${1-}" in
@@ -107,56 +108,48 @@ update_hosts() {
   echo "----------------------------------------------------------------------"
 }
 
-update_torrent() {
-  old_line=$(grep "torrentIp=" /etc/klcloud/btserver/torrent.ini)
-  new_line="torrentIp=$ipaddr"
+update_ansible() {
+  ansible_hosts_file="../etc_example/hosts"
+  sed -i 's/[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+/'"${ipaddr}"'/g' $ansible_hosts_file
 
-  sudo sed -i "s#$old_line#$new_line#" /etc/klcloud/btserver/torrent.ini
- 
-  # 重启 btserver 容器
-  docker restart btserver >/dev/null
-  docker restart btserver_tracker >/dev/null
-
-  # 打印修改后的 torrent.ini
-  echo "$(date "+%Y-%m-%d %H:%M:%S") New '/etc/klcloud/btserver/torrent.ini' config is:" 
-  grep -E "torrentIp=" /etc/klcloud/btserver/torrent.ini
+  echo "$(date "+%Y-%m-%d %H:%M:%S") New '$ansible_hosts_file' config is:" 
+  grep -E "api_interface" $ansible_hosts_file
   echo "----------------------------------------------------------------------"
 }
 
 update_jave() {
-  java_conf_path="/etc/klcloud/fsd/trochilus.sql"
-  sed -i 's/"proxyIp":"[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+"/"proxyIp":"'"${ipaddr}"'"/g;
-          s/"vip":"[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+"/"vip":"'"${ipaddr}"'"/g' \
-          $java_conf_path
+  java_conf_file="/etc/klcloud/fsd/trochilus.sql"
   
-  echo "$(date "+%Y-%m-%d %H:%M:%S") New '$java_conf_path' config is:" 
-  grep -E "proxyIp" $java_conf_path
+  update_setting_sql="$(grep -E 'sys_setting' $java_conf_file \
+  | sed -E 's/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/'"${ipaddr}"'/g' \
+  | sed 's/`sys_setting`/klcloud_fsd_edu.sys_setting/g')" 
+
+  update_server_sql="UPDATE klcloud_fsd_edu.des_server SET ip = '${ipaddr}';"
+
+  mariadb_root_username=$(echo $(grep -E '^mariadb_root_username:' $global_vars_file | cut -d':' -f2))
+  mariadb_root_password=$(echo $(grep -E '^mariadb_root_password:' $global_vars_file | cut -d':' -f2))
+
+  docker exec -it mariadb mysql -u$mariadb_root_username -p$mariadb_root_password -e "$update_setting_sql $update_server_sql"
+
+
+  ansible-playbook -i ../etc_example/hosts -e @../etc_example/global_vars.yaml \
+                   -e @../etc_example/ceph-globals.yaml ../ansible/90-setup.yaml \
+                   -t trochilus -t btserver 
   echo "----------------------------------------------------------------------"
 }
 
-update_ansible() {
-  ansible_hosts_path="../etc_example/hosts"
-  sed -i 's/[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+/'"${ipaddr}"'/g' $ansible_hosts_path
+deploy_version=$(grep -E '^deploy_edu:' $global_vars_file | cut -d':' -f2)
 
-  echo "$(date "+%Y-%m-%d %H:%M:%S") New '$ansible_hosts_path' config is:" 
-  grep -E "api_interface" $ansible_hosts_path
-  echo "----------------------------------------------------------------------"
-}
-
-deploy_version=$(grep -E '^deploy_edu:' ../etc_example/global_vars.yaml)
-
-if [ -z "$deploy_version | grep -o 'true'" ]; then
+if [ $deploy_version != true ]; then
   die "This script is only available in a single node Edition VOI environment!"
 fi
 
 update_network
 if [ $? -eq 0 ]; then
   update_hosts
-  update_torrent
-  update_jave
   update_ansible
+  update_jave
   echo "The environment update success。"
 else
     echo "Failed to change the IP address. Please check the environment. "
 fi
-
