@@ -15,6 +15,7 @@ libvirt_services:
 libvirt_image: "{{ docker_image_repository }}/libvirt"
 libvirt_default_volumes:
   - "{{ config_directory }}/libvirt:/etc/libvirt"
+  - "{{ config_directory }}/libvirt/vdi:/etc/vdi"
   - "/etc/localtime:/etc/localtime:ro"
   - "/lib/modules:/lib/modules:ro"
   - "/run/:/run/:shared"
