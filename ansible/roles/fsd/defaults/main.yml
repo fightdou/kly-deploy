@@ -34,7 +34,12 @@ fsd_services:
       fsd_init_db_password: "{{ mariadb_root_password }}"
     dimensions: "{{ fsd_dimensions }}"
     privileged: True
-
+  fsd-console-web:
+    enabled: False
+    container_name: fsd_console_web
+    image: "{{ fsd_console_web_image_full }}"
+    dimensions: "{{ fsd_dimensions }}"
+    privileged: True
 
 deploy_type: "{% if deploy_edu %}_edu{% else %}{% endif %}"
 fsd_proxy_ip: "{% if proxy_ip != '' %}{{ proxy_ip }}{% elif enable_keepalived | bool %}{{ external_vip_address }}{% else %}{{ api_interface_address }}{% endif %}"
@@ -94,6 +99,13 @@ fsd_init_default_volumes:
   - "/etc/localtime:/etc/localtime:ro"
   - "{{ desktop_mount_dir }}/static:/home/tmp:rw"
   - "{{ config_directory }}/fsd/trochilus.sql:/home/trochilus/trochilus.sql:rw"
+
+####################
+# fsd_console_web
+####################
+fsd_console_web_image: "{{ docker_image_repository }}/fsd_console_web"
+fsd_console_web_tag: "{{ fsd_default_tag }}"
+fsd_console_web_image_full: "{{ fsd_console_web_image }}:{{ fsd_console_web_tag }}"
 
 fsd_dimensions: 
   ulimits: 
