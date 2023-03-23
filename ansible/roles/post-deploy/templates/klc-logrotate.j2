@@ -3,8 +3,7 @@
 /var/log/mariadb/*.log
 /var/log/trochilus/*.log
 {% if deploy_comm | bool %}
-/var/log/guest-service/*.log {
-}
+/var/log/guest-service/*.log 
 {% endif %}
 {
     daily
