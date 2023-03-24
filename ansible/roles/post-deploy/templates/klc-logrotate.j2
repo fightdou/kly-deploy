@@ -25,14 +25,3 @@
     delaycompress
     create 666 root root
 }
-
-# trochilus dhcp log
-/var/log/trochilus/dhcp/*/*.log {
-    daily
-    rotate 30
-    compress
-    missingok
-    notifempty
-    delaycompress
-    create 640 dnsmasq root
-}
