@@ -3,8 +3,7 @@
 /var/log/mariadb/*.log
 /var/log/trochilus/*.log
 {% if deploy_comm | bool %}
-/var/log/guest-service/*.log {
-}
+/var/log/guest-service/*.log 
 {% endif %}
 {
     daily
@@ -25,15 +24,4 @@
     notifempty
     delaycompress
     create 666 root root
-}
-
-# trochilus dhcp log
-/var/log/trochilus/dhcp/*/*.log {
-    daily
-    rotate 30
-    compress
-    missingok
-    notifempty
-    delaycompress
-    create 640 dnsmasq root
 }
