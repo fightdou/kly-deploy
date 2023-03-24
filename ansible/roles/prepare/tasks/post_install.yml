@@ -7,6 +7,10 @@
   hostname:
     name: "{{ hostvars[inventory_hostname]['hostname'] }}"
 
+- name: disable timedatectl ntp
+  shell: |
+    timedatectl set-ntp no
+
 - name: openEuler disable firewalld
   become: True
   service:
