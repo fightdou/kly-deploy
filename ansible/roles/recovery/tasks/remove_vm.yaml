@@ -10,14 +10,3 @@
 - name: undefine all vm
   shell: "docker exec -it libvirt virsh undefine {{ item }} --nvram"
   with_items: "{{ all_vm_uuid.stdout_lines }}"
-
-- name: remove vm dir
-  file:
-    path: /var/lib/trochilus/voi/vms/*
-    state: absent
-
-- name: remove public-base-disks
-  file:
-    path: /var/lib/trochilus/voi/public-base-disk/*
-    state: absent
-  with_items: "{{ all_vm_uuid.stdout_lines }}"

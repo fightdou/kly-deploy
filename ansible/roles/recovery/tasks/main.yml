@@ -3,7 +3,25 @@
 
 - import_tasks: remove_vm.yaml
 
-- import_tasks: remove_image.yaml
+- name: remove fsd config
+  file:
+    path: "{{ config_directory }}/fsd"
+    state: absent
+
+- name: remove voi all file
+  file:
+    path: "{{ trochilus_voi_base_path }}"
+    state: absent
+
+- name: remove 111
+  file:
+    path: "{{ desktop_mount_dir }}/111"
+    state: absent
+
+- name: remove p2v
+  file:
+    path: "{{ desktop_mount_dir }}/p2v"
+    state: absent
 
 - import_tasks: remove_net.yaml
 

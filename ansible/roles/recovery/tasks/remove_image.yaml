@@ -1,4 +1,0 @@
-- name: remove all imgae 
-  file:
-    path: /var/lib/trochilus/voi/images/*
-    state: absent
