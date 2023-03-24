@@ -1,16 +1,16 @@
-# ---
-# - import_tasks: get_node_data.yaml
+---
+- import_tasks: get_node_data.yaml
 
-# - import_tasks: deploy_samba.yml
+- import_tasks: deploy_samba.yml
 
-# - import_tasks: config.yml
+- import_tasks: config.yml
 
-# - import_tasks: check-containers.yml
+- import_tasks: check-containers.yml
 
-# - import_tasks: create_db_and_load_static_files.yml
-#   when: inventory_hostname == groups['fsd'][0]
+- import_tasks: create_db_and_load_static_files.yml
+  when: inventory_hostname == groups['fsd'][0]
 
-# - name: Flush handlers
-#   meta: flush_handlers
+- name: Flush handlers
+  meta: flush_handlers
 
 - import_tasks: deploy_fsd_console.yml
