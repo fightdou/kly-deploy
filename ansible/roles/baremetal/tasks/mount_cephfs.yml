@@ -74,19 +74,17 @@
   - name: copy 5G init share images file
     become: true
     copy:
-      src: "5GDISK_x86.qcow2"
+      src: "5GDISK.qcow2"
       dest: "{{ desktop_mount_dir }}/voi/share_image/5GDISK.qcow2"
 
   - name: copy 10G init share images file
     become: true
     copy:
-      src: "10GDISK_x86.qcow2"
+      src: "10GDISK.qcow2"
       dest: "{{ desktop_mount_dir }}/voi/share_image/10GDISK.qcow2"
 
   - name: copy 50G init share images file
     become: true
     copy:
-      src: "5GDISK_x86.qcow2"
+      src: "50GDISK.qcow2"
       dest: "{{ desktop_mount_dir }}/voi/share_image/50GDISK.qcow2"
-  when:
-    - ansible_machine == "x86_64"
