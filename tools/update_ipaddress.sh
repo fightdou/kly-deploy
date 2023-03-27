@@ -30,6 +30,7 @@ parse_params() {
   gateway=""
   dns=""
   global_vars_file=../etc_example/global_vars.yaml
+  old_ipaddr=$(grep $(hostname) /etc/hosts | awk '{print $1}')
 
   while :; do
     case "${1-}" in
@@ -72,17 +73,17 @@ parse_params "$@"
 
 update_network() {
   # 修改 IP 地址和子网掩码
-  sudo nmcli connection modify $netcard ipv4.addresses $ipaddr/$prefix 
+  sudo nmcli connection modify $netcard ipv4.addresses $ipaddr/$prefix
   # 修改网关
-  sudo nmcli connection modify $netcard ipv4.gateway $gateway 
-  
+  sudo nmcli connection modify $netcard ipv4.gateway $gateway
+
   if [ ! -z "${dns-}" ]; then
-    sudo nmcli connection modify $netcard ipv4.dns $dns 
+    sudo nmcli connection modify $netcard ipv4.dns $dns
   fi
-  
+
   # 重启网络连接
   sudo nmcli connection down $netcard >/dev/null && sudo nmcli connection up $netcard >/dev/null
- 
+
   # 打印修改后的IP地址
   echo "$(date "+%Y-%m-%d %H:%M:%S") New IP address and netmask for $netcard:"
   grep -E 'IPADDR|NETMASK|PREFIX|GATEWAY|DNS' /etc/sysconfig/network-scripts/ifcfg-$netcard
@@ -101,40 +102,45 @@ update_hosts() {
   new_line="$ipaddr $(hostname)"
 
   sudo sed -i "s#$old_line#$new_line#" /etc/hosts
-  
+
   # 打印修改后的 hosts
-  echo "$(date "+%Y-%m-%d %H:%M:%S") New '/etc/hosts' config is:" 
+  echo "$(date "+%Y-%m-%d %H:%M:%S") New '/etc/hosts' config is:"
   grep -E $ipaddr /etc/hosts
   echo "----------------------------------------------------------------------"
 }
 
 update_ansible() {
   ansible_hosts_file="../etc_example/hosts"
-  sed -i 's/[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+/'"${ipaddr}"'/g' $ansible_hosts_file
+  sed -i 's/'"${old_ipaddr}"'/'"${ipaddr}"'/g' $ansible_hosts_file
 
-  echo "$(date "+%Y-%m-%d %H:%M:%S") New '$ansible_hosts_file' config is:" 
+  echo "$(date "+%Y-%m-%d %H:%M:%S") New '$ansible_hosts_file' config is:"
   grep -E "api_interface" $ansible_hosts_file
   echo "----------------------------------------------------------------------"
 }
 
 update_jave() {
   java_conf_file="/etc/klcloud/fsd/trochilus.sql"
-  
-  update_setting_sql="$(grep -E 'sys_setting' $java_conf_file \
-  | sed -E 's/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/'"${ipaddr}"'/g' \
-  | sed 's/`sys_setting`/klcloud_fsd_edu.sys_setting/g')" 
 
-  update_server_sql="UPDATE klcloud_fsd_edu.des_server SET ip = '${ipaddr}';"
+  update_setting_sql="$(cat $java_conf_file | sed -E 's/'"${old_ipaddr}"'/'"${ipaddr}"'/g')" 
+  update_server_sql="UPDATE des_server SET ip = '${ipaddr}' WHERE ip = '${old_ipaddr}';"
+  update_console_sql="UPDATE des_center_console SET ip = '${ipaddr}' WHERE ip = '${old_ipaddr}';"
 
   mariadb_root_username=$(echo $(grep -E '^mariadb_root_username:' $global_vars_file | cut -d':' -f2))
   mariadb_root_password=$(echo $(grep -E '^mariadb_root_password:' $global_vars_file | cut -d':' -f2))
 
-  docker exec -it mariadb mysql -u$mariadb_root_username -p$mariadb_root_password -e "$update_setting_sql $update_server_sql"
+  docker exec -it mariadb mysql -u$mariadb_root_username -p$mariadb_root_password -e \
+  "$update_setting_sql $update_server_sql $update_console_sql"
 
-
+  if [ -d /etc/klcloud/trochilus ]; then
+    rm -rf /etc/klcloud/trochilus >/dev/null 
+  fi  
+  if [ -d /etc/klcloud/btserver ]; then
+    rm -rf /etc/klcloud/btserver >/dev/null 
+  fi
   ansible-playbook -i ../etc_example/hosts -e @../etc_example/global_vars.yaml \
                    -e @../etc_example/ceph-globals.yaml ../ansible/90-setup.yaml \
-                   -t trochilus -t btserver 
+                   -t trochilus -t btserver
+
   echo "----------------------------------------------------------------------"
 }
 
