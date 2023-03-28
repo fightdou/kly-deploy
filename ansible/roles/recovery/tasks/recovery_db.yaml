@@ -13,8 +13,3 @@
     - "{{ trochilus_mariadb_dataname }}"
     - "klcloud_fsd_edu"
     - "xxl_job"
-
-- name: remove fsd config
-  file:
-    path: "{{ config_directory }}/fsd"
-    state: absent

@@ -3,13 +3,35 @@
 
 - import_tasks: remove_vm.yaml
 
-- import_tasks: remove_image.yaml
-
 - import_tasks: remove_net.yaml
+
+- name: get voi resource
+  shell: "ls {{ desktop_mount_dir }}/voi -I share_image"
+  register: files_list
+
+- name: remove voi resource
+  file:
+    path: "{{ desktop_mount_dir }}/voi/{{ item }}"
+    state: absent
+  with_items:
+    - "{{ files_list.stdout_lines }}"
+
+- name: remove extra voi resource
+  file:
+    path: "{{ desktop_mount_dir }}/{{ item }}"
+    state: absent
+  with_items:
+    - "111"
+    - "p2v"
 
 - name: Apply role trochilus
   import_role:
     name: trochilus
+
+- name: remove fsd config
+  file:
+    path: "{{ config_directory }}/fsd"
+    state: absent
 
 - name: Apply role fsd
   import_role:
