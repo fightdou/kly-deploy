@@ -227,6 +227,8 @@ fsd_share_root_path: "{{ desktop_mount_dir }}"
 fsd_cloud_disk_root_path: "{{ fsd_share_root_path }}/111"
 proxy_ip: ""
 vdi_desktop_num: 10000
+#上传iso占用空间 通用版需要
+vdi_file_storage_num: 500
 vdi_storage_num: 1000
 cloud_disk_num: 1000
 # 平台配置的码率范围，默认1,100
