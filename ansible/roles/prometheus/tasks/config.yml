@@ -111,11 +111,18 @@
 
 - name: copy over prometheus voi rule yml
   template:
-    src: "{{ item }}-rule_{{ ansible_architecture }}.yml.j2"
-    dest: "{{ config_directory }}/prometheus/rules/{{ item }}-rule.yml"
+    src: "voi-rule_x86_64.yml.j2"
+    dest: "{{ config_directory }}/prometheus/rules/voi-rule-windows.yml"
     mode: 0644
-  with_items:
-    - "voi"
+  when:
+    - only_deploy_voi | bool
+    - ansible_machine == "x86_64"
+
+- name: copy over prometheus voi rule yml
+  template:
+    src: "voi-rule_aarch64.yml.j2"
+    dest: "{{ config_directory }}/prometheus/rules/voi-rule-linux.yml"
+    mode: 0644
   when:
     - only_deploy_voi | bool
 
