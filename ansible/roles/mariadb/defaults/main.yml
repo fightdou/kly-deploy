@@ -24,7 +24,7 @@ mariadb_service: "{{ mariadb_services['mariadb'] }}"
 # volume
 ############
 mariadb_default_volumes:
-  - "{{ config_directory }}/mariadb/:/var/lib/config_files/:rw"
+  - "{{ config_directory }}/mariadb/:/var/lib/kolla/config_files/:rw"
   - "/etc/localtime:/etc/localtime:ro"
   - "/var/log/mariadb/:/var/log/mariadb/:rw"
   - "mariadb:/var/lib/mysql"

@@ -9,7 +9,8 @@
     common_options: "{{ docker_common_options }}"
     detach: False
     environment:
-      BOOTSTRAP:
+      KOLLA_BOOTSTRAP:
+      KOLLA_CONFIG_STRATEGY: "COPY_ALWAYS"
       DB_ROOT_PASSWORD: "{{ database_password }}"
       DB_MAX_TIMEOUT: "{{ database_max_timeout }}"
     image: "{{ service.image }}"
