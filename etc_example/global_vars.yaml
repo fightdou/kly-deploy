@@ -233,6 +233,7 @@ vdi_storage_num: 1000
 cloud_disk_num: 1000
 # 平台配置的码率范围，默认1,100
 fsd_policy_codeRateRange: 1,100
+fsd_biz_parameter_appSize: 1024
 # voi 部署场景 [edu，med，common] 当deploy_edu_voi开启时 生效
 # 1. edu 教育
 # 2. med 医疗
