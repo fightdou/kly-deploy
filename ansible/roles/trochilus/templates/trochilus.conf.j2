@@ -100,3 +100,8 @@ retry_interval = 5
 request_conn_timeout = 10
 request_read_timeout = 60
 expected_codes = 200,202,204
+
+[cors]
+allowed_origin = *
+allow_headers = X-Image-Auto-Convert, Content-Type, Content-MD5,X-Image-Meta-Checksum,X-Storage-Token,Accept-Encoding,X-Auth-Token,X-Identity-Status,X-Roles,X-Service-Catalog,X-User-Id,X-Tenant-Id,X-OpenStack-Request-ID,Authorization,Current-Project,Current-User,Operation-Code,Region-Code,lang
+allow_methods = OPTIONS, GET, POST, PUT, DELETE
