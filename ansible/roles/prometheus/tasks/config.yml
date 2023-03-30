@@ -112,7 +112,7 @@
 - name: copy over prometheus voi rule yml
   template:
     src: "voi-rule_x86_64.yml.j2"
-    dest: "{{ config_directory }}/prometheus/rules/voi-rule-windows.yml"
+    dest: "{{ config_directory }}/prometheus/rules/voi-windows-rule.yml"
     mode: 0644
   when:
     - only_deploy_voi | bool
@@ -121,7 +121,7 @@
 - name: copy over prometheus voi rule yml
   template:
     src: "voi-rule_aarch64.yml.j2"
-    dest: "{{ config_directory }}/prometheus/rules/voi-rule-linux.yml"
+    dest: "{{ config_directory }}/prometheus/rules/voi-linux-rule.yml"
     mode: 0644
   when:
     - only_deploy_voi | bool
