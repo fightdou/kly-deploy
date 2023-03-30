@@ -8,7 +8,7 @@ groups:
       expr: (1 - (node_memory_MemAvailable_bytes / (node_memory_MemTotal_bytes)))* 100
  
     - record: TWatch:VM::DiskUsageRate
-      expr: (node_filesystem_size_bytes{mountpoint="/"}-node_filesystem_free_bytes{mountpoint="/"}) * 100/(node_filesystem_avail_bytes{mountpoint="/"}+(node_filesystem_size_bytes{mountpoint="/"}-node_filesystem_free_bytes{mountpoint="/"}))
+      expr: (node_filesystem_size_bytes{mountpoint="/",host=""}-node_filesystem_free_bytes{mountpoint="/",host=""}) * 100/(node_filesystem_avail_bytes{mountpoint="/",host=""}+(node_filesystem_size_bytes{mountpoint="/",host=""}-node_filesystem_free_bytes{mountpoint="/",host=""}))
  
     - record: TWatch:VM::NetworkAllInBytes
       expr: sum by(virt)(irate(node_network_receive_bytes_total{device!~'tap.*|veth.*|br.*|docker.*|virbr*|lo*'}[2m])*8)
