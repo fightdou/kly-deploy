@@ -141,7 +141,7 @@ listen btserver-torrent
     balance source
     option tcplog
 {% for host in (groups['btserver']) %}
-    server {{ host }} {{ host }}:{{ bt_download_internal_port_start }},{{ bt_download_internal_port_end }} check inter 2000 rise 2 fall 5
+    server {{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }} {{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }}:{{ bt_download_internal_port_start }},{{ bt_download_internal_port_end }} check inter 2000 rise 2 fall 5
 {% endfor %}
 
 listen btserver
@@ -150,7 +150,7 @@ listen btserver
     balance source
     option tcplog
 {% for host in (groups['btserver']) %}
-    server {{ host }} {{ host }}:{{ bt_server_internal_port }} check inter 2000 rise 2 fall 5
+    server {{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }} {{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }}:{{ bt_server_internal_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 
 listen btserver-tracker
@@ -159,7 +159,7 @@ listen btserver-tracker
     balance source
     option tcplog
 {% for host in (groups['btserver']) %}
-    server {{ host }} {{ host }}:{{ bt_tracker_internal_port }} check inter 2000 rise 2 fall 5
+    server {{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }} {{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }}:{{ bt_tracker_internal_port }} check inter 2000 rise 2 fall 5
 {% endfor %}
 {% endif %}
 
