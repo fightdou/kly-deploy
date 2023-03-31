@@ -19,9 +19,6 @@
     state: "directory"
     mode: "0777"
     recurse: yes
-  when:
-    - not only_deploy_voi | bool
-    - deploy_comm | bool
 
 - name: Copy Tdesktop.exe to share path
   become: true

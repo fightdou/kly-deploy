@@ -94,6 +94,11 @@ control
 compute
 storage
 
+[docker-exporter:children]
+control
+compute
+storage
+
 [prometheus-thanos-query:children]
 control
 
