@@ -1,0 +1,25 @@
+---
+- name: Check if chrony is installed
+  command: "rpm -qa chrony" 
+  register: chrony_check
+  changed_when: false
+  args:
+    warn: false
+
+- name: Install chrony
+  package:
+    name: chrony
+  when: chrony_check.rc > 1
+
+- name: Copy chrony conf
+  template:
+    src: chrony.conf.j2
+    dest: /etc/chrony.conf
+    mode: 0644
+  notify: Restart chronyd
+  
+- name: Flush handlers
+  meta: flush_handlers
+
+- name: update time
+  shell: chronyc -a makestep
