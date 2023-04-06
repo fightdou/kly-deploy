@@ -58,10 +58,13 @@ enabled_image_store = filesystem
 filesystem_store_chunk_size = 65536
 filesystem_store_datadir = /var/lib/trochilus/images
 [lvm1]
-volume_driver = lvm1
-volume_group = vg_name
-thin_pool_lv = data_pool
-lv_type = thin
+volume_driver = trochilus.agent.storage.volume.drivers.lvm.LVMVolumeDriver
+volume_group = {{ lvm_volgroup_name }}
+lv_type = {% if support_thin_volume | bool %}{{ thin_volume_pool_name }}{% else %}{{ lvm_normal_volume_name }}{% endif %}
+
+{% if support_thin_volume | bool %}
+thin_pool_lv = {{ thin_volume_pool_name }}
+{% endif %}
 {% endif %}
 
 [network_settings]

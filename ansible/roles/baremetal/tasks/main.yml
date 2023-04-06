@@ -3,6 +3,10 @@
     - enable_ceph | bool
     - not deploy_edu | bool
 
+- import_tasks: create_vg_volume.yaml
+  when:
+    - enable_lvm | bool
+
 - import_tasks: hugepages_config.yml
   when:
     - enable_hugepages | bool
