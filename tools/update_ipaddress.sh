@@ -131,8 +131,8 @@ update_jave() {
   docker exec -it mariadb mysql -u$mariadb_root_username -p$mariadb_root_password -e \
   "$update_setting_sql $update_server_sql $update_console_sql"
 
-  if [ -d /etc/klcloud/trochilus ]; then
-    rm -rf /etc/klcloud/trochilus >/dev/null 
+  if [ -d /etc/klcloud/trochilus/trochilus.conf ]; then
+    rm -rf /etc/klcloud/trochilus/trochilus.conf >/dev/null 
   fi  
   if [ -d /etc/klcloud/btserver ]; then
     rm -rf /etc/klcloud/btserver >/dev/null 
