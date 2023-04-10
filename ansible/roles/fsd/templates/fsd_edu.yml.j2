@@ -11,12 +11,12 @@ custom:
   fsd_biz_deploy_inner_ip: {{ default_internal_server_visit_ip }}
   fsd_biz_deploy_mode: all
   fsd_biz_deploy_node_type: "single"
-  
+
   fsd_biz_deploy_ssh_port: 22222
   fsd_biz_path_shareRootPath: {{ fsd_share_root_path }}
-  fsd_biz_desktop_tracker_configFile: /opt/torrent_server_bin/
+  fsd_biz_desktop_tracker_configFile: {{ config_directory }}/btserver
   fsd_biz_front_frontDir: /var/www/html
-  fsd_biz_front_nginxConfigFile: /etc/nginx/conf.d/fsd.conf
+  fsd_biz_front_nginxConfigFile: {{ config_directory }}/fsd/fsd.conf
   fsd_biz_front_vipConfigFile: /etc/keepalived/keepalived.conf
   fsd_biz_clouddisk_rootPath: {{ fsd_cloud_disk_root_path }}
   fsd_biz_clouddisk_sharedDiskMapPath: shareA
