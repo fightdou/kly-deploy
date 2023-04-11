@@ -120,23 +120,30 @@ update_ansible() {
 
 update_jave() {
   java_conf_file="/etc/klcloud/fsd/trochilus.sql"
-
-  update_setting_sql="$(cat $java_conf_file | sed -E 's/'"${old_ipaddr}"'/'"${ipaddr}"'/g')" 
-  update_server_sql="UPDATE des_server SET ip = '${ipaddr}' WHERE ip = '${old_ipaddr}';"
-  update_console_sql="UPDATE des_center_console SET ip = '${ipaddr}' WHERE ip = '${old_ipaddr}';"
+  java_db_name="klcloud_fsd_edu"
 
   mariadb_root_username=$(echo $(grep -E '^mariadb_root_username:' $global_vars_file | cut -d':' -f2))
   mariadb_root_password=$(echo $(grep -E '^mariadb_root_password:' $global_vars_file | cut -d':' -f2))
 
-  docker exec -it mariadb mysql -u$mariadb_root_username -p$mariadb_root_password -e \
-  "$update_setting_sql $update_server_sql $update_console_sql"
+  select_setting_sql="select info from sys_setting where uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8c7';"
+  setting_info=$(docker exec -it mariadb mysql -N -s -u$mariadb_root_username -p$mariadb_root_password -e \
+                "use ${java_db_name}; $select_setting_sql")
+  new_setting_info=$(echo $setting_info | sed 's/'"${old_ipaddr}"'/'"${ipaddr}"'/g')
+  
+  update_setting_sql="UPDATE sys_setting SET info = '${new_setting_info}' WHERE uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8c7';" 
+  update_server_sql="UPDATE des_server SET ip = '${ipaddr}' WHERE ip = '${old_ipaddr}';"
+  # update_console_sql="UPDATE des_center_console SET ip = '${ipaddr}' WHERE ip = '${old_ipaddr}';"
 
-  if [ -d /etc/klcloud/trochilus ]; then
-    rm -rf /etc/klcloud/trochilus >/dev/null 
+  docker exec -it mariadb mysql -u$mariadb_root_username -p$mariadb_root_password -e \
+  "use ${java_db_name}; $update_setting_sql $update_server_sql"
+
+  if [ -d /etc/klcloud/trochilus/trochilus.conf ]; then
+    rm -rf /etc/klcloud/trochilus/trochilus.conf >/dev/null 
   fi  
   if [ -d /etc/klcloud/btserver ]; then
     rm -rf /etc/klcloud/btserver >/dev/null 
   fi
+  
   ansible-playbook -i ../etc_example/hosts -e @../etc_example/global_vars.yaml \
                    -e @../etc_example/ceph-globals.yaml ../ansible/90-setup.yaml \
                    -t trochilus -t btserver

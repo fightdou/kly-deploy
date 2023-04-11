@@ -1,0 +1,6 @@
+---
+- include_tasks: validate_docker_execute.yml
+
+- include_tasks: cleanup_containers.yml
+
+- include_tasks: cleanup_desktop_res.yml

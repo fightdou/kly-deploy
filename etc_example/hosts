@@ -8,7 +8,7 @@
 [allnodes]
 # 172.27.125.20 hostname=control1 api_interface=enp125s0f0 ceph_public_interface=enp125s0f0 ceph_cluster_interface=enp125s0f0 flat_network_interface="['enp125s0f1']" vlan_network_interface="{'enp125s0f1': '1:100'}" ceph_volume_data="['/dev/vdb','/dev/vdc']" nic_info="['enp125s0f0:172.27.125.20:1100', 'enp125s0f1::0100']"
 # 172.27.125.20 hostname=control2 api_interface=enp125s0f0 ceph_public_interface=enp125s0f0 ceph_cluster_interface=enp125s0f0 flat_network_interface="['enp125s0f1']" vlan_network_interface="{'enp125s0f1': '1:100'}" ceph_volume_data="['/dev/vdb','/dev/vdc']" nic_info="['enp125s0f0:172.27.125.20:1100', 'enp125s0f1::0100']"
-172.27.125.20  hostname=control1  api_interface=enp125s0f0  ceph_public_interface=enp125s0f0  ceph_cluster_interface=enp125s0f0  nic_info="['enp125s0f0:172.27.125.20:1011','enp125s0f1:null:0100']" flat_network_interface="['enp125s0f1']"   ceph_volume_data="['/dev/sda','/dev/sdb','/dev/sdc','/dev/sdd']"  vlan_network_interface="{'enp125s0f1':['1:4094']}"
+172.27.125.20  hostname=control1  api_interface=enp125s0f0  ceph_public_interface=enp125s0f0  ceph_cluster_interface=enp125s0f0  nic_info="['enp125s0f0:172.27.125.20:1011','enp125s0f1:null:0100']" flat_network_interface="['enp125s0f1']"   ceph_volume_data="['/dev/sda','/dev/sdb','/dev/sdc','/dev/sdd']" lvm_pv_device="['/dev/nvme0n1']" vlan_network_interface="{'enp125s0f1':['1:4094']}"
 
 [control]
 172.27.125.20
@@ -90,6 +90,11 @@ compute
 storage
 
 [host-exporter:children]
+control
+compute
+storage
+
+[docker-exporter:children]
 control
 compute
 storage

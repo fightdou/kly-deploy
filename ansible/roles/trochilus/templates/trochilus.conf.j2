@@ -58,10 +58,13 @@ enabled_image_store = filesystem
 filesystem_store_chunk_size = 65536
 filesystem_store_datadir = /var/lib/trochilus/images
 [lvm1]
-volume_driver = lvm1
-volume_group = vg_name
-thin_pool_lv = data_pool
-lv_type = thin
+volume_driver = trochilus.agent.storage.volume.drivers.lvm.LVMVolumeDriver
+volume_group = {{ lvm_volgroup_name }}
+lv_type = {% if support_thin_volume | bool %}{{ thin_volume_pool_name }}{% else %}{{ lvm_normal_volume_name }}{% endif %}
+
+{% if support_thin_volume | bool %}
+thin_pool_lv = {{ thin_volume_pool_name }}
+{% endif %}
 {% endif %}
 
 [network_settings]
@@ -100,3 +103,8 @@ retry_interval = 5
 request_conn_timeout = 10
 request_read_timeout = 60
 expected_codes = 200,202,204
+
+[cors]
+allowed_origin = *
+allow_headers = X-Image-Auto-Convert, Content-Type, Content-MD5,X-Image-Meta-Checksum,X-Storage-Token,Accept-Encoding,X-Auth-Token,X-Identity-Status,X-Roles,X-Service-Catalog,X-User-Id,X-Tenant-Id,X-OpenStack-Request-ID,Authorization,Current-Project,Current-User,Operation-Code,Region-Code,lang
+allow_methods = OPTIONS, GET, POST, PUT, DELETE

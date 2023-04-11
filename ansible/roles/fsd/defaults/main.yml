@@ -55,7 +55,7 @@ fsd_image_full: "{{ fsd_image }}:{{ fsd_tag }}"
 fsd_default_volumes:
   - "{{ desktop_mount_dir }}:{{ desktop_mount_dir }}:rw"
   - "{{ desktop_mount_dir }}/prometheus/rules:/home/static/prometheus/rules:rw"
-  - "{{ desktop_mount_dir }}/prometheus/alertmanager/alertmanager.yml:/home/static/prometheus/alert/alertmanager.yml:rw"
+  - "{{ desktop_mount_dir }}/prometheus/alertmanager/:/home/static/prometheus/alert/:rw"
   - "{{ config_directory }}/fsd/application-docker.yml:/home/static/java/application-docker.yml:rw"
   - "/var/log/fsd:/log:rw"
   - "/etc/localtime:/etc/localtime:ro"
