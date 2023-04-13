@@ -1,0 +1,3 @@
+- name: delete docker local volumes
+  shell: "docker volume ls|grep -v kolla_logs|grep -v VOLUME|awk '{print $2}'|xargs -I {} docker volume rm {}"
+  ignore_errors: true

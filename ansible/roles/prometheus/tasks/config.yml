@@ -101,9 +101,7 @@
   copy:
     src: service-rule.yml
     dest: "{{ config_directory }}/prometheus/rules/service-rule.yml"
-  when:
-    - only_deploy_voi | bool
-
+    
 - name: copy twatch rule file
   template:
     src: twatch-rule.yml.j2
@@ -115,7 +113,6 @@
     dest: "{{ config_directory }}/prometheus/rules/voi-windows-rule.yml"
     mode: 0644
   when:
-    - only_deploy_voi | bool
     - ansible_machine == "x86_64"
 
 - name: copy over prometheus voi rule yml
@@ -123,8 +120,6 @@
     src: "voi-rule_aarch64.yml.j2"
     dest: "{{ config_directory }}/prometheus/rules/voi-linux-rule.yml"
     mode: 0644
-  when:
-    - only_deploy_voi | bool
 
 - name: 创建 prometheus alert-rule 共享目录
   file:
