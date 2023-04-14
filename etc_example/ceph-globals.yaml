@@ -26,6 +26,10 @@ osd_pool_default_pgp_num: 16
 ## 默认关闭所有debug 配置项
 ceph_config_debug_default: "0/0"
 
+# ceph osd 启动端口
+osd_bind_port_min: 7100
+osd_bind_port_max: 7500
+
 images_pool_pg_num: 128
 images_pool_pgp_num: "{{ images_pool_pg_num }}"
 volumes_poll_pg_num: 128

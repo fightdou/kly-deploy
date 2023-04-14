@@ -18,6 +18,8 @@ osd pool default pgp num    = {{ osd_pool_default_pgp_num }}
 
 osd pool default crush rule = 0
 osd crush chooseleaf type   = 1
+ms_bind_port_min = {{ osd_bind_port_min }}
+ms_bind_port_max = {{ osd_bind_port_max }}
 
 admin socket                = /var/run/ceph/$cluster-$name.asock
 pid file                    = /var/run/ceph/$cluster-$name.pid

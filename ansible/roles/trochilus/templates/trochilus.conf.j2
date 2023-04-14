@@ -70,6 +70,7 @@ physical_interface_mappings = {{ physical_interface_mappings }}
 [vm_settings]
 virt_type = kvm
 default_root_disk_backend = {% if enable_ceph | bool %}rbd1{% elif enable_lvm | bool %}thin_lvm1{% endif %}
+
 {% if enable_ceph %}
 rbd_secret_uuid = {{ ceph_rbd_secret_uuid }}
 {% endif %}
