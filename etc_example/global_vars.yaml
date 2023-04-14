@@ -32,6 +32,7 @@ reserved_mds_memory_mb: 2048
 reseverd_system_memory_mb: 16384
 # 系统用户名
 system_username: root
+system_ssd_port: 22
 # 系统密码
 system_password: Troila12#$
 # ipmi 厂商
