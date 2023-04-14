@@ -1,5 +1,4 @@
 docker_register_domain: 172.18.28.6
-docker_register_port: 5002
 offline_deb_repo_port: 9865
 system_type: '{% if ansible_architecture == "x86_64" %}x86{% else %}{{ ansible_architecture }}{% endif %}'
 docker_namespace_name: klcloud_{{ system_type }}
