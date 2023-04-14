@@ -270,4 +270,4 @@ bt_download_external_port_end: 6889
 bt_download_internal_port_end: 16889
 btserver_external_listen_ports: "{{ bt_download_external_port_start }}-{{ bt_download_external_port_end }}"
 btserver_internal_listen_ports: "{{ bt_download_internal_port_start }}-{{ bt_download_internal_port_end }}"
-btserver_tag: 2.1.0
+btserver_tag: latest
