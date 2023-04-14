@@ -5,6 +5,7 @@ custom:
   spring_datasource_password: {{ mariadb_root_password }}
   spring_redis_password: {{ redis_master_password }}
   spring_redis_sentinel_nodes: {% for host in groups['redis'] %}{{ host }}:26379{% if not loop.last %},{% endif %}{% endfor %}
+  
   fsd_common_netty_codec_mac: 60f81dad19ae
   fsd_biz_deploy_inner_vip: "{{ default_internal_server_visit_ip }}"
   fsd_biz_deploy_mode: {{ fsd_deploy_mode }}
