@@ -105,7 +105,7 @@ fsd_init_default_volumes:
 # fsd_console_web
 ####################
 fsd_console_web_image: "{{ docker_image_repository }}/fsd_console_web"
-fsd_console_web_tag: "{{ fsd_default_tag }}"
+fsd_console_web_tag: "{{ fsd_console_tag }}"
 fsd_console_web_image_full: "{{ fsd_console_web_image }}:{{ fsd_console_web_tag }}"
 
 fsd_dimensions: 

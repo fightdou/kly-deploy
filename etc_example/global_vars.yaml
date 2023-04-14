@@ -85,7 +85,7 @@ enable_prometheus: true
 enable_pushgateway: "{% if deploy_edu | bool or only_deploy_voi | bool %}false{% else %}true{% endif %}"
 enable_guest_service: "{% if deploy_edu | bool or only_deploy_voi | bool %}false{% else %}true{% endif %}"
 enable_fsd: true
-enable_btserver: true
+enable_btserver: "{% if fsd_deploy_mode == 'vdi' %}false{% else %}true{% endif %}"
 enable_lvm: false
 enable_ceph: "{% if only_deploy_voi | bool or deploy_edu | bool %}false{% else %}true{% endif %}"
 
