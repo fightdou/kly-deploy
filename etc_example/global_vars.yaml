@@ -1,7 +1,7 @@
 docker_register_domain: 172.18.28.6
 docker_register_port: 5002
 offline_deb_repo_port: 9865
-system_type: "{% if ansible_architecture == 'x86_64' %}x86{% else %}{{ ansible_architecture }}{% endif %}"
+system_type: '{% if ansible_architecture == "x86_64" %}x86{% else %}{{ ansible_architecture }}{% endif %}'
 docker_namespace_name: klcloud_{{ system_type }}
 docker_image_repository: "{{ docker_register_domain }}/{{ docker_namespace_name }}"
 docker_image_tag: latest
@@ -18,7 +18,7 @@ deploy_comm: false
 # 默认预留内存和 CPU
 internal_vip_address: 172.18.29.212
 external_vip_address: 172.27.123.251
-api_interface_address: "{{ 'api' | filter_address }}"
+api_interface_address: '{{ "api" | filter_address }}'
 network_address_family: "ipv4"
 api_address_family: "{{ network_address_family }}"
 reserved_host_cpus: 2
@@ -75,7 +75,7 @@ enable_destroy_images: false
 ##########
 enable_baremetal: true
 enable_haproxy: "{% if deploy_edu | bool %}false{% else %}true{% endif %}"
-enable_keepalived: "{% if deploy_edu | bool or groups['keepalived'] | length == 1 %}false{% else %}true{% endif %}"
+enable_keepalived: '{% if deploy_edu | bool or groups["keepalived"] | length == 1 %}false{% else %}true{% endif %}'
 enable_mariadb: true
 enable_redis: true
 enable_emqx: true
@@ -228,7 +228,7 @@ fsd_internal_main_port: 19010
 fsd_webhook_token: abc123
 fsd_default_tag: latest
 fsd_deploy_mode: all
-fsd_deploy_node_type: "{% if groups['fsd'] | length > 1 %}cluster{% else %}single{% endif %}"
+fsd_deploy_node_type: '{% if groups["fsd"] | length > 1 %}cluster{% else %}single{% endif %}'
 fsd_share_root_path: "{{ desktop_mount_dir }}"
 fsd_cloud_disk_root_path: "{{ fsd_share_root_path }}/111"
 proxy_ip: ""
