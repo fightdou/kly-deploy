@@ -42,7 +42,7 @@ fsd_services:
     privileged: True
 
 deploy_type: "{% if deploy_edu | bool %}_edu{% else %}{% endif %}"
-deploy_storage_type: "{% if enable_lvm | bool %}lvm{% elif enable_ceph | bool %}ceph{% endif %}"
+deploy_storage_type: "{% if enable_lvm | bool %}lvm{% elif enable_ceph | bool %}ceph{% else %}qcow2{% endif %}"
 fsd_proxy_ip: "{% if proxy_ip != '' %}{{ proxy_ip }}{% elif enable_keepalived | bool %}{{ external_vip_address }}{% else %}{{ api_interface_address }}{% endif %}"
 fsd_vip: "{% if enable_keepalived | bool %}{{ external_vip_address }}{% else %}{{ api_interface_address }}{% endif %}"
 fsd_ngxin_proxy_pass: "{{ default_internal_server_visit_ip }}"

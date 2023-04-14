@@ -30,5 +30,4 @@
   shell: "lvcreate -l +100%free --thinpool {{ thin_volume_pool_name }} {{ lvm_volgroup_name }}"
   when: 
     - enable_lvm | bool
-    - support_thin_volume | bool
     - vg_exist.stdout == "0"

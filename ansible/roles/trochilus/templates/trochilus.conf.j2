@@ -24,12 +24,7 @@ bind_host = {{ default_internal_server_listen_ip }}
 bind_port = {{ trochilus_listen_api_port }}
 supported_instance_metadatas = k1, k2
 internal_ip = {{ default_internal_server_listen_ip }}
-
-{% if enable_ceph %}
-enabled_volume_backends = rbd1
-{% elif enable_lvm %}
-enabled_volume_backends = lvm1
-{% endif %}
+enabled_volume_backends = {% if enable_ceph %}rbd1{% elif enable_lvm %}thin_lvm1{% endif %}
 
 [database]
 connection = mysql+pymysql://{{ trochilus_mariadb_username }}:{{ trochilus_mariadb_password }}@{{ default_internal_server_visit_ip }}:{{ mariadb_external_listen_port }}/{{ trochilus_mariadb_dataname }}
@@ -52,19 +47,17 @@ rbd_store_conn_timeout = 0
 rbd_store_thin_provisioning = true
 {%- endif %}
 
-{% if enable_lvm %}
+{% if enable_lvm | bool %}
 [image_settings]
-enabled_image_store = filesystem
-filesystem_store_chunk_size = 65536
-filesystem_store_datadir = /var/lib/trochilus/images
-[lvm1]
-volume_driver = trochilus.agent.storage.volume.drivers.lvm.LVMVolumeDriver
-volume_group = {{ lvm_volgroup_name }}
-lv_type = {% if support_thin_volume | bool %}{{ thin_volume_pool_name }}{% else %}{{ lvm_normal_volume_name }}{% endif %}
-
-{% if support_thin_volume | bool %}
-thin_pool_lv = {{ thin_volume_pool_name }}
-{% endif %}
+enabled_image_store = lvm
+lvm_store_vgname = {{ lvm_volgroup_name }}
+lvm_store_thin_pool = {{ thin_volume_pool_name }}
+lvm_store_thin_vitualsize = {{ thin_lv_size }}G
+[thin_lvm1]
+volume_driver = trochilus.agent.storage.volume.drivers.thin_lvm.ThinLVMVolumeDriver
+thin_volume_group = {{ lvm_volgroup_name }}
+thin_pool_name = {{ thin_volume_pool_name }}
+thin_virtualsize = {{ thin_lv_size }}G
 {% endif %}
 
 [network_settings]
@@ -76,9 +69,10 @@ physical_interface_mappings = {{ physical_interface_mappings }}
 
 [vm_settings]
 virt_type = kvm
-default_root_disk_backend = {% if enable_ceph | bool %}rbd1{% elif enable_lvm %}lvm1{% endif %}
-
+default_root_disk_backend = {% if enable_ceph | bool %}rbd1{% elif enable_lvm | bool %}thin_lvm1{% endif %}
+{% if enable_ceph %}
 rbd_secret_uuid = {{ ceph_rbd_secret_uuid }}
+{% endif %}
 vnc_enabled = true
 vnc_server_listen = 0.0.0.0
 spice_enabled = true

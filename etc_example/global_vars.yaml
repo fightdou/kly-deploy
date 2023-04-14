@@ -204,10 +204,7 @@ trochilus_mariadb_username: trochilus
 trochilus_mariadb_password: 123456
 trochilus_mariadb_dataname: trochilus
 lvm_volgroup_name: vg_name
-support_thin_volume: false
 thin_volume_pool_name: data_pool
-thin_volume_type_name: thin
-lvm_normal_volume_name: normal
 websockify_external_port: 9003
 websockify_internal_port: 19003
 websockify_tag: latest
