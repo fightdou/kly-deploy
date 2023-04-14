@@ -29,7 +29,7 @@ trochilus_services:
     dimensions: "{{ websockify_dimensions }}"
   virt_v2v:
     container_name: virt_v2v_with_ssh
-    enabled: "{% if deploy_edu | bool %}true{% else %}false{% endif %}"
+    enabled: True
     privileged: True
     image: "{{ virt_v2v_image_full }}"
     volumes: "{{ virt_v2v_default_volumes }}"

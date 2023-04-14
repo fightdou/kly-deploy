@@ -1,0 +1,7 @@
+---
+- name: Apply role internal ip
+  gather_facts: True
+  hosts: baremetal
+  roles:
+    - { role: internal-ip,
+        tags: internal-ip }
