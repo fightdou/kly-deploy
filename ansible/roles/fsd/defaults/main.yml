@@ -13,7 +13,7 @@ fsd_services:
     volumes: "{{ fsd_job_default_volumes }}"
     environment:
       SERVER_PORT: "{{ fsd_listen_job_port }}"
-      ENV_FSD_COMMON_JOB_MYSQL_SVC: "{{ default_internal_server_visit_ip }}" 
+      ENV_FSD_COMMON_JOB_MYSQL_SVC: "{{ inventory_hostname }}"
       ENV_FSD_COMMON_JOB_MYSQL_USERNAME: "{{ mariadb_root_username }}"
       ENV_FSD_COMMON_JOB_MYSQL_PASSWORD: "{{ mariadb_root_password }}"
     dimensions: "{{ fsd_dimensions }}"
