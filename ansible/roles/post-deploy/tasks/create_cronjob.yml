@@ -15,7 +15,7 @@
   delegate_to: localhost
 
 - name: copy mysql backup scripts
-  copy:
+  template:
     src: mysql_backup.sh.j2
     dest: "{{ config_directory }}/mariadb/mysql_backup.sh"
     mode: 0755
@@ -25,9 +25,10 @@
 
 - name: create crontab command
   cron:
-    minute: "0 10 * * * "
+    minute: "0"
+    hour: "10"
     name: Exec mysql backup
-    job: /bin/bash {{ config_directory }}/mariadb/mysql_backup.sh
-  become: true
+    job: >
+      /bin/bash {{ config_directory }}/mariadb/mysql_backup.sh
   run_once: True
   delegate_to: localhost

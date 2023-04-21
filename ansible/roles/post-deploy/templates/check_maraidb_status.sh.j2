@@ -3,11 +3,14 @@ log_file=/var/log/mariadb/check_mariadb.log
 
 echo "`date` ------ mysql galera check start! ---------" | tee -a $log_file
 
-for i in {1..2}; do
+for i in {1..10}; do
     sleep 30
     echo "`date` Check Galera cluster running node" | tee -a $log_file
-    status=`docker ps | grep mariadb | wc -l`
-    if [ $status -eq 1 ];
+    {% for host in groups['mariadb'] %}
+    {% set index = loop.index %}
+    {{ 'status' + index | string }}=`ssh {{ host }} docker ps | grep mariadb | wc -l`
+    {% endfor %}
+    if [ $status1 -eq 1 ] && [ $status2 -eq 1 ] && [ $status3 -eq 1 ];
     then
         sleep 30
         num=$(docker exec mariadb mysql -u{{ mariadb_root_username }} -p{{ mariadb_root_password }} -e "SHOW STATUS LIKE 'wsrep_cluster_size';" | grep wsrep_cluster_size | awk '{print $2}')
