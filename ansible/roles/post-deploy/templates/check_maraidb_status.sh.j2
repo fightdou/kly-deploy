@@ -1,0 +1,32 @@
+#!/bin/bash
+log_file=/var/log/mariadb/check_mariadb.log
+
+echo "`date` ------ mysql galera check start! ---------" | tee -a $log_file
+
+for i in {1..2}; do
+    sleep 30
+    echo "`date` Check Galera cluster running node" | tee -a $log_file
+    status=`docker ps | grep mariadb | wc -l`
+    if [ $status -eq 1 ];
+    then
+        sleep 30
+        num=$(docker exec mariadb mysql -u{{ mariadb_root_username }} -p{{ mariadb_root_password }} -e "SHOW STATUS LIKE 'wsrep_cluster_size';" | grep wsrep_cluster_size | awk '{print $2}')
+        echo "`date` Galera cluster node is $num" | tee -a $log_file
+        if [ $num -lt 2 ];
+        then
+            echo "`date` Galera cluster is not healthy!"| tee -a $log_file
+            sleep 30
+            num=$(docker exec mariadb mysql -u{{ mariadb_root_username }} -p{{ mariadb_root_password }} -e "SHOW STATUS LIKE 'wsrep_cluster_size';" | grep wsrep_cluster_size | awk '{print $2}')
+            if [ $num -lt 2 ];
+            then
+                echo "`date` Start exec mysql recover script!"| tee -a $log_file
+                ansible-playbook -i /root/deploy/kly-deploy/etc_example/hosts -e @/root/deploy/kly-deploy/etc_example/global_vars.yaml -e @/root/deploy/kly-deploy/etc_example/ceph-globals.yaml /root/deploy/kly-deploy/ansible/93-mariadb_recovery.yaml
+            fi
+        else
+            echo "`date` Galera cluster is healthy!"| tee -a $log_file
+            break
+        fi
+    else
+        sleep 30
+    fi
+done
