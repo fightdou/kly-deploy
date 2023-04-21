@@ -4,3 +4,81 @@
 - include_tasks: cleanup_containers.yml
 
 - include_tasks: cleanup_desktop_res.yml
+
+- name: Delete cephfs share dir file
+  shell: rm -rf {{ desktop_mount_dir }}/*
+  when:
+    - enable_ceph | bool
+
+- name: Umount cephfs share dir
+  mount:
+    path: "{{ desktop_mount_dir }}"
+    state: absent
+  ignore_errors: True
+  when:
+    - enable_ceph | bool
+
+- name: 清理 vg 卷
+  shell: vgremove -y {{ lvm_volgroup_name }}
+  when:
+    - enable_lvm | bool
+  ignore_errors: True
+
+- name: 清理 pv 卷
+  shell: pvremove -y {{ lvm_pv_device }}
+  when:
+    - enable_lvm | bool
+  ignore_errors: True
+
+- name: 清除清除系统缓存的定时任务
+  cron:
+    name: "clean linux cache"
+    state: absent
+  when: inventory_hostname in groups["control"]
+  ignore_errors: true
+
+- name: 清理 iptables
+  shell: "{{ item }} || true"
+  with_items:
+  - iptables -F
+  - iptables -X
+  - iptables -F -t nat
+  - iptables -X -t nat
+  - iptables -F -t filter
+  - iptables -X -t filter
+  - iptables -F -t mangle
+  - iptables -X -t mangle
+
+- name: 刷新 iptables
+  iptables:
+    table: "{{ item }}"
+    flush: yes
+  with_items:
+    - filter
+    - nat
+    - mangle
+
+- name: 获取 trochilus 创建的网络 namespace
+  shell: ip netns | awk -F' ' '{print $1}'
+  register: trochilus_netns
+
+- name: 删除网络命名空间
+  shell: ip netns del {{ item }}
+  with_items: "{{ trochilus_netns.stdout_lines }}"
+
+- name: 移除添加的 hosts 信息
+  blockinfile:
+    path: "/etc/hosts"
+    state: absent
+    marker: "# {mark} ANSIBLE GENERATED HOSTS"
+
+- name: 重启网络
+  systemd:
+    name: NetworkManager
+    state: restarted
+
+- name: 重启docker
+  systemd:
+    name: docker
+    state: restarted
+  ignore_errors: true

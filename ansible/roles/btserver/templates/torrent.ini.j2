@@ -1,7 +1,7 @@
 [torrent]
 managementIp=0.0.0.0
 managementPort={{ bt_listen_server_port }}
-torrentIp={{ hostvars[inventory_hostname]['ansible_' + api_interface]['ipv4']['address'] }}:{{ bt_listen_tracker_port }}
+torrentIp={{ hostvars[inventory_hostname]['ansible_' + api_interface]['ipv4']['address'] }}
 portBegin={{ bt_listen_download_port_start }}
 portEnd={{ bt_listen_download_port_end }}
 trackerPort={{ bt_listen_tracker_port }}
