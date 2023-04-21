@@ -6,7 +6,7 @@
     mode: "0770"
   become: true
 
-  - name: Ensuring fsd_console config directories exist
+- name: Ensuring fsd_console config directories exist
   file:
     path: "{{ config_directory }}/fsd_console"
     state: "directory"
