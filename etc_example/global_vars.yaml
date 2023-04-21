@@ -45,7 +45,7 @@ create_swap_file: false
 swap_file_path: /swapfile
 swap_file_block_size: 2M
 swap_file_true: 10240
-vm_swappiness: 10
+vm_swappiness: 0
 
 ####################
 # Docker options
