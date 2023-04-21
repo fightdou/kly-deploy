@@ -24,6 +24,36 @@
     - "111"
     - "p2v"
 
+- name: Remove redis container
+  kolla_docker:
+    name: "{{ item }}"
+    action: remove_container
+  with_items:
+    - "redis"
+    - "redis_sentinel"
+
+- name: remove redis volume
+  kolla_docker:
+    action: remove_volume
+    name: redis_data
+
+- name: remove redis config
+  file:
+    path: "{{ config_directory }}/{{ item }}"
+    state: absent
+  with_items:
+    - "redis"
+    - "redis-sentinel"
+
+- name: Apply role redis
+  import_role:
+    name: redis
+
+- name: remove trochilus config
+  file:
+    path: "{{ config_directory }}/trochilus"
+    state: absent
+
 - name: Apply role trochilus
   import_role:
     name: trochilus
@@ -33,6 +63,22 @@
     path: "{{ config_directory }}/fsd"
     state: absent
 
+- name: restart btserver container
+  kolla_docker:
+    name: "{{ item }}"
+    action: restart_container
+  with_items:
+    - "btserver"
+    - "btserver_tracker"
+
 - name: Apply role fsd
   import_role:
     name: fsd
+
+- name: restart redis container
+  kolla_docker:
+    name: "{{ item }}"
+    action: restart_container
+  with_items:
+    - "redis"
+    - "redis_sentinel"

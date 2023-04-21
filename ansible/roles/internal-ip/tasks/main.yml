@@ -1,0 +1,31 @@
+---
+- name: Get the last in network IP address
+  set_fact:
+    manage_ip: "{{ ansible_default_ipv4.address }}"
+    manage_ip_last_two_octets: "{{ ansible_default_ipv4.address.split('.')[2:] | join('.') }}"
+  when: "api_interface in ansible_interfaces"
+
+- name: Assembling internal IP
+  set_fact:
+    manage_internal_ip: "169.168.{{ manage_ip_last_two_octets }}"
+
+- name: Modifying network connections
+  become: True
+  shell: "nmcli connection modify {{ api_interface }} +ipv4.addresses {{ manage_internal_ip }}/24"
+
+- name: Restart network crad
+  shell: "nmcli connection down {{ api_interface }} && nmcli connection up {{ api_interface }}"
+
+- name: Copy inventory file
+  copy:
+    src: "{{ inventory_file }}"
+    dest: "{{ inventory_file }}_{{ ansible_date_time.epoch }}"
+    owner: root
+    mode: 0644
+
+- name: Replace the IP in the host file
+  replace:
+    path: "{{ inventory_file }}"
+    regexp: '{{ hostvars[item].manage_ip }}'
+    replace: '{{ hostvars[item].manage_internal_ip }}'
+  with_items: "{{ groups['baremetal'] }}"

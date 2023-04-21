@@ -78,6 +78,25 @@
   set_fact:
     physical_interface_mappings: "{{ flat_interface_mappings }},{{ vlan_interface_mappings }}"
 
+- name: Cat thin volume size
+  shell: lvdisplay  vg_name/data_pool --unit g | grep "LV Size" | awk -F' ' '{print $3}'  | awk -F'.' '{print $1}'
+  register: lv_size
+  when:
+    - enable_lvm | bool
+
+- name: set lv size fact
+  set_fact:
+    thin_lv_size: "{{ lv_size.stdout }}"
+  when:
+    - enable_lvm | bool
+
+- name: copy lvm conf file
+  copy:
+    src: lvm.conf
+    dest: /etc/lvm/lvm.conf
+  when:
+    - enable_lvm | bool
+
 - name: copy trochilus conf file
   template:
     src: trochilus.conf.j2
