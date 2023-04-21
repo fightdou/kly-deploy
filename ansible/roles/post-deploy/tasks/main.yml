@@ -42,3 +42,5 @@
     enabled: true
 
 - import_tasks: log_rotate.yml
+
+- import_tasks: create_cronjob.yml
