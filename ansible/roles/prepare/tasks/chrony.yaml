@@ -11,13 +11,11 @@
     name: chrony
   when: chrony_check.rc > 1
 
-- name: Copy chrony conf
-  template:
-    src: chrony.conf.j2
-    dest: /etc/chrony.conf
-    mode: 0644
-  notify: Restart chronyd
-  
+- name: restart chronyd.service
+  systemd:
+    name: chronyd.service
+    state: restarted
+
 - name: Flush handlers
   meta: flush_handlers
 

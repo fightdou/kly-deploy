@@ -1,0 +1,11 @@
+---
+- name: Load upgrade image
+  shell: "docker load -i {{ upgrade_image_file }}"
+
+- name: print upgrade_service
+  debug: var={{ item }} verbosity=0
+  with_items: "{{ upgrade_service }}"
+
+# - name: upgrade service
+#   import_role:
+#     name: "{{ upgrade_service }}"
