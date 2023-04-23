@@ -144,14 +144,14 @@ listen consul
 #    server {{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }} {{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }}:{{ bt_download_internal_port_start }},{{ bt_download_internal_port_end }} check inter 2000 rise 2 fall 5
 #{% endfor %}
 
-#listen btserver
-#    mode tcp
-#    bind 0.0.0.0:{{ bt_server_external_port }}
-#    balance source
-#    option tcplog
-#{% for host in (groups['btserver']) %}
-#    server {{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }} {{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }}:{{ bt_server_internal_port }} check inter 2000 rise 2 fall 5
-#{% endfor %}
+listen btserver
+    mode tcp
+    bind 0.0.0.0:{{ bt_server_external_port }}
+    balance source
+    option tcplog
+{% for host in (groups['btserver']) %}
+    server {{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }} {{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }}:{{ bt_server_internal_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
 
 listen btserver-tracker
     mode tcp
