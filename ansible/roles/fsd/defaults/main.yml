@@ -36,6 +36,7 @@ fsd_services:
     privileged: True
   fsd-console-web:
     enabled: False
+    volumes: "{{ fsd_console_web_volumes }}"
     container_name: fsd_console_web
     image: "{{ fsd_console_web_image_full }}"
     dimensions: "{{ fsd_dimensions }}"
@@ -107,6 +108,9 @@ fsd_init_default_volumes:
 fsd_console_web_image: "{{ docker_image_repository }}/fsd_console_web"
 fsd_console_web_tag: "{{ fsd_console_tag }}"
 fsd_console_web_image_full: "{{ fsd_console_web_image }}:{{ fsd_console_web_tag }}"
+fsd_console_web_volumes:
+  - "{{ config_directory }}/fsd_console/:/opt/fsd_console_start/:rw"
+
 
 fsd_dimensions: 
   ulimits: 

@@ -6,6 +6,13 @@
     mode: "0770"
   become: true
 
+- name: Ensuring fsd_console config directories exist
+  file:
+    path: "{{ config_directory }}/fsd_console"
+    state: "directory"
+    mode: "0770"
+  become: true
+
 - name: 生成 trochilus sql 文件
   template:
     src: trochilus.sql.j2
@@ -50,3 +57,10 @@
   become: true
   notify:
     - Restart fsd-nginx container
+
+- name: Copying over fsd_console_start script
+  template:
+    src: "fsd_console_start.sh.j2"
+    dest: "{{ config_directory }}/fsd_console/fsd_console_start.sh"
+    mode: "0777"
+  become: true

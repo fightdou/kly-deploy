@@ -7,10 +7,11 @@
   kolla_docker:
     action: "recreate_or_restart_container"
     common_options: "{{ docker_common_options }}"
+    volumes: "{{ service.volumes }}"
     image: "{{ service.image }}"
     name: "{{ service.container_name }}"
     dimensions: "{{ service.dimensions }}"
     privileged: "{{ service.privileged | default(False) }}"
-    command: java -jar {% if deploy_edu | bool %}/opt/fsd-edu-console-web.jar --fsd.edu.console.host={{ fsd_proxy_ip }}:9010  --fsd.edu.console.ip={{ api_interface_address }}{% elif deploy_comm | bool %}-Xms128m -Xmx256m -jar /opt/fsd-console-web.jar --fsd.common.host={{ fsd_proxy_ip }}:9010 --fsd.common.ip={{ api_interface_address }}{% endif %}
+    command: "sh /opt/fsd_console_start/fsd_console_start.sh"
   run_once: True
   delegate_to: "{{ groups['fsd'][0] }}"
