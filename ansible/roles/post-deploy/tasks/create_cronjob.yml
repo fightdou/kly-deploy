@@ -1,0 +1,34 @@
+---
+- name: create mysql backup dir
+  file:
+    path: "/opt/mariadb-backup"
+    state: "directory"
+    mode: "0770"
+  become: true
+  run_once: True
+  delegate_to: localhost
+
+- name: create mysql init backup sql
+  shell: docker exec mariadb mysqldump -u{{ mariadb_root_username }} -p{{ mariadb_root_password }} --all-databases > {{ mariadb_backup_path }}/backup-base-init.sql
+  become: true
+  run_once: True
+  delegate_to: localhost
+
+- name: copy mysql backup scripts
+  template:
+    src: mysql_backup.sh.j2
+    dest: "{{ config_directory }}/mariadb/mysql_backup.sh"
+    mode: 0755
+  become: true
+  run_once: True
+  delegate_to: localhost
+
+- name: create crontab command
+  cron:
+    minute: "0"
+    hour: "10"
+    name: Exec mysql backup
+    job: >
+      /bin/bash {{ config_directory }}/mariadb/mysql_backup.sh
+  run_once: True
+  delegate_to: localhost

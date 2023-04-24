@@ -5,10 +5,8 @@
 
 - include_tasks: cleanup_desktop_res.yml
 
-- name: Delete cephfs share dir file
+- name: Delete trochilus dir file
   shell: rm -rf {{ desktop_mount_dir }}/*
-  when:
-    - enable_ceph | bool
 
 - name: Umount cephfs share dir
   mount:

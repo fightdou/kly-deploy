@@ -42,3 +42,37 @@
     enabled: true
 
 - import_tasks: log_rotate.yml
+
+- import_tasks: create_cronjob.yml
+
+- name: 复制 mariadb check 脚本
+  become: true
+  template:
+    src: check_maraidb_status.sh.j2
+    dest: "{{ config_directory }}/mariadb/check_maraidb_status.sh"
+    mode: 755
+  run_once: True
+  delegate_to: localhost
+  when:
+    - groups['control'] | length > 1
+
+- name: 设置开机启动 maraidb 命令
+  become: true
+  template:
+    src: check_maraidb_status.service.j2
+    dest: /usr/lib/systemd/system/check_maraidb_status.service
+  run_once: True
+  delegate_to: localhost
+  when:
+    - groups['control'] | length > 1
+
+- name: Reload systemctl and enable check_maraidb_status service
+  become: true
+  systemd:
+    name: check_maraidb_status
+    daemon_reload: true
+    enabled: true
+  run_once: True
+  delegate_to: localhost
+  when:
+    - groups['control'] | length > 1

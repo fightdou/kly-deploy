@@ -1,0 +1,11 @@
+[Unit]
+Description=Exec mariadb check scripts
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash {{ config_directory }}/mariadb/check_maraidb_status.sh
+
+[Install]
+WantedBy=multi-user.target

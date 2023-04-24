@@ -1,0 +1,39 @@
+#!/bin/bash
+log_file=/var/log/mariadb/check_mariadb.log
+STATUS="none"
+echo "`date` ------ mysql galera check start! ---------" | tee -a $log_file
+
+for i in {1..10}; do
+    sleep 30
+    echo "`date` Check Galera cluster running node" | tee -a $log_file
+    {% for host in groups['mariadb'] %}
+    {% set index = loop.index %}
+    {{ 'status' + index | string }}=`ssh {{ host }} docker ps | grep mariadb | wc -l`
+    {% endfor %}
+    if [ $status1 -eq 1 ] && [ $status2 -eq 1 ] && [ $status3 -eq 1 ];
+    then
+        sleep 30
+        STATUS=$(docker exec mariadb mysql -u{{ mariadb_root_username }} -p{{ mariadb_root_password }} -e "SHOW STATUS LIKE 'wsrep_cluster_status';" | awk '{print $2}' | sed 's/Value//' | sed ':a;N;$!ba;s/\n//g')
+        echo "`date` Galera cluster node is $STATUS" | tee -a $log_file
+        if [ "${STATUS}" != "Primary" ];
+        then
+            echo "`date` Galera cluster is not healthy!"| tee -a $log_file
+            sleep 30
+            STATUS=$(docker exec mariadb mysql -u{{ mariadb_root_username }} -p{{ mariadb_root_password }} -e "SHOW STATUS LIKE 'wsrep_cluster_status';" | awk '{print $2}' | sed 's/Value//' | sed ':a;N;$!ba;s/\n//g')
+            if [ "${STATUS}" != "Primary" ];
+            then
+                echo "`date` Start exec mysql recover script!"| tee -a $log_file
+                ansible-playbook -i /root/deploy/kly-deploy/etc_example/hosts -e @/root/deploy/kly-deploy/etc_example/global_vars.yaml -e @/root/deploy/kly-deploy/etc_example/ceph-globals.yaml /root/deploy/kly-deploy/ansible/93-mariadb_recovery.yaml >> /var/log/mariadb/ansible-recovery.log
+                echo "`date` Exec ansible recovery script success!!"| tee -a $log_file
+                {% for host in groups['mariadb'] %}
+                ssh {{ host }} docker restart trochilus_agent trochilus_api fsd fsd_job
+                {% endfor %}
+            fi
+        else
+            echo "`date` Galera cluster is healthy!"| tee -a $log_file
+            break
+        fi
+    else
+        sleep 30
+    fi
+done
