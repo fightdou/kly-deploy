@@ -1,0 +1,5 @@
+upgrade_resource_path: /opt/upgrade_resource
+upgrade_image_file: "{{ upgrade_resource_path }}/kunlunyun-2.0.0.tar.gz"
+upgrade_service:
+  - trochilus
+  - fsd

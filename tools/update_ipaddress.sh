@@ -111,7 +111,7 @@ update_hosts() {
 
 update_ansible() {
   ansible_hosts_file="../etc_example/hosts"
-  sed -i 's/'"${old_ipaddr}"'/'"${ipaddr}"'/g' $ansible_hosts_file
+  sudo sed -i 's/'"${old_ipaddr}"'/'"${ipaddr}"'/g' $ansible_hosts_file
 
   echo "$(date "+%Y-%m-%d %H:%M:%S") New '$ansible_hosts_file' config is:"
   grep -E "api_interface" $ansible_hosts_file
@@ -119,7 +119,6 @@ update_ansible() {
 }
 
 update_jave() {
-  java_conf_file="/etc/klcloud/fsd/trochilus.sql"
   java_db_name="klcloud_fsd_edu"
 
   mariadb_root_username=$(echo $(grep -E '^mariadb_root_username:' $global_vars_file | cut -d':' -f2))
@@ -137,13 +136,9 @@ update_jave() {
   docker exec -it mariadb mysql -u$mariadb_root_username -p$mariadb_root_password -e \
   "use ${java_db_name}; $update_setting_sql $update_server_sql"
 
-  if [ -d /etc/klcloud/btserver ]; then
-    rm -rf /etc/klcloud/btserver >/dev/null 
-  fi
-  
-  ansible-playbook -i ../etc_example/hosts -e @../etc_example/global_vars.yaml \
-                   -e @../etc_example/ceph-globals.yaml ../ansible/90-setup.yaml \
-                   -t btserver
+  sudo sed -i 's/'"${old_ipaddr}"'/'"${ipaddr}"'/g' /etc/klcloud/btserver/opentracker.conf
+  sudo sed -i 's/'"${old_ipaddr}"'/'"${ipaddr}"'/g' /etc/klcloud/btserver/torrent.ini
+  docker restart btserver btserver_tracker
 
   echo "----------------------------------------------------------------------"
 }

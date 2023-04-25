@@ -28,4 +28,6 @@
     path: "{{ inventory_file }}"
     regexp: '{{ hostvars[item].manage_ip }}'
     replace: '{{ hostvars[item].manage_internal_ip }}'
+  run_once: True
+  delegate_to: "{{ groups['baremetal'][0] }}"
   with_items: "{{ groups['baremetal'] }}"

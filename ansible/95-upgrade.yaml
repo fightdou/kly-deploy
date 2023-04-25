@@ -1,0 +1,7 @@
+---
+- name: Apply upgrade
+  gather_facts: True
+  hosts: baremetal
+  roles:
+    - { role: upgrade,
+        tags: upgrade}
