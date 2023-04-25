@@ -15,7 +15,8 @@
   systemd:
     name: chronyd.service
     state: restarted
-
+    enabled: True
+  
 - name: Flush handlers
   meta: flush_handlers
 

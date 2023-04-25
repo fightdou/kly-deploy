@@ -8,8 +8,8 @@ docker_image_tag: latest
 config_directory: "/etc/klcloud"
 
 #部署通用版或者教育版,只能开一个
-deploy_edu: true
-deploy_comm: false
+deploy_edu: false
+deploy_comm: true
 
 ###############
 # Global Config
@@ -223,7 +223,7 @@ fsd_console_port: 9040
 fsd_external_main_port: 9010
 fsd_internal_main_port: 19010
 fsd_webhook_token: abc123
-fsd_default_tag: 2.0.2-lvm
+fsd_default_tag: latest
 fsd_console_tag: latest
 fsd_deploy_mode: all
 fsd_deploy_node_type: '{% if groups["fsd"] | length > 1 %}cluster{% else %}single{% endif %}'
