@@ -175,7 +175,7 @@ mariadb_sst_port: "4444"
 database_max_timeout: 600
 mariadb_root_password: 123456
 mariadb_root_username: root
-mariadb_default_tag: 10.6
+mariadb_default_tag: latest
 mariadb_backup_path: "/opt/mariadb-backup"
 
 
