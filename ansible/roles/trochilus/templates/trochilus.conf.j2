@@ -61,7 +61,7 @@ thin_virtualsize = {{ thin_lv_size }}G
 {% endif %}
 
 [network_settings]
-disable_linux_bridge_stp = false
+disable_linux_bridge_stp = true
 dhcp_confs = /etc/trochilus/dhcp
 support_flat_physicals = {{ flat_physicals }}
 physical_vlan_ranges = {{ vlan_range }}
