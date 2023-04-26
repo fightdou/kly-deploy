@@ -10,7 +10,8 @@ vrrp_script check_script_{{ service_name }} {
 vrrp_instance {{ service_name }} {
   state {{ vip_instance_state }}
   interface {{ vip_interface }}
-  virtual_router_id {{ router_id }}
+  virtual_router_id {% if service_name == 'internal' %}{{ router_id | int + 1 }}{% else %}{{ router_id | int }}{% endif %}
+
   priority {{ vip_instance_priority }}
   accept
   garp_master_refresh 5
