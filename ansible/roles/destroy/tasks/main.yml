@@ -22,11 +22,18 @@
     - enable_lvm | bool
   ignore_errors: True
 
-- name: 清理 pv 卷
-  shell: pvremove -y {{ lvm_pv_device }}
+- name: 生成清理命令
+  set_fact:
+    pv_volume: "{% for pv in lvm_pv_device %} {{ pv }} {% if not loop.last %} {% endif %}{% endfor %}"
   when:
     - enable_lvm | bool
+
+- name: 清理 pv 卷
+  become: true
   ignore_errors: True
+  shell: pvremove -y {{ pv_volume }}
+  when:
+    - enable_lvm | bool
 
 - name: 清除清除系统缓存的定时任务
   cron:
