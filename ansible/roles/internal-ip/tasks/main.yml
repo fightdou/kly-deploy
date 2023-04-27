@@ -22,6 +22,8 @@
     dest: "{{ inventory_file }}_{{ ansible_date_time.epoch }}"
     owner: root
     mode: 0644
+  run_once: True
+  delegate_to: "{{ groups['baremetal'][0] }}"
 
 - name: Replace the IP in the host file
   replace:
