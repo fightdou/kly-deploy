@@ -64,13 +64,6 @@
     enabled: yes
     name: check_libvirt_collectd
 
-- name: Start collectd service
-  systemd:
-    name: collectd.service
-    state: restarted
-    enabled: no
-    daemon_reload: yes
-
 - name: Ensuring prometheus config directories exist
   file:
     path: "{{ config_directory }}/prometheus/rules"
@@ -155,3 +148,10 @@
     dest: "{{ config_directory }}/host-exporter/config.yml"
   notify:
     - Restart prometheus-host-exporter container
+
+- name: Start collectd service
+  systemd:
+    name: collectd.service
+    state: restarted
+    enabled: no
+    daemon_reload: yes
