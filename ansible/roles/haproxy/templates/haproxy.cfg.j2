@@ -40,9 +40,7 @@ listen mariadb
     bind 0.0.0.0:{{ mariadb_external_listen_port }}
     balance source
     option tcplog
-{% for host in (groups['mariadb']) %}
-    server {{ host }} {{ host }}:{{ mariadb_internal_listen_port }} check inter 2000 rise 2 fall 5
-{% endfor %}
+    server {{ inventory_hostname }} {{ inventory_hostname }}:{{ mariadb_internal_listen_port }} check inter 2000 rise 2 fall 5
 {% endif %}
 
 #{% if enable_redis | bool %}
