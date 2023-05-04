@@ -1,6 +1,6 @@
 ---
 - name: Check if chrony is installed
-  command: "rpm -qa chrony" 
+  command: "rpm -qa chrony"
   register: chrony_check
   changed_when: false
   args:
@@ -9,14 +9,19 @@
 - name: Install chrony
   package:
     name: chrony
-  when: chrony_check.rc > 1
+  when: chrony_check.rc != 0
 
-- name: restart chronyd.service
-  systemd:
-    name: chronyd.service
-    state: restarted
-    enabled: True
-  
+- name: Copy chrony conf
+  template:
+    src: chrony.conf.j2
+    dest: "/etc/chrony.conf"
+    mode: 0644
+  notify: Restart chronyd
+
+- name: disable timedatectl ntp
+  shell: |
+    timedatectl set-ntp no
+
 - name: Flush handlers
   meta: flush_handlers
 

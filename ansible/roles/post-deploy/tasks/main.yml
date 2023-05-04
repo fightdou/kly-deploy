@@ -76,3 +76,10 @@
   delegate_to: localhost
   when:
     - groups['control'] | length > 1
+
+- name: 创建定时任务,每天晚上2点清除系统缓存
+  cron:
+    name: "clean linux cache"
+    hour: "2"
+    job: "sync && echo 1 > /proc/sys/vm/drop_caches"
+  when: inventory_hostname in groups["control"]
