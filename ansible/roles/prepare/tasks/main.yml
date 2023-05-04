@@ -1,6 +1,6 @@
 ---
-- include_tasks: chrony.yaml
-
 - import_tasks: install_docker.yml
 
 - import_tasks: post_install.yml
+
+- include_tasks: chrony.yaml
