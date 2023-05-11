@@ -1,0 +1,2 @@
+deploy_type: "{% if deploy_edu | bool %}_edu{% else %}{% endif %}"
+fsd_proxy_ip: "{% if proxy_ip != '' %}{{ proxy_ip }}{% elif enable_keepalived | bool %}{{ external_vip_address }}{% else %}{{ api_interface_address }}{% endif %}"

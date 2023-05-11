@@ -1,5 +1,10 @@
-upgrade_resource_path: /opt/upgrade_resource
-upgrade_image_file: "{{ upgrade_resource_path }}/kunlunyun-2.0.0.tar.gz"
+upgrade_version: 2.0.3
+upgrade_resource_path: /opt/kly-upgrade/COMM-upgrade_resource_v2.0.3
+upgrade_image_file: "{{ upgrade_resource_path }}/upgrade_image_2.0.3.tar.gz"
 upgrade_service:
-  - trochilus
+  - trochilus 
   - fsd
+  
+fsd_default_tag: "{{ upgrade_version }}"
+trochilus_tag: "{{ upgrade_version }}"
+fsd_upgrade_server_port: 9014

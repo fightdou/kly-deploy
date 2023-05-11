@@ -1,0 +1,15 @@
+- name: bakup trochilus config file
+  vars:
+    folder_name: trochilus
+    timestamp: "{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+  file:
+    src: "{{ config_directory }}/{{ folder_name }}"
+    dest: "{{ config_directory }}/{{ folder_name }}-{{ timestamp }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: upgade trochilus service
+  import_role:
+    name: trochilus

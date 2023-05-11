@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# 等待时间和最大重试次数
+WAIT_TIME=3
+MAX_RETRY=30
+
+# 检查系统的版本号
+if test -f "/etc/klcloud-release"; then
+  release=$(cat /etc/klcloud-release)
+  version=$(echo "$release" | awk -F'-' '{print $2}' | sed 's/^v//')
+else
+  version="2.0.2"
+fi
+
+# 执行升级命令
+java -jar {{ upgrade_resource_path }}/upgrade-web.jar \
+    --spring.datasource.password={{ mariadb_root_password }} \
+    --upgrade.biz.deploy.nodeIp={{ fsd_proxy_ip }} \
+    --upgrade.biz.deploy.project=klcloud_fsd{{deploy_type}} \
+    --upgrade.biz.path.logPath=/var/log/deploy \
+    --server.port={{ fsd_upgrade_server_port }} >/dev/null &
+
+retry_count=0
+while [ $retry_count -lt $MAX_RETRY ]; do
+  if netstat -an | grep -w "{{ fsd_upgrade_server_port }}" >/dev/null; then
+    # 发送升级请求并检查状态码
+    response=$(curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" \
+      -d "{\"currentVersion\": \"$version\",\"project\": \"fsd{{deploy_type}}\",\"targetVersion\": \"{{ upgrade_version }}\"}" \
+      "http://localhost:{{ fsd_upgrade_server_port }}/api/v1/upgrade/")
+    status=$(echo $response | jq -r '.state')
+
+    # 根据状态码判断升级是否成功，并终止升级服务
+    if [[ $status -eq 200 ]]; then
+      pkill -f upgrade-web
+      exit 0
+    else
+      pkill -f upgrade-web
+      exit 1
+    fi
+  fi
+
+  retry_count=$((retry_count+1))
+  sleep ${WAIT_TIME}
+done
+
+# 升级失败，退出脚本
+exit 1

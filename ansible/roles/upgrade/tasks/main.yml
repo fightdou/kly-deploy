@@ -1,11 +1,38 @@
 ---
+
+- name: Copy image to remote host
+  copy:
+    src: "{{ upgrade_image_file }}"
+    dest: "{{ upgrade_image_file }}"
+  delegate_to: localhost
+  run_once: true
+
 - name: Load upgrade image
   shell: "docker load -i {{ upgrade_image_file }}"
 
-- name: print upgrade_service
-  debug: var={{ item }} verbosity=0
-  with_items: "{{ upgrade_service }}"
+- name: Bakup databses
+  shell: /bin/bash {{ config_directory }}/mariadb/mysql_backup.sh
+  delegate_to: localhost
+  run_once: true
 
+- name: Create file upgarde dir
+  become: true
+  file:
+    path: "{{ config_directory }}/upgrade/"
+    state: directory
+    mode: 0755
+
+- import_tasks: trochilus.yml
+  when: "'trochilus' in upgrade_service"
+
+- import_tasks: btserver.yml
+  when: "'btserver' in upgrade_service"
+
+- import_tasks: fsd.yml
+  when: "'fsd' in upgrade_service"
+  
 # - name: upgrade service
-#   import_role:
-#     name: "{{ upgrade_service }}"
+#   include_role:
+#     name: "{{ item }}"
+#   with_items: "{{ upgrade_service }}"
+
