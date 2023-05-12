@@ -51,7 +51,7 @@ vm_swappiness: 0
 # Docker options
 ####################
 # Valid options are [ no, on-failure, always, unless-stopped ]
-docker_restart_policy: "unless-stopped"
+docker_restart_policy: "always"
 # '0' means unlimited retries (applies only to 'on-failure' policy)
 docker_restart_policy_retry: "10"
 # Timeout after Docker sends SIGTERM before sending SIGKILL.
