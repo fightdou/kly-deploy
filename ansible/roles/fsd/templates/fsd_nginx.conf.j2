@@ -9,7 +9,14 @@ server {
   gzip_min_length 100;
   gzip_types text/plain text/css application/xml application/javascript;
   gzip_vary on;
-        
+
+  {% if deploy_edu | bool %}
+  client_header_timeout 7200s;
+  client_body_timeout 7200s;
+  send_timeout 7200s;
+  keepalive_timeout 7200s;
+  {% endif %}
+
   location / {
     root    /usr/local/dist/;
     index   index.php index.html index.htm;
