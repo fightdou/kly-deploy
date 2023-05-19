@@ -199,6 +199,8 @@ trochilus_ha_base_dir_path: /etc/trochilus/ha
 trochilus_dhcp_confs: /etc/trochilus/dhcp
 trochilus_enable_reserved_core: false
 trochilus_reserved_cores_num: 2
+trochilus_cpu_weight_multiplier: 100
+trochilus_memory_weight_multiplier: 1
 trochilus_mariadb_username: trochilus
 trochilus_mariadb_password: fe7f93ca2af34f3aa85cd9f0b66b9896
 trochilus_mariadb_dataname: trochilus
