@@ -21,6 +21,7 @@
 - name: disable timedatectl ntp
   shell: |
     timedatectl set-ntp no
+  ignore_errors: true
 
 - name: Flush handlers
   meta: flush_handlers

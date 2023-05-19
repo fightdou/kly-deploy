@@ -105,8 +105,8 @@ ceph_rbd_secret_uuid: e2338e01-6f82-4236-885b-056847028c77
 ceph_rbd_admin_user: client.admin
 hugepages_size: 2M
 enable_hugepages: "{% if only_deploy_voi | bool or deploy_edu | bool %}false{% else %}true{% endif %}"
-libvirt_tag: 2.0.2
-guest_service_tag: 2.0.2
+libvirt_tag: 2.0.3
+guest_service_tag: 2.0.3
 
 #################
 # Haproxy Options
@@ -191,7 +191,7 @@ trochilus_external_agent_listen_port: 9002
 trochilus_internal_agent_listen_port: 19002
 trochilus_base_path: "{{ desktop_mount_dir }}"
 trochilus_voi_base_path: "{{ desktop_mount_dir }}/voi"
-trochilus_tag: 2.0.2
+trochilus_tag: 2.0.3
 virt_v2v_tag: latest
 # 如果vdi盒子和管理网不在同一个网段，就填管理网网关ip。如果vdi盒子和管理网在同一个网段，就啥也不填
 trochilus_detected_mgmt_net_ip: ""
@@ -199,6 +199,8 @@ trochilus_ha_base_dir_path: /etc/trochilus/ha
 trochilus_dhcp_confs: /etc/trochilus/dhcp
 trochilus_enable_reserved_core: false
 trochilus_reserved_cores_num: 2
+trochilus_cpu_weight_multiplier: 100
+trochilus_memory_weight_multiplier: 1
 trochilus_mariadb_username: trochilus
 trochilus_mariadb_password: fe7f93ca2af34f3aa85cd9f0b66b9896
 trochilus_mariadb_dataname: trochilus
@@ -224,7 +226,7 @@ fsd_external_main_port: 9010
 fsd_internal_main_port: 19010
 fsd_ssd_port: 22222
 fsd_webhook_token: abc123
-fsd_default_tag: 2.0.2
+fsd_default_tag: 2.0.3
 fsd_console_tag: latest
 fsd_deploy_mode: all
 fsd_deploy_node_type: '{% if groups["fsd"] | length > 1 %}cluster{% else %}single{% endif %}'
@@ -271,4 +273,4 @@ bt_download_external_port_end: 6889
 bt_download_internal_port_end: 16889
 btserver_external_listen_ports: "{{ bt_download_external_port_start }}-{{ bt_download_external_port_end }}"
 btserver_internal_listen_ports: "{{ bt_download_internal_port_start }}-{{ bt_download_internal_port_end }}"
-btserver_tag: 2.0.2
+btserver_tag: 2.0.3
