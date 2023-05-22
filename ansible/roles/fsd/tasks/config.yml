@@ -27,6 +27,13 @@
     mode: "0777"
     recurse: yes
 
+- name: Copy change_ip.sh to fsd path
+  become: true
+  copy:
+    src: change_ip.sh
+    dest: "{{ config_directory }}/fsd/"
+    mode: "0777"
+
 - name: Copy Tdesktop.exe to share path
   become: true
   copy:
