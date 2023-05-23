@@ -91,3 +91,17 @@
     regexp: 'swap'
     state: absent
     backup: yes
+
+- name: Copy SSH CONFIG
+  template: 
+    src: sshd_config
+    dest: /etc/ssh/sshd_config
+    mode: 0600
+  when: ansible_architecture == "aarch64"
+
+- name: Restart SSH
+  systemd:
+    name: sshd
+    state: restarted
+    enabled: true
+  when: ansible_architecture == "aarch64"
