@@ -1,6 +1,6 @@
-- name: bakup trochilus config file
+- name: bakup libvirt config file
   vars:
-    folder_name: trochilus
+    folder_name: libvirt
     timestamp: "{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
   file:
     src: "{{ config_directory }}/{{ folder_name }}"
@@ -10,6 +10,6 @@
     group: root
     mode: "0755"
 
-- name: upgade trochilus service
+- name: upgade libvirt service
   import_role:
-    name: trochilus
+    name: libvirt

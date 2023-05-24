@@ -1,5 +1,4 @@
 ---
-
 - name: Copy image to remote host
   copy:
     src: "{{ upgrade_image_file }}"
@@ -22,17 +21,17 @@
     state: directory
     mode: 0755
 
+- import_tasks: libvirt.yml
+  when: "'libvirt' in upgrade_service"
+
 - import_tasks: trochilus.yml
   when: "'trochilus' in upgrade_service"
+
+- import_tasks: guest-service.yml
+  when: "'guest-service' in upgrade_service"
 
 - import_tasks: btserver.yml
   when: "'btserver' in upgrade_service"
 
 - import_tasks: fsd.yml
   when: "'fsd' in upgrade_service"
-  
-# - name: upgrade service
-#   include_role:
-#     name: "{{ item }}"
-#   with_items: "{{ upgrade_service }}"
-

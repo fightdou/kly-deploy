@@ -1,6 +1,6 @@
-- name: bakup trochilus config file
+- name: bakup guest-service config file
   vars:
-    folder_name: trochilus
+    folder_name: guest-service
     timestamp: "{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
   file:
     src: "{{ config_directory }}/{{ folder_name }}"
@@ -10,6 +10,6 @@
     group: root
     mode: "0755"
 
-- name: upgade trochilus service
+- name: upgade guest-service service
   import_role:
-    name: trochilus
+    name: guest-service
