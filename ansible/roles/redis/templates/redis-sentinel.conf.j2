@@ -5,7 +5,7 @@ bind 0.0.0.0
 port {{ redis_sentinel_port }}
 logfile /var/log/redis/redis-sentinel.log
 sentinel myid {{ inventory_hostname | hash('sha1') }}
-sentinel monitor mymaster {{ redis_master_address }} {{ redis_external_server_port }} 2
+sentinel monitor mymaster {{ redis_master_address }} {{ redis_listen_server_port }} 2
 sentinel auth-pass mymaster {{ redis_master_password }}
 sentinel down-after-milliseconds mymaster 10000
 sentinel failover-timeout mymaster 180000
