@@ -11,6 +11,7 @@
     environment:
       KOLLA_CONFIG_STRATEGY: "COPY_ALWAYS"
       BOOTSTRAP_ARGS: "--wsrep-new-cluster"
+      bootstrap_first: "yes"
     labels:
       BOOTSTRAP:
     image: "{{ service.image }}"
