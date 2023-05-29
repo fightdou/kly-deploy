@@ -43,16 +43,16 @@ listen mariadb
     server {{ inventory_hostname }} {{ inventory_hostname }}:{{ mariadb_internal_listen_port }} check inter 2000 rise 2 fall 5
 {% endif %}
 
-#{% if enable_redis | bool %}
-#listen redis
-#    mode tcp
-#    bind 0.0.0.0:{{ redis_external_server_port }}
-#    balance source
-#    option tcplog
-#{% for host in (groups['redis']) %}
-#    server {{ host }} {{ host }}:{{ redis_internal_server_port }} check inter 2000 rise 2 fall 5
-#{% endfor %}
-#{% endif %}
+{% if enable_redis | bool %}
+listen redis
+    mode tcp
+    bind 0.0.0.0:{{ redis_external_server_port }}
+    balance source
+    option tcplog
+{% for host in (groups['redis']) %}
+    server {{ host }} {{ host }}:{{ redis_internal_server_port }} check inter 2000 rise 2 fall 5
+{% endfor %}
+{% endif %}
 
 {% if enable_emqx | bool %}
 listen emqx
