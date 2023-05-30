@@ -7,6 +7,10 @@
   when:
     - enable_ceph | bool
 
+- import_tasks: create_bcache_script.yml
+  when:
+    - bcache | bool
+
 - name: 获取 osd 数量
   shell: systemctl | grep running | grep osd@ | wc -l
   register: osd_num
