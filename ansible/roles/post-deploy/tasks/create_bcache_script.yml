@@ -1,0 +1,24 @@
+---
+- name: 复制resize_bcache_minimun.service
+  copy:
+    src: resize_bcache_minimun.service
+    dest:  /usr/lib/systemd/system/resize_bcache_minimun.service
+  when:
+    - inventory_hostname in groups['storage']
+
+- name: 复制 resize_bcache_minimun 文件
+  copy:
+    src: resize_bcache_minimun
+    dest:  /usr/local/bin/resize_bcache_minimun
+    mode: 0755
+  when:
+    - inventory_hostname in groups['storage']
+
+- name: Reload systemctl and enable resize_bcache_minimun service
+  become: true
+  systemd:
+    name: resize_bcache_minimun
+    daemon_reload: true
+    enabled: true
+  when:
+    - inventory_hostname in groups['storage']

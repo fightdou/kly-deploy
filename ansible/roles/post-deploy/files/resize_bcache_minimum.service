@@ -1,0 +1,11 @@
+[Unit]
+Description=Exec resize bcache minimum args
+After=ceph.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/resize_bcache_minimum
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
