@@ -107,6 +107,11 @@ hugepages_size: 2M
 enable_hugepages: "{% if only_deploy_voi | bool or deploy_edu | bool %}false{% else %}true{% endif %}"
 libvirt_tag: 2.0.3
 guest_service_tag: 2.0.3
+coredump_img_file_path: /opt/coredump
+coredump_libvirt_path: /opt/coredump_file
+coredump_block_size: 1024M
+coredump_count: 20
+coredump_loop_device_name: /dev/loop99
 
 #################
 # Haproxy Options
