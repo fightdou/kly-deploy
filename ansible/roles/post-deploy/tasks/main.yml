@@ -3,10 +3,6 @@
   when:
     - create_swap_file | bool
 
-- import_tasks: set-libvirt-coredump.yml
-  when:
-    - not only_deploy_voi | bool
-
 - import_tasks: create_mount_crontab.yml
   when:
     - enable_ceph | bool
