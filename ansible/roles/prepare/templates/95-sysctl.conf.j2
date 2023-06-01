@@ -13,3 +13,7 @@ vm.swappiness = {{ vm_swappiness }}
 {% else %}
 vm.swappiness = 0
 {% endif %}
+
+{% if not only_deploy_voi | bool %}
+kernel.core_pattern=|{{ coredump_libvirt_path }}/corefile-%e-%p-%t
+{% endif %}

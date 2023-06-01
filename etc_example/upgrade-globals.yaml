@@ -12,3 +12,10 @@ trochilus_tag: "{{ upgrade_version }}"
 trochilus_cpu_weight_multiplier: 100
 trochilus_memory_weight_multiplier: 1
 fsd_upgrade_server_port: 9014
+
+# libvirt coredump 参数
+coredump_img_file_path: /opt/coredump
+coredump_libvirt_path: /opt/coredump_file
+coredump_block_size: 1024M
+coredump_count: 20
+coredump_loop_device_name: /dev/loop99
