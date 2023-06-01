@@ -8,3 +8,7 @@ echo N > /sys/module/kvm/parameters/nx_huge_pages
 {% if enable_lvm | bool %}
 vgchange -ay -K {{ lvm_volgroup_name }}
 {% endif %}
+
+{% if not only_deploy_voi | bool %}
+echo "{{ coredump_libvirt_path }}/corefile-%e-%p-%t" > /proc/sys/kernel/core_pattern
+{% endif %}
