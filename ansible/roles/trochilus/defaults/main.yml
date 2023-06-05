@@ -83,3 +83,16 @@ physical_flat_interface: "{% for flat_interface in flat_network_interface %}{% i
 physical_interface_mappings: "{% if trochilus_support_flat_network and trochilus_support_vlan_network %}{{ physical_flat_interface }},{{ physical_vlan_interface }} {% elif trochilus_support_flat_network %} {{ physical_flat_interface }}{% elif trochilus_support_vlan_network %} {{ physical_vlan_interface }} {% endif %}"
 
 webhook_target_ip: "{% if enable_keepalived | bool %}{{ internal_vip_address }}{% else %}0.0.0.0{% endif %}"
+
+volume_backends:
+  - name: "local"
+    enabled: "{{ enable_local | bool }}"
+    image: "filesystem"
+  - name: "thin_lvm1"
+    enabled: "{{ enable_lvm | bool }}"
+    image: "lvm"
+  - name: "rbd1"
+    enabled: "{{ enable_ceph | bool }}"
+    image: "rbd"
+
+volume_enabled_backends: "{{ volume_backends|selectattr('enabled', 'equalto', true)|list }}"

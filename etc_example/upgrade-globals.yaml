@@ -6,7 +6,8 @@ upgrade_service:
   - trochilus
   - guest-service
   - fsd
-  
+
+enable_local: false
 fsd_default_tag: "{{ upgrade_version }}"
 trochilus_tag: "{{ upgrade_version }}"
 trochilus_cpu_weight_multiplier: 100
