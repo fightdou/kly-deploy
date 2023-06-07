@@ -57,7 +57,9 @@ volume_driver = trochilus.agent.storage.volume.drivers.local.LocalStorageVolumeD
 {% endif %}
 
 [image_settings]
-enabled_image_store = {{ volume_enabled_backends|map(attribute='image')|join(',') }}
+enabled_image_store = {% if enable_ceph %}rbd{% else %}filesystem{% endif %}
+
+enabled_image_stores = {{ volume_enabled_backends|map(attribute='image')|join(',') }}
 {% if enable_lvm | bool %}
 lvm_store_vgname = {{ lvm_volgroup_name }}
 lvm_store_thin_pool = {{ thin_volume_pool_name }}

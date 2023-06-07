@@ -96,9 +96,20 @@ enable_local: false
 only_deploy_voi: true
 # voi单网卡部署开关
 enable_single_net: false
+single_net_bridge_name: br0
+vpair_tap_name: klcloud-br
+vtap_name: klcloud-vpc
 voi_storage_num: 100
 voi_data_device: "/dev/sda"
 voi_data_directory: "{{ desktop_mount_dir }}"
+
+#############
+# local 配置
+#############
+local_vg_name: local
+local_trochilus_lv_name: trochilus
+local_net_lv_name: net
+share_mount_dir: "/opt/share"
 
 #################
 # Libvirt Options

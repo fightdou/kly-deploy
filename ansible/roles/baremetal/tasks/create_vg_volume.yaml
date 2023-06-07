@@ -1,33 +1,35 @@
+---
+- name: copy lvm conf file
+  copy:
+    src: lvm.conf
+    dest: /etc/lvm/lvm.conf
+  when:
+    - enable_lvm | bool
+
 - name: 查看 pv 是否存在
   shell: "vgs | grep {{ lvm_volgroup_name }} | wc -l"
   register: vg_exist
-  when:
-    - enable_lvm | bool
 
 - name: 生成创建命令
   set_fact:
     pv_volume: "{% for pv in lvm_pv_device %} {{ pv }} {% if not loop.last %} {% endif %}{% endfor %}"
   when:
-    - enable_lvm | bool
     - vg_exist.stdout == "0"
 
 - name: 创建 pv
   become: true
   shell: "pvcreate {{ pv_volume }}"
   when:
-    - enable_lvm | bool
     - vg_exist.stdout == "0"
 
 - name: 创建 vg
   become: true
   shell: "vgcreate {{ lvm_volgroup_name }} {{ pv_volume }}"
   when: 
-    - enable_lvm | bool
     - vg_exist.stdout == "0"
 
 - name: 创建 thin pool
   become: true
   shell: "lvcreate -l +100%free --thinpool {{ thin_volume_pool_name }} {{ lvm_volgroup_name }}"
   when: 
-    - enable_lvm | bool
     - vg_exist.stdout == "0"
