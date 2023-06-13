@@ -4,5 +4,4 @@
   hosts: baremetal
   roles:
     - { role: internal-ip,
-        tags: internal-ip,
-        when: deploy_comm | bool  }
+        tags: internal-ip }

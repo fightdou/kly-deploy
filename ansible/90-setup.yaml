@@ -57,6 +57,14 @@
         tags: libvirt,
         when: enable_libvirt| bool }
 
+- name: Apply role glusterfs
+  gather_facts: false
+  hosts: glusterfs
+  roles:
+    - { role: glusterfs,
+        tags: glusterfs,
+        when: enable_glusterfs| bool }
+
 - name: Apply role trochilus
   gather_facts: false
   hosts:

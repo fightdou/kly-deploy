@@ -1,0 +1,5 @@
+---
+gluster_ip: "{% for host in groups['glusterfs'] %}{{ host }}{% if not loop.last %},{% endif %}{% endfor %}"
+gluster_ip_list: "{{ gluster_ip.split(',') }}"
+
+share_volume_name: "share_data"
