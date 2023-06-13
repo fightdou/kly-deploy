@@ -5,16 +5,24 @@
 # ceph 0有ssd时: bcache_map_list=[{'cache':'/dev/nvme0n1','data':'/dev/sda /dev/sdb /dev/sdc'},{'cache':'/dev/nvme1n1','data':'/dev/sdb /dev/sdc /dev/sdd'}]
 
 [allnodes]
-169.168.134.201 ansible_ssh_extra_args='-o StrictHostKeyChecking=no' hostname=control1 api_interface=eno1 ceph_public_interface=eno1 ceph_cluster_interface=eno1 flat_network_interface="['enp7s0f1']" vlan_network_interface="{'enp7s0f1': ['1:4094']}" ceph_volume_data="['/dev/sdb']" bcache_map_list="[{'cache': '/dev/nvme0n1', 'data': '/dev/sdb'}]" nic_info="['eno1:null:1011', 'enp7s0f1:null:0100']" lvm_pv_device="['/dev/sdc', '/dev/nvme1n1']" local_device="['/dev/sdd']" external_manage_ip='172.27.134.201'
+169.168.134.201 ansible_ssh_extra_args='-o StrictHostKeyChecking=no' hostname=control1 api_interface=eno1 ceph_public_interface=eno1 ceph_cluster_interface=eno1 flat_network_interface="['enp7s0f1']" vlan_network_interface="{'enp7s0f1': ['1:4094']}" ceph_volume_data="['/dev/sdb', '/dev/sdc', '/dev/sdd']" bcache_map_list="[]" nic_info="['eno1:null:1011', 'enp7s0f1:null:0100']"
+169.168.134.202 ansible_ssh_extra_args='-o StrictHostKeyChecking=no' hostname=control2 api_interface=eno1 ceph_public_interface=eno1 ceph_cluster_interface=eno1 flat_network_interface="['enp7s0f1']" vlan_network_interface="{'enp7s0f1': ['1:4094']}" ceph_volume_data="['/dev/sdb', '/dev/sdc', '/dev/sdd']" bcache_map_list="[]" nic_info="['eno1:null:1011', 'enp7s0f1:null:0100']"
+169.168.134.203 ansible_ssh_extra_args='-o StrictHostKeyChecking=no' hostname=control3 api_interface=eno1 ceph_public_interface=eno1 ceph_cluster_interface=eno1 flat_network_interface="['enp7s0f1']" vlan_network_interface="{'enp7s0f1': ['1:4094']}" ceph_volume_data="['/dev/sdb', '/dev/sdc', '/dev/sdd']" bcache_map_list="[]" nic_info="['eno1:null:1011', 'enp7s0f1:null:0100']"
 
 [control]
 169.168.134.201
+169.168.134.202
+169.168.134.203
 
 [compute]
 169.168.134.201
+169.168.134.202
+169.168.134.203
 
 [storage]
 169.168.134.201
+169.168.134.202
+169.168.134.203
 
 [ceph:children]
 ceph-mons
@@ -117,3 +125,5 @@ control
 [btserver_tracker:children]
 control
 
+[glusterfs:children]
+control

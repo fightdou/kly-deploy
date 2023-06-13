@@ -1,0 +1,20 @@
+---
+- name: install deb for gluster
+  package:
+    name: "{{ package }}"
+    state: present
+    update_cache: True
+  vars:
+    package:
+      - "glusterfs-server"
+      - "lvm2"
+      # - "nfs-ganesha-gluster"
+
+- name: Start glusterfs versions
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+    enabled: True
+  with_items:
+    - "glusterd"
+

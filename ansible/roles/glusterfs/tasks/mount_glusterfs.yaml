@@ -1,0 +1,12 @@
+---
+- name: Mount Shared Storage
+  mount:
+    src: "{{ inventory_hostname }}:/{{ share_volume_name }}"
+    path: "{{ share_mount_dir }}"
+    state: "mounted"
+    fstype: glusterfs
+
+- name: Check Mounting
+  shell: "mountpoint -q {{ share_mount_dir }}"
+  register: mountpoint_info
+  failed_when: mountpoint_info.rc != 0

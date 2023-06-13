@@ -1,0 +1,20 @@
+---
+- name: Create a trusted storage pool
+  gluster_peer:
+    state: present
+    nodes: "{{ gluster_ip_list }}"
+  delegate_to: "{{ groups['glusterfs'][0] }}"
+  run_once: true
+
+- name: Create GlusterFS Volume
+  gluster_volume:
+    state: present
+    name: "{{ share_volume_name }}"
+    bricks: "{{ share_metadata_path }}"
+    cluster: "{{ gluster_ip_list }}"
+    replicas: 2
+    arbiters: 1
+    force: true
+  run_once: true
+  delegate_to: "{{ groups['glusterfs'][0] }}"
+  become: true

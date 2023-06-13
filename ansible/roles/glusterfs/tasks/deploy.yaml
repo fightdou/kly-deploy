@@ -1,0 +1,8 @@
+---
+- import_tasks: install.yaml
+
+- import_tasks: createlvm.yaml
+
+- import_tasks: createvolume.yaml
+
+- import_tasks: mount_glusterfs.yaml

@@ -15,8 +15,8 @@ deploy_comm: true
 # Global Config
 ###############
 # 默认预留内存和 CPU
-internal_vip_address: 172.18.29.212
-external_vip_address: 172.27.123.251
+internal_vip_address: 169.168.134.251
+external_vip_address: 172.27.134.251
 api_interface_address: '{{ "api" | filter_address }}'
 network_address_family: "ipv4"
 api_address_family: "{{ network_address_family }}"
@@ -79,24 +79,33 @@ enable_mariadb: true
 enable_redis: true
 enable_emqx: true
 enable_libvirt: true
+enable_glusterfs: '{% if enable_local | bool and groups["glusterfs"] | length > 1 and enable_ceph | bool == false %}true{% else %}false{% endif %}'
 enable_trochilus: true
 enable_prometheus: true
 enable_pushgateway: "{% if deploy_edu | bool or only_deploy_voi | bool %}false{% else %}true{% endif %}"
 enable_guest_service: "{% if deploy_edu | bool or only_deploy_voi | bool %}false{% else %}true{% endif %}"
 enable_fsd: true
 enable_btserver: "{% if fsd_deploy_mode == 'vdi' %}false{% else %}true{% endif %}"
-enable_lvm: false
+enable_local: true
 enable_ceph: "{% if only_deploy_voi | bool or deploy_edu | bool %}false{% else %}true{% endif %}"
 
 ##########
 # VOI 配置
 ##########
-only_deploy_voi: true
+only_deploy_voi: false
 # voi单网卡部署开关
 enable_single_net: false
 voi_storage_num: 100
 voi_data_device: "/dev/sda"
 voi_data_directory: "{{ desktop_mount_dir }}"
+
+#############
+# local 配置
+#############
+local_vg_name: local
+local_trochilus_lv_name: trochilus
+local_net_lv_name: net
+share_mount_dir: "/opt/share"
 
 #################
 # Libvirt Options
@@ -274,3 +283,9 @@ bt_download_internal_port_end: 16889
 btserver_external_listen_ports: "{{ bt_download_external_port_start }}-{{ bt_download_external_port_end }}"
 btserver_internal_listen_ports: "{{ bt_download_internal_port_start }}-{{ bt_download_internal_port_end }}"
 btserver_tag: 2.0.3
+
+###################
+# glusterfs 
+###################
+gluster_metadata_path: "/data"
+share_metadata_path: "{{ gluster_metadata_path }}/share_data"
