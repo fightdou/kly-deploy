@@ -87,6 +87,8 @@ enable_fsd: true
 enable_btserver: "{% if fsd_deploy_mode == 'vdi' %}false{% else %}true{% endif %}"
 enable_lvm: false
 enable_ceph: "{% if only_deploy_voi | bool or deploy_edu | bool %}false{% else %}true{% endif %}"
+# 本地存储
+enable_local: false
 
 ##########
 # VOI 配置
@@ -94,9 +96,20 @@ enable_ceph: "{% if only_deploy_voi | bool or deploy_edu | bool %}false{% else %
 only_deploy_voi: true
 # voi单网卡部署开关
 enable_single_net: false
+single_net_bridge_name: br0
+vpair_tap_name: klcloud-br
+vtap_name: klcloud-vpc
 voi_storage_num: 100
 voi_data_device: "/dev/sda"
 voi_data_directory: "{{ desktop_mount_dir }}"
+
+#############
+# local 配置
+#############
+local_vg_name: local
+local_trochilus_lv_name: trochilus
+local_net_lv_name: net
+share_mount_dir: "/opt/share"
 
 #################
 # Libvirt Options
@@ -111,7 +124,7 @@ coredump_img_file_path: /opt/coredump
 coredump_libvirt_path: /opt/coredump_file
 coredump_block_size: 1024M
 coredump_count: 20
-coredump_loop_device_name: /dev/loop99
+coredump_loop_device_name: /dev/loop0
 
 #################
 # Haproxy Options

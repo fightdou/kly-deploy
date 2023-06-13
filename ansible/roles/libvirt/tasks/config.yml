@@ -62,6 +62,28 @@
       when: 
         - not img_exists.stat.exists
 
+    - name: 查看 loop 设备是否存在
+      stat:
+        path: "{{ coredump_loop_device_name }}"
+      register: loop_exists
+
+    - name: 挂载 loop 设备
+      shell: "losetup {{ coredump_loop_device_name }} {{ coredump_img_file_path }}/coredump.img"
+      when:
+        - not loop_exists.stat.exists
+
+    - name: 查看 coredump 文件是否 mount
+      shell: mount | grep {{ coredump_loop_device_name }} | wc -l
+      register: loop_mount
+
+    - name: 格式化 loop 设备文件系统
+      filesystem:
+        fstype: ext4
+        force: true
+        dev: "{{ coredump_loop_device_name }}"
+      when:
+        - loop_mount.stdout != "1"
+
     - name: 挂载 coredump 文件目录
       mount:
         path: "{{ coredump_libvirt_path }}"

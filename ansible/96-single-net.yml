@@ -1,0 +1,10 @@
+---
+- import_playbook: gather-facts.yml
+
+- name: 
+  gather_facts: false
+  hosts: baremetal
+  roles:
+    - { role: single_net,
+        tags: single_net,
+        when: enable_single_net| bool }

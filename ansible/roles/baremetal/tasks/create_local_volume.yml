@@ -1,0 +1,71 @@
+---
+- name: copy lvm conf file
+  copy:
+    src: lvm.conf
+    dest: /etc/lvm/lvm.conf
+
+- name: 查看 pv 是否存在
+  shell: "vgs | grep {{ local_vg_name }} | wc -l"
+  register: vg_exist
+
+- name: 生成创建命令
+  set_fact:
+    pv_volume: "{% for pv in local_device %} {{ pv }} {% if not loop.last %} {% endif %}{% endfor %}"
+  when:
+    - vg_exist.stdout == "0"
+
+- name: 创建 pv
+  become: true
+  shell: "pvcreate {{ pv_volume }}"
+  when:
+    - vg_exist.stdout == "0"
+
+- name: 创建 vg
+  become: true
+  shell: "vgcreate {{ local_vg_name }} {{ pv_volume }}"
+  when: 
+    - vg_exist.stdout == "0"
+
+- name: 查看 trochilus lv 卷是否创建
+  shell: "vgs | grep {{ local_trochilus_lv_name }} | wc -l"
+  register: trochilus_lv_exist
+
+- name: 创建 trochilus 逻辑卷
+  become: true
+  shell: "lvcreate -L {{ trochilus_lv_size }} -n {{ local_trochilus_lv_name }} {{ local_vg_name }}"
+  when:
+    - trochilus_lv_exist.stdout == "0"
+
+- name: 格式化 trochilus 逻辑卷
+  shell: "mkfs.ext4 /dev/{{ local_vg_name }}/{{ local_trochilus_lv_name }}"
+  when:
+    - trochilus_lv_exist.stdout == "0"
+
+- name: Mount trochilus logical volume
+  mount:
+    path: "{{ desktop_mount_dir }}"
+    src: "/dev/{{ local_vg_name }}/{{ local_trochilus_lv_name }}"
+    fstype: ext4
+    state: mounted
+
+- name: 查看 net lv 卷是否创建
+  shell: "vgs | grep {{ local_net_lv_name }} | wc -l"
+  register: net_lv_exist
+
+- name: 创建 net 逻辑卷
+  become: true
+  shell: "lvcreate -L {{ cloud_disk_num }}G -n {{ local_net_lv_name }} {{ local_vg_name }}"
+  when:
+    - net_lv_exist.stdout == "0"
+
+- name: 格式化 net 逻辑卷
+  shell: "mkfs.ext4 /dev/{{ local_vg_name }}/{{ local_net_lv_name }}"
+  when:
+    - net_lv_exist.stdout == "0"
+
+- name: Mount share net logical volume
+  mount:
+    path: "{{ share_mount_dir }}"
+    src: "/dev/{{ local_vg_name }}/{{ local_net_lv_name }}"
+    fstype: ext4
+    state: mounted

@@ -25,7 +25,10 @@ bind_host = {{ default_internal_server_listen_ip }}
 bind_port = {{ trochilus_listen_api_port }}
 supported_instance_metadatas = k1, k2
 internal_ip = {{ default_internal_server_listen_ip }}
-enabled_volume_backends = {% if enable_ceph %}rbd1{% elif enable_lvm %}thin_lvm1{% endif %}
+
+{% if volume_enabled_backends %}
+enabled_volume_backends = {{ volume_enabled_backends|map(attribute='name')|join(',') }}
+{% endif %}
 
 [database]
 connection = mysql+pymysql://{{ trochilus_mariadb_username }}:{{ trochilus_mariadb_password }}@{{ default_internal_server_visit_ip }}:{{ mariadb_external_listen_port }}/{{ trochilus_mariadb_dataname }}
@@ -38,28 +41,43 @@ rbd_user = admin
 rbd_keyring_conf = /etc/ceph/ceph.client.admin.keyring
 rados_connect_timeout = -1
 volume_driver = trochilus.agent.storage.volume.drivers.rbd.RBDVolumeDriver
-[image_settings]
-enabled_image_store = rbd
-rbd_store_config_file = /etc/ceph/ceph.conf
-rbd_store_user = admin
-rbd_store_pool = images
-rbd_store_chunk_size = 8
-rbd_store_conn_timeout = 0
-rbd_store_thin_provisioning = true
 {%- endif %}
 
 {% if enable_lvm | bool %}
-[image_settings]
-enabled_image_store = lvm
-lvm_store_vgname = {{ lvm_volgroup_name }}
-lvm_store_thin_pool = {{ thin_volume_pool_name }}
-lvm_store_thin_vitualsize = {{ thin_lv_size }}G
 [thin_lvm1]
 volume_driver = trochilus.agent.storage.volume.drivers.thin_lvm.ThinLVMVolumeDriver
 thin_volume_group = {{ lvm_volgroup_name }}
 thin_pool_name = {{ thin_volume_pool_name }}
 thin_virtualsize = {{ thin_lv_size }}G
 {% endif %}
+
+{% if enable_local | bool %}
+[local]
+volume_driver = trochilus.agent.storage.volume.drivers.local.LocalStorageVolumeDriver
+{% endif %}
+
+[image_settings]
+enabled_image_store = {% if enable_ceph %}rbd{% else %}filesystem{% endif %}
+
+enabled_image_stores = {{ volume_enabled_backends|map(attribute='image')|join(',') }}
+{% if enable_lvm | bool %}
+lvm_store_vgname = {{ lvm_volgroup_name }}
+lvm_store_thin_pool = {{ thin_volume_pool_name }}
+lvm_store_thin_vitualsize = {{ thin_lv_size }}G
+{% endif %}
+{% if enable_ceph | bool %}
+rbd_store_config_file = /etc/ceph/ceph.conf
+rbd_store_user = admin
+rbd_store_pool = images
+rbd_store_chunk_size = 8
+rbd_store_conn_timeout = 0
+rbd_store_thin_provisioning = true
+{% endif %}
+{% if enable_local | bool %}
+filesystem_store_chunk_size = 65536
+filesystem_store_datadir = /var/lib/trochilus/images
+{% endif %}
+
 
 [network_settings]
 disable_linux_bridge_stp = true
