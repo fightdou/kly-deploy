@@ -81,6 +81,8 @@
       - telnet
       - ethtool
       - tcpdump
+      - sysstat
+      - perf
       - bash-completion
       - bridge-utils
       - python3-PyMySQL

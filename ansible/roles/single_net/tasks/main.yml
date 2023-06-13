@@ -1,27 +1,41 @@
 ---
-# tasks file for add-tap0
-- name: Install for add-tap
-  package:
-    name: "{{ item }}"
-    state: present
-    update_cache: True
-  with_items:
-    - tunctl
-
 - name: Copy add-tap.sh
-  copy:
-    src: add_tap.sh
-    dest: /lib/modules/add_tap.sh
+  template:
+    src: single_net.sh.j2
+    dest: /home/single_net.sh
     mode: 0755
 
-- name: Copy add-tap.service.j2
-  copy:
-    src: add_tap.service
-    dest: /lib/systemd/system/add_tap.service
-    mode: 0755
+- name: exec single net scripts
+  shell: /home/single_net.sh {{ ansible_default_ipv4.interface }} {{ single_net_bridge_name }} {{ ansible_default_ipv4.address }} {{ ansible_default_ipv4.gateway }}
+  ignore_errors: true
 
-- name: start-enable
-  shell: |
-    systemctl daemon-reload
-    systemctl start add_tap.service
-    systemctl enable add_tap.service
+- name: Get nmcli con bridge name
+  shell: nmcli con show | grep "{{ single_net_bridge_name }}" | awk '{print $1" "$2}'
+  register: nmcli_bridge_name
+
+- name: Set bridge name
+  set_fact:
+    bridge_name: "Bridge {{ single_net_bridge_name }}"
+
+- name: edit bridge br name
+  shell: nmcli con mod "{{ bridge_name }}" connection.id {{ single_net_bridge_name }}
+  when:
+    - nmcli_bridge_name.stdout == "{{ bridge_name }}"
+
+- name: Copy inventory file
+  copy:
+    src: "{{ inventory_file }}"
+    dest: "{{ inventory_file }}_{{ ansible_date_time.epoch }}"
+    owner: root
+    mode: 0644
+  run_once: True
+  delegate_to: "{{ groups['baremetal'][0] }}"
+
+- name: Replace the api_interface name in the host file
+  replace:
+    path: "{{ inventory_file }}"
+    regexp: '{{ hostvars[item].api_interface }}'
+    replace: '{{ single_net_bridge_name }}'
+  run_once: True
+  delegate_to: "{{ groups['baremetal'][0] }}"
+  with_items: "{{ groups['baremetal'] }}"

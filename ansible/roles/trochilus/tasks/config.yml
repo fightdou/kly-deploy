@@ -90,13 +90,6 @@
   when:
     - enable_lvm | bool
 
-- name: copy lvm conf file
-  copy:
-    src: lvm.conf
-    dest: /etc/lvm/lvm.conf
-  when:
-    - enable_lvm | bool
-
 - name: copy trochilus conf file
   template:
     src: trochilus.conf.j2

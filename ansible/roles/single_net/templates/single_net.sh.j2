@@ -1,0 +1,83 @@
+#!/usr/bin/bash
+# 用于单网卡 VDI 部署，替换物理网卡为网桥, 并创建虚拟网卡对用于打通 VPC 和 物理网络。
+
+# 检查是否以root权限运行
+if [ "$(id -u)" -ne 0 ]; then
+    echo "Please run this script as root or using sudo."
+    exit 1
+fi
+
+# 检查参数数量
+if [ "$#" -ne 4 ]; then
+    echo "Usage: $0 <physical_interface> <bridge_name> <ip_address> <gateway>"
+    exit 1
+fi
+
+# 获取参数
+physical_interface=$1
+bridge_name=$2
+ip_address=$3
+ip_gateway=$4
+
+# 检查网桥是否已经存在
+if ip link show | grep -q ": ${bridge_name}: "; then
+    echo "The bridge ${bridge_name} already exists. Exiting."
+    exit 1
+fi
+
+mac_address=$(cat /sys/class/net/${physical_interface}/address)
+
+# 备份物理网卡配置文件
+cp /etc/sysconfig/network-scripts/ifcfg-${physical_interface} /etc/sysconfig/network-scripts/ifcfg-${physical_interface}.bak
+
+# 生成新的物理网卡配置文件
+cat > /etc/sysconfig/network-scripts/ifcfg-${physical_interface} << EOL
+DEVICE=${physical_interface}
+TYPE=Ethernet
+ONBOOT=yes
+BRIDGE=${bridge_name}
+EOL
+
+# 生成网桥配置文件
+cat > /etc/sysconfig/network-scripts/ifcfg-${bridge_name} << EOL
+DEVICE=${bridge_name}
+TYPE=Bridge
+ONBOOT=yes
+BOOTPROTO=static
+IPADDR=${ip_address}
+GATEWAY=${ip_gateway}
+PREFIX=24
+MACADDR=${mac_address}
+EOL
+
+# 生成脚本文件
+cat > /etc/veth_setup.sh << EOL
+#!/usr/bin/bash
+# 创建veth对, 并将其中一个端口添加到网桥
+ip link add {{ vtap_name}} type veth peer name {{ vpair_tap_name }}
+sleep 1
+brctl addif ${bridge_name} {{ vpair_tap_name }}
+ip link set {{ vpair_tap_name }} up
+ip link set {{ vtap_name}} up
+EOL
+chmod +x /etc/veth_setup.sh
+
+# 生成服务文件
+cat > /etc/systemd/system/veth-setup.service << EOL
+[Unit]
+Description=Veth Setup Service
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/etc/veth_setup.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOL
+
+systemctl daemon-reload
+systemctl enable veth-setup
+nmcli con reload
+systemctl start veth-setup

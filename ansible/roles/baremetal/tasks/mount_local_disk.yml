@@ -1,0 +1,22 @@
+---
+- name: mount local disk
+  block: 
+  - name: format datanode disks
+    filesystem: 
+      fstype: ext4
+      force: true
+      dev: "{{ local_device[0] }}"
+
+  - name: cat disk UUID
+    shell: "blkid | grep {{ local_device[0] }} | awk -F' ' '{print $2}'"
+    register: disk_uuid
+
+  - name: mount datanode disks
+    mount:
+      path: "{{ desktop_mount_dir }}"
+      src: "{{ disk_uuid.stdout | replace('\"', '') }}"
+      fstype: ext4
+      opts: "defaults,noatime,nobarrier"
+      state: mounted
+  when: 
+    - ansible_facts.mounts | selectattr('mount', '==', desktop_mount_dir) | list | length == 0 

@@ -12,13 +12,6 @@
   register: cephfs_mount_result
   ignore_errors: true
 
-- name: Make cephfs mount dir
-  become: true
-  file:
-    path: "{{ desktop_mount_dir }}"
-    state: directory
-    mode: 0755
-
 - name: Mount cephfs share dir
   become: true
   mount:

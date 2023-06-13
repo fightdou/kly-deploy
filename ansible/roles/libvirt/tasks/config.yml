@@ -44,9 +44,61 @@
         dest: "{{ config_directory }}/libvirt/vdi/vdi_conf.ini"
         owner: root
         mode: 0644
+
+    - name: 创建 coredump_img_file_path 目录
+      file:
+        path: "{{ coredump_img_file_path }}"
+        state: directory
+        mode: 0755
+    
+    - name: check coredump.img 文件是否存在
+      stat: 
+        path: "{{ coredump_img_file_path }}/coredump.img"
+      register: img_exists
+
+    - name: 创建 coredump image 文件
+      become: True
+      shell: "dd if=/dev/zero of={{ coredump_img_file_path }}/coredump.img bs={{ coredump_block_size }} count={{ coredump_count }}"
+      when: 
+        - not img_exists.stat.exists
+
+    - name: 查看 loop 设备是否存在
+      stat:
+        path: "{{ coredump_loop_device_name }}"
+      register: loop_exists
+
+    - name: 挂载 loop 设备
+      shell: "losetup {{ coredump_loop_device_name }} {{ coredump_img_file_path }}/coredump.img"
+      when:
+        - not loop_exists.stat.exists
+
+    - name: 查看 coredump 文件是否 mount
+      shell: mount | grep {{ coredump_loop_device_name }} | wc -l
+      register: loop_mount
+
+    - name: 格式化 loop 设备文件系统
+      filesystem:
+        fstype: ext4
+        force: true
+        dev: "{{ coredump_loop_device_name }}"
+      when:
+        - loop_mount.stdout != "1"
+
+    - name: 挂载 coredump 文件目录
+      mount:
+        path: "{{ coredump_libvirt_path }}"
+        src: "{{ coredump_img_file_path }}/coredump.img"
+        fstype: ext4
+        opts: "defaults,loop"
+        state: mounted
+
+    - name: 修改 kernel.core_pattern 参数
+      shell: sysctl -w "kernel.core_pattern=|{{ coredump_libvirt_path }}/corefile-%e-%p-%t"
+
+    - name: 修改 /proc/sys/kernel/core_pattern 文件
+      shell: echo "{{ coredump_libvirt_path }}/corefile-%e-%p-%t" > /proc/sys/kernel/core_pattern
   when:
    - not only_deploy_voi | bool
-
 
 - name: Copy libvirtd.conf 文件
   copy:

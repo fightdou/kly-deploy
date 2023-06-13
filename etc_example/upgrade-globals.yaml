@@ -6,9 +6,28 @@ upgrade_service:
   - trochilus
   - guest-service
   - fsd
-  
+
+enable_local: false
 fsd_default_tag: "{{ upgrade_version }}"
 trochilus_tag: "{{ upgrade_version }}"
 trochilus_cpu_weight_multiplier: 100
 trochilus_memory_weight_multiplier: 1
 fsd_upgrade_server_port: 9014
+
+# libvirt coredump 参数
+coredump_img_file_path: /opt/coredump
+coredump_libvirt_path: /opt/coredump_file
+coredump_block_size: 1024M
+coredump_count: 20
+coredump_loop_device_name: /dev/loop0
+
+# 支持单网卡
+single_net_bridge_name: br0
+vpair_tap_name: klcloud-br
+vtap_name: klcloud-vpc
+
+# 支持 local 存储后端
+local_vg_name: local
+local_trochilus_lv_name: trochilus
+local_net_lv_name: net
+share_mount_dir: "/opt/share"
