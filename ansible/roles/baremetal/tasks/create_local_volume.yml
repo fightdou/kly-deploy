@@ -27,12 +27,12 @@
     - vg_exist.stdout == "0"
 
 - name: 查看 trochilus lv 卷是否创建
-  shell: "vgs | grep {{ local_trochilus_lv_name }} | wc -l"
+  shell: "lvs | grep {{ local_trochilus_lv_name }} | wc -l"
   register: trochilus_lv_exist
 
 - name: 创建 trochilus 逻辑卷
   become: true
-  shell: "lvcreate -L {{ trochilus_lv_size }} -n {{ local_trochilus_lv_name }} {{ local_vg_name }}"
+  shell: "lvcreate -y -L {{ trochilus_lv_size }} -n {{ local_trochilus_lv_name }} {{ local_vg_name }}"
   when:
     - trochilus_lv_exist.stdout == "0"
 
@@ -49,12 +49,12 @@
     state: mounted
 
 - name: 查看 net lv 卷是否创建
-  shell: "vgs | grep {{ local_net_lv_name }} | wc -l"
+  shell: "lvs | grep {{ local_net_lv_name }} | wc -l"
   register: net_lv_exist
 
 - name: 创建 net 逻辑卷
   become: true
-  shell: "lvcreate -L {{ cloud_disk_num }}G -n {{ local_net_lv_name }} {{ local_vg_name }}"
+  shell: "lvcreate -y -L {{ share_lv_size }} -n {{ local_net_lv_name }} {{ local_vg_name }}"
   when:
     - net_lv_exist.stdout == "0"
 
@@ -69,3 +69,10 @@
     src: "/dev/{{ local_vg_name }}/{{ local_net_lv_name }}"
     fstype: ext4
     state: mounted
+  when: groups['glusterfs'] | length < 3
+
+- name: Apply role glusterfs
+  import_role:
+    name: glusterfs
+  when: 
+    - enable_glusterfs | bool

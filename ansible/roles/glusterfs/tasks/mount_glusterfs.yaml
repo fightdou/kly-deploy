@@ -1,10 +1,19 @@
 ---
-- name: Mount Shared Storage
+- name: Mount Shared Storage control node
   mount:
     src: "{{ inventory_hostname }}:/{{ share_volume_name }}"
     path: "{{ share_mount_dir }}"
     state: "mounted"
     fstype: glusterfs
+  when: inventory_hostname in groups['glusterfs']
+
+- name: Mount Shared Storage not control node
+  mount:
+    src: "groups['glusterfs'][0]:/{{ share_volume_name }}"
+    path: "{{ share_mount_dir }}"
+    state: "mounted"
+    fstype: glusterfs
+  when: inventory_hostname not in groups['glusterfs']
 
 - name: Check Mounting
   shell: "mountpoint -q {{ share_mount_dir }}"

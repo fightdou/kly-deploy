@@ -5,6 +5,10 @@
 
 - include_tasks: cleanup_desktop_res.yml
 
+- include_tasks: cleanup_volume.yml
+  when:
+    - enable_local | bool
+
 - name: Delete trochilus dir file
   shell: rm -rf {{ desktop_mount_dir }}/*
 
@@ -87,3 +91,5 @@
     name: docker
     state: restarted
   ignore_errors: true
+
+

@@ -1,0 +1,87 @@
+- name: Check if directory is mounted
+  shell: "mountpoint -q {{ desktop_mount_dir }}"
+  register: mount_check
+  ignore_errors: true
+
+- name: Unmount directory if mounted
+  command: "umount {{ desktop_mount_dir }}"
+  when: mount_check.rc == 0
+
+- name: Check if directory is mounted
+  shell: "mountpoint -q {{ share_mount_dir }}"
+  register: mount_check
+  ignore_errors: true
+
+- name: Unmount directory if mounted
+  command: "umount {{ share_mount_dir }}"
+  when: mount_check.rc == 0
+
+- name: Remove GlusterFS Volume
+  gluster_volume:
+    state: absent
+    name: share_data
+  delegate_to: "{{ groups['glusterfs'][0] }}"
+  run_once: true
+  when: enable_glusterfs | bool
+  ignore_errors: true
+  
+- name: Check if directory is mounted
+  shell: "mountpoint -q {{ gluster_metadata_path }}"
+  register: mount_check
+  ignore_errors: true
+  when: enable_glusterfs | bool
+
+- name: Unmount directory if mounted
+  command: "umount {{ gluster_metadata_path }}"
+  when: 
+    - mount_check.rc == 0
+    - enable_glusterfs | bool
+
+- name: Remove peer from GlusterFS cluster
+  command: rm -rf /var/lib/glusterd/vols/* && systemctl restart glusterd.service
+  when: enable_glusterfs | bool
+
+- name: Check if trochilus lv volume is created
+  shell: "lvs | grep {{ local_trochilus_lv_name }} | wc -l"
+  register: trochilus_lv_exist
+
+- name: Deactivate and remove trochilus Logical Volume
+  lvol:
+    vg: "{{ local_vg_name }}"
+    lv: "{{ local_trochilus_lv_name }}"
+    state: absent
+    force: yes
+  when: trochilus_lv_exist.stdout != "0"
+
+- name: Check if net lv volume is created
+  shell: "lvs | grep {{ local_net_lv_name }} | wc -l"
+  register: net_lv_exist
+
+- name: Deactivate and remove net Logical Volume
+  lvol:
+    vg: "{{ local_vg_name }}"
+    lv: "{{ local_net_lv_name }}"
+    state: absent
+    force: yes
+  when: net_lv_exist.stdout != "0"
+
+- name: Check if vg volume group exists
+  shell: "vgs | grep {{ local_vg_name }} | wc -l"
+  register: vg_exist
+
+- name: Remove Volume Group
+  lvg:
+    vg: "{{ local_vg_name }}"
+    state: absent
+    force: yes
+  when: vg_exist.stdout != "0"
+
+- name: Remove pv
+  become: true
+  shell: "pvremove -y {{ item }}"
+  with_items: "{{ local_device }}"
+  when: vg_exist.stdout != "0"
+
+- name: Wipe Disk
+  command: "wipefs -a {{ item }}"
+  with_items: "{{ local_device }}"

@@ -1,11 +1,11 @@
 ---
 system_type: "{% if ansible_architecture == 'x86_64' %}x86{% else %}{{ ansible_architecture }}{% endif %}"
 api_interface_address: "{{ 'api' | filter_address }}"
-enable_keepalived: "{% if deploy_edu | bool or groups['keepalived'] | length == 1 %}false{% else %}true{% endif %}"
+enable_keepalived: "{% groups['keepalived'] | length == 1 %}false{% else %}true{% endif %}"
 fsd_deploy_node_type: "{% if groups['fsd'] | length > 1 %}cluster{% else %}single{% endif %}"
 
 
-enable_internal_communication: "{% if deploy_comm | bool %}true{% else %}false{% endif %}"
+enable_internal_communication: true
 
 default_internal_server_listen_ip: "{% if enable_internal_communication | bool %}{{ inventory_hostname }}{% else %}0.0.0.0{% endif %}"
 default_internal_server_visit_ip: "{% if enable_internal_communication | bool %}{% if enable_keepalived | bool %}{{ internal_vip_address }}{% else %}{{ inventory_hostname }}{% endif %}{% else %}127.0.0.1{% endif %}"

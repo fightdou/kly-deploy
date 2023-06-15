@@ -9,7 +9,6 @@
 - import_tasks: mount_cephfs.yml
   when:
     - enable_ceph | bool
-    - not deploy_edu | bool
 
 - import_tasks: create_vg_volume.yaml
   when:

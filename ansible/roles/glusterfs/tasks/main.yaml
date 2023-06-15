@@ -1,6 +1,2 @@
 ---
 - include_tasks: deploy.yaml
-
-# - name: Print host names
-#   debug:
-#     msg: "Host: {{ inventory_hostname }}"
