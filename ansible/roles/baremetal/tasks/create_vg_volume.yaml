@@ -30,6 +30,6 @@
 
 - name: 创建 thin pool
   become: true
-  shell: "lvcreate -l +100%free --thinpool {{ thin_volume_pool_name }} {{ lvm_volgroup_name }}"
+  shell: "lvcreate -y -l +100%free --thinpool {{ thin_volume_pool_name }} {{ lvm_volgroup_name }}"
   when: 
     - vg_exist.stdout == "0"

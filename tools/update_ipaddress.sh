@@ -1,24 +1,9 @@
 #!/bin/bash
 
-usage() {
-  cat <<EOF
-Usage: $(basename "${BASH_SOURCE[0]}") [OPTION]...
-
-Available options:
--h, --help          Print this help and exit
--n, --netcard       Specifies the name of the network adapter to be changed.
--i, --ipaddr        The IP address of the current env management network.
--p, --prefix        The netmask prefix of the current env management network.
--g, --gateway       The gateway of the current env management network.
--d, --dns           The dns of the current env management network.
-EOF
-  exit
-}
-
 die() {
   local msg=$1
-  local code=${2-1} # default exit status 1
-  echo >&2 -e "\033[31m$msg \033[0m"
+  local code=${2:-1}
+  echo -e "\033[31m$msg \033[0m" >&2
   exit "$code"
 }
 
@@ -29,132 +14,98 @@ parse_params() {
   prefix=""
   gateway=""
   dns=""
-  global_vars_file=../etc_example/global_vars.yaml
-  old_ipaddr=$(grep $(hostname) /etc/hosts | awk '{print $1}')
-
-  while :; do
-    case "${1-}" in
-    -h | --help) usage ;;
-    -n | --netcard)
-      netcard="${2-}"
-      shift
-      ;;
-    -i | --ipaddr)
-      ipaddr="${2-}"
-      shift
-      ;;
-    -p | --prefix)
-      prefix="${2-}"
-      shift
-      ;;
-    -g | --gateway)
-      gateway="${2-}"
-      shift
-      ;;
-    -d | --dns)
-      dns="${2-}"
-      shift
-      ;;
-    -?*) die "Unknown option: $1" ;;
-    *) break ;;
+  current_ipaddr=""
+  global_vars_file="../etc_example/global_vars.yaml"
+  
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -n|--netcard) netcard="${2-}" ; shift ;;
+      -i|--ipaddr) ipaddr="${2-}" ; shift ;;
+      -p|--prefix) prefix="${2-}" ; shift ;;
+      -g|--gateway) gateway="${2-}" ; shift ;;
+      -d|--dns) dns="${2-}" ; shift ;;
+      -c|--current_ipaddr) current_ipaddr="${2-}" ; shift ;;
+      -?*) die "Unknown option: $1" ;;
+      *) break ;;
     esac
     shift
   done
 
-  if [ -z "${netcard-}" ] || [ -z "${ipaddr-}" ] || [ -z "${prefix-}" ] || [ -z "${gateway-}" ]; then
-    die "Missing required parameter:
-${GREEN}eg: ./$(basename "${BASH_SOURCE[0]}")  --netcard eth_name --ipaddr 192.168.100.10 --prefix 24 --gateway 192.168.100.254 ${NOFORMAT}"
+  if [[ -z $netcard || -z $ipaddr || -z $prefix || -z $gateway ]]; then
+    die "eg: ./$(basename "${BASH_SOURCE[0]}") --netcard eth_name --ipaddr 192.168.100.10 --prefix 24 --gateway 192.168.100.254"
+  fi
+}
+
+gat_current_ipaddr() {
+  if [[ $current_ipaddr == "" ]]; then
+    current_ipaddr=$(grep -Eo 'IPADDR=[0-9.]+' /etc/sysconfig/network-scripts/ifcfg-$netcard | cut -d= -f2)
   fi
 
-  return 0
+  if [[ -z $current_ipaddr || $current_ipaddr == 169.168* ]]; then
+    die "Failed to get the current IP address, Set it by adding the --current_ipaddr parameter." 
+  fi
+
+  echo "The current IP address is: $current_ipaddr"
+}
+
+update_network() {
+  sudo nmcli connection modify $netcard ipv4.addresses $ipaddr/$prefix
+  sudo nmcli connection modify $netcard ipv4.gateway $gateway
+  if [ ! -z "${dns-}" ]; then
+    sudo nmcli connection modify $netcard ipv4.dns $dns
+  fi
+  sudo nmcli connection down $netcard >/dev/null && sudo nmcli connection up $netcard >/dev/null
+
+  result=$(ip address show $netcard | grep "$ipaddr/$prefix" | wc -l)
+  if [ $result -eq 0 ]; then
+    die "netcard $netcard Change failed!!!" 
+  fi
+}
+
+update_config_file() {
+  # btserver
+  if [[ $current_ipaddr != $ipaddr ]]; then
+    sudo sed -i "s/${current_ipaddr}/${ipaddr}/g" /etc/klcloud/btserver/torrent.ini
+    result=$(cat /etc/klcloud/btserver/torrent.ini | grep $ipaddr | wc -l)
+    if [ $result -eq 0 ]; then
+      die "update btserver config failed!!!" 
+    fi
+    docker restart btserver btserver_tracker
+  fi
+
+  # fsd_console
+  if [[ $current_ipaddr != $ipaddr ]]; then
+    sudo sed -i "s/${current_ipaddr}/${ipaddr}/g" /etc/klcloud/fsd_console/fsd_console_start.sh
+    result=$(cat /etc/klcloud/fsd_console/fsd_console_start.sh | grep $ipaddr | wc -l)
+    if [ $result -eq 0 ]; then
+      die "update fsd_console config failed!!!" 
+    fi
+    docker restart fsd_console_web
+  fi
+
+  # fsd_database
+  java_db_name="klcloud_fsd_edu"
+  mariadb_root_username=$(grep -E '^mariadb_root_username:' "$global_vars_file" | cut -d':' -f2 | awk '{print $1}')
+  mariadb_root_password=$(grep -E '^mariadb_root_password:' "$global_vars_file" | cut -d':' -f2 | awk '{print $1}')
+  select_setting_sql="select info from sys_setting where uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8c7';"
+  setting_info=$(docker exec -it mariadb mysql -N -s -u"$mariadb_root_username" -p"$mariadb_root_password" -e "use ${java_db_name}; $select_setting_sql")
+  
+  if [[ $setting_info == *"$current_ipaddr"* ]]; then
+    new_setting_info=$(echo "$setting_info" | sed "s/${current_ipaddr}/${ipaddr}/g")
+    update_setting_sql="UPDATE sys_setting SET info = '${new_setting_info}' WHERE uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8c7';" 
+    update_server_sql="UPDATE des_server SET ip = '${ipaddr}';"
+
+    docker exec -it mariadb mysql -u"$mariadb_root_username" -p"$mariadb_root_password" -e "use ${java_db_name}; $update_setting_sql $update_server_sql"
+  fi
 }
 
 parse_params "$@"
 
-update_network() {
-  # 修改 IP 地址和子网掩码
-  sudo nmcli connection modify $netcard ipv4.addresses $ipaddr/$prefix
-  # 修改网关
-  sudo nmcli connection modify $netcard ipv4.gateway $gateway
-
-  if [ ! -z "${dns-}" ]; then
-    sudo nmcli connection modify $netcard ipv4.dns $dns
-  fi
-
-  # 重启网络连接
-  sudo nmcli connection down $netcard >/dev/null && sudo nmcli connection up $netcard >/dev/null
-
-  # 打印修改后的IP地址
-  echo "$(date "+%Y-%m-%d %H:%M:%S") New IP address and netmask for $netcard:"
-  grep -E 'IPADDR|NETMASK|PREFIX|GATEWAY|DNS' /etc/sysconfig/network-scripts/ifcfg-$netcard
-  echo "----------------------------------------------------------------------"
-
-  result=$(ip address show $netcard | grep "$ipaddr/$profix")
-  if [ -z "${result}" ]; then
-    return 1
-  else
-    return 0
-  fi
-}
-
-update_hosts() {
-  old_line=$(grep $(hostname) /etc/hosts)
-  new_line="$ipaddr $(hostname)"
-
-  sudo sed -i "s#$old_line#$new_line#" /etc/hosts
-
-  # 打印修改后的 hosts
-  echo "$(date "+%Y-%m-%d %H:%M:%S") New '/etc/hosts' config is:"
-  grep -E $ipaddr /etc/hosts
-  echo "----------------------------------------------------------------------"
-}
-
-update_ansible() {
-  ansible_hosts_file="../etc_example/hosts"
-  sudo sed -i 's/'"${old_ipaddr}"'/'"${ipaddr}"'/g' $ansible_hosts_file
-
-  echo "$(date "+%Y-%m-%d %H:%M:%S") New '$ansible_hosts_file' config is:"
-  grep -E "api_interface" $ansible_hosts_file
-  echo "----------------------------------------------------------------------"
-}
-
-update_jave() {
-  java_db_name="klcloud_fsd_edu"
-
-  mariadb_root_username=$(echo $(grep -E '^mariadb_root_username:' $global_vars_file | cut -d':' -f2))
-  mariadb_root_password=$(echo $(grep -E '^mariadb_root_password:' $global_vars_file | cut -d':' -f2))
-
-  select_setting_sql="select info from sys_setting where uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8c7';"
-  setting_info=$(docker exec -it mariadb mysql -N -s -u$mariadb_root_username -p$mariadb_root_password -e \
-                "use ${java_db_name}; $select_setting_sql")
-  new_setting_info=$(echo $setting_info | sed 's/'"${old_ipaddr}"'/'"${ipaddr}"'/g')
-  
-  update_setting_sql="UPDATE sys_setting SET info = '${new_setting_info}' WHERE uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8c7';" 
-  update_server_sql="UPDATE des_server SET ip = '${ipaddr}';"
-  # update_console_sql="UPDATE des_center_console SET ip = '${ipaddr}' WHERE ip = '${old_ipaddr}';"
-
-  docker exec -it mariadb mysql -u$mariadb_root_username -p$mariadb_root_password -e \
-  "use ${java_db_name}; $update_setting_sql $update_server_sql"
-
-  sudo sed -i 's/'"${old_ipaddr}"'/'"${ipaddr}"'/g' /etc/klcloud/btserver/opentracker.conf
-  sudo sed -i 's/'"${old_ipaddr}"'/'"${ipaddr}"'/g' /etc/klcloud/btserver/torrent.ini
-  docker restart btserver btserver_tracker
-
-  echo "----------------------------------------------------------------------"
-}
-
 deploy_version=$(grep -E '^deploy_edu:' $global_vars_file | cut -d':' -f2)
-
 if [ $deploy_version != true ]; then
   die "This script is only available in a single node Edition VOI environment!"
 fi
 
+gat_current_ipaddr
 update_network
-if [ $? -eq 0 ]; then
-  update_hosts
-  update_ansible
-  update_jave
-  echo "The environment update success。"
-else
-    echo "Failed to change the IP address. Please check the environment. "
-fi
+update_config_file

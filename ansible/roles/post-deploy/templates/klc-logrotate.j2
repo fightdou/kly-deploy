@@ -2,7 +2,7 @@
 /var/log/libvirt/*.log
 /var/log/mariadb/*.log
 /var/log/trochilus/*.log
-{% if deploy_comm | bool %}
+{% if enable_guest_service | bool %}
 /var/log/guest-service/*.log 
 {% endif %}
 {

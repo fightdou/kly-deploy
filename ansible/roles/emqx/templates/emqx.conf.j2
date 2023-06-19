@@ -3,9 +3,9 @@ cluster.proto_dist = inet_tcp
 cluster.discovery = static
 cluster.autoheal = on
 cluster.autoclean = 5m
-cluster.static.seeds = {% if deploy_edu | bool %}{{ ansible_hostname }}@127.0.0.1{% else %}{% for host in groups['emqx'] %}{{ hostvars[host].ansible_hostname }}@{{ host }}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}
+cluster.static.seeds = {% for host in groups['emqx'] %}{{ hostvars[host].ansible_hostname }}@{{ host }}{% if not loop.last %},{% endif %}{% endfor %}
 
-node.name = {% if deploy_edu | bool %}{{ ansible_hostname }}@127.0.0.1{% else %}{{ ansible_hostname }}@{{ inventory_hostname }}{% endif %}
+node.name = {{ ansible_hostname }}@{{ inventory_hostname }}
 
 node.cookie = emqxsecretcookie
 node.data_dir = data

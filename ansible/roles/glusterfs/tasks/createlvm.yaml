@@ -5,17 +5,12 @@
     state: directory
     mode: 0755
 
-- name: Create xfs filesystem
-  filesystem:
-    fstype: xfs
-    dev: "/dev/{{ local_vg_name }}/{{ local_net_lv_name }}"
-
 - name: Mount Glusterfs Metadata Lvm To Glusterfs Metadata Path
   mount:
     src: "/dev/{{ local_vg_name }}/{{ local_net_lv_name }}"
     path: "{{ gluster_metadata_path }}"
     state: "mounted"
-    fstype: xfs
+    fstype: ext4
 
 - name: Check Mounting
   shell: mountpoint -q {{ gluster_metadata_path }}
