@@ -60,6 +60,10 @@ trochilus_default_volumes:
   - "/lib/modules/:/lib/modules/:rw"
   - "/etc/ceph/:/etc/ceph/"
   - "libvirtd:/var/lib/libvirt"
+  - "edk2:/usr/share/edk2/"
+  - "ovmf:/usr/share/OVMF/"
+  - "ovmf_qemu:/usr/share/qemu/"
+  - "aavmf:/usr/share/AAVMF"
   - "/var/log/trochilus/:/var/log/trochilus/"
   - "{{ desktop_mount_dir }}:/var/lib/trochilus/"
   {% if deploy_edu | bool %}
