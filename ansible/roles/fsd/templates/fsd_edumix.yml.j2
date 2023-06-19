@@ -4,14 +4,15 @@ spring:
 custom:
   spring_datasource_password: {{ mariadb_root_password }}
   spring_redis_sentinel_nodes: {% for host in groups['redis'] %}{{ host }}:26379{% if not loop.last %},{% endif %}{% endfor %}
+  
   spring_redis_password: {{ redis_master_password }}
   fsd_common_netty_codec_mac: 60f81dad19ae
   fsd_edumix_biz_deploy_mode: {{ fsd_deploy_mode }}
   fsd_edumix_biz_deploy_node_type: {{ fsd_deploy_node_type }}
-  fsd_edumix_biz_deploy_storage_type: {{ volume_enabled_backends }}
+  fsd_edumix_biz_deploy_storage_type: {{ storage_backends|map(attribute='name')|join(',') }}
   fsd_edumix_biz_deploy_inner_vip: {{ default_internal_server_visit_ip }}
   fsd_edumix_biz_deploy_ssh_port: {{ fsd_ssd_port }}
-  fsd_edumix_biz_path_shareRootPath: {{ share_mount_dir }}
+  fsd_edumix_biz_path_shareRootPath: {{ share_mount_dresize_bcache_minimun.serviceir }}
   fsd_edumix_biz_path_vdiRootPath: {{ trochilus_vdi_base_path }}
   fsd_edumix_biz_path_voiRootPath: {{ trochilus_voi_base_path }}
   fsd_edumix_biz_front_frontDir: /var/www/html

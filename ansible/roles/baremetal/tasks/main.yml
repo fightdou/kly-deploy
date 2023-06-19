@@ -9,6 +9,7 @@
 - import_tasks: mount_cephfs.yml
   when:
     - enable_ceph | bool
+    - not enable_local | bool
 
 - import_tasks: create_vg_volume.yaml
   when:

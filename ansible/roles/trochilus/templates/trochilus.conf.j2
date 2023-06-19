@@ -41,7 +41,7 @@ rbd_user = admin
 rbd_keyring_conf = /etc/ceph/ceph.client.admin.keyring
 rados_connect_timeout = -1
 volume_driver = trochilus.agent.storage.volume.drivers.rbd.RBDVolumeDriver
-{%- endif %}
+{% endif %}
 
 {% if enable_lvm | bool %}
 [thin_lvm1]
@@ -60,7 +60,7 @@ volume_driver = trochilus.agent.storage.volume.drivers.local.LocalStorageVolumeD
 enabled_image_store = {% if enable_ceph %}rbd{% else %}filesystem{% endif %}
 
 enabled_image_stores = {{ volume_enabled_backends|map(attribute='image')|join(',') }}
-image_iso_dir = {{ share_disk_mount_path }}/iso_file
+image_iso_dir = "{{ share_disk_mount_path }}/iso_file"
 
 {% if enable_lvm | bool %}
 lvm_store_vgname = {{ lvm_volgroup_name }}
@@ -77,7 +77,7 @@ rbd_store_thin_provisioning = true
 {% endif %}
 {% if enable_local | bool %}
 filesystem_store_chunk_size = 65536
-filesystem_store_datadir = {% if deploy_edu | bool %}{{ trochilus_vdi_base_path }}/images{% else }{{ desktop_mount_dir }}/images{% endif %}
+filesystem_store_datadir = "{% if deploy_edu | bool %}{{ trochilus_vdi_base_path }}/images{% else %}{{ desktop_mount_dir }}/images{% endif %}"
 {% endif %}
 
 [network_settings]

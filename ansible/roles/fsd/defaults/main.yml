@@ -129,4 +129,4 @@ cluster_storage:
   - name: "ceph"
     enabled: "{{ enable_ceph | bool }}"
 
-volume_enabled_backends: "{{ cluster_storage|selectattr('enabled', 'equalto', true)|list }}"
+storage_backends: "{{ cluster_storage|selectattr('enabled', 'equalto', true)|list }}"

@@ -81,7 +81,7 @@ enable_emqx: true
 enable_libvirt: true
 enable_trochilus: true
 enable_prometheus: true
-enable_pushgateway: "{% only_deploy_voi | bool %}false{% else %}true{% endif %}"
+enable_pushgateway: "{% if only_deploy_voi | bool %}false{% else %}true{% endif %}"
 enable_guest_service: "{% if only_deploy_voi | bool %}false{% else %}true{% endif %}"
 enable_fsd: true
 enable_btserver: "{% if fsd_deploy_mode == 'vdi' %}false{% else %}true{% endif %}"

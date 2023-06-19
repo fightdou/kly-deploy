@@ -28,7 +28,7 @@
   when: 
     - enable_local | bool
 
-  - name: Set init total_iso_share_num var
+- name: Set init total_iso_share_num var
   set_fact:
     total_iso_share_num: 0
   when: 

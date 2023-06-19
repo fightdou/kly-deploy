@@ -13,6 +13,8 @@ trochilus_tag: "{{ upgrade_version }}"
 trochilus_cpu_weight_multiplier: 100
 trochilus_memory_weight_multiplier: 1
 fsd_upgrade_server_port: 9014
+trochilus_vdi_base_path: "{{ desktop_mount_dir }}/local_disks"
+
 
 # libvirt coredump 参数
 coredump_img_file_path: /opt/coredump
@@ -31,3 +33,8 @@ local_vg_name: local
 local_trochilus_lv_name: trochilus
 local_net_lv_name: net
 share_mount_dir: "/opt/share"
+
+## seaflie
+netdisk_username: admin@seafile.local
+netdisk_password: 123456
+netdisk_flavor: 50
