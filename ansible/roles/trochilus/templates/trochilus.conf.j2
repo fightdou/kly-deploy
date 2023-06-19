@@ -60,6 +60,8 @@ volume_driver = trochilus.agent.storage.volume.drivers.local.LocalStorageVolumeD
 enabled_image_store = {% if enable_ceph %}rbd{% else %}filesystem{% endif %}
 
 enabled_image_stores = {{ volume_enabled_backends|map(attribute='image')|join(',') }}
+image_iso_dir = {{ share_disk_mount_path }}/iso_file
+
 {% if enable_lvm | bool %}
 lvm_store_vgname = {{ lvm_volgroup_name }}
 lvm_store_thin_pool = {{ thin_volume_pool_name }}
@@ -75,9 +77,8 @@ rbd_store_thin_provisioning = true
 {% endif %}
 {% if enable_local | bool %}
 filesystem_store_chunk_size = 65536
-filesystem_store_datadir = /var/lib/trochilus/images
+filesystem_store_datadir = {% if deploy_edu | bool %}{{ trochilus_vdi_base_path }}/images{% else }{{ desktop_mount_dir }}/images{% endif %}
 {% endif %}
-
 
 [network_settings]
 disable_linux_bridge_stp = true
@@ -97,9 +98,10 @@ vnc_enabled = true
 vnc_server_listen = 0.0.0.0
 spice_enabled = true
 spice_server_listen = 0.0.0.0
+vdi_disk_path = {{ trochilus_vdi_base_path }}
 [voi_settings]
-voi_image_base_path = /var/lib/trochilus/voi/images
-voi_vm_base_path = /var/lib/trochilus/voi/vms
+voi_image_base_path = {{ desktop_mount_dir }}/voi/images
+voi_vm_base_path = {{ desktop_mount_dir }}/voi/vms
 vm_name_template = voi-%s
 [ha_settings]
 detected_mgmt_net_ip = {{ trochilus_detected_mgmt_net_ip }}

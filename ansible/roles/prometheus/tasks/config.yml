@@ -73,7 +73,7 @@
 
 - name: 创建 alertmanager 共享目录
   file:
-    name: "{{ desktop_mount_dir }}/prometheus/alertmanager"
+    name: "{{ share_disk_mount_path }}/prometheus/alertmanager"
     state: directory
     recurse: yes
     mode: 0755
@@ -81,7 +81,7 @@
 - name: copy alertmanager conf file
   template:
     src: alertmanager.yml.j2
-    dest: "{{ desktop_mount_dir }}/prometheus/alertmanager/alertmanager.yml"
+    dest: "{{ share_disk_mount_path }}/prometheus/alertmanager/alertmanager.yml"
   notify:
     - Restart prometheus-alertmanager container
 
@@ -116,7 +116,7 @@
 
 - name: 创建 prometheus alert-rule 共享目录
   file:
-    name: "{{ desktop_mount_dir }}/prometheus/rules"
+    name: "{{ share_disk_mount_path }}/prometheus/rules"
     state: directory
     recurse: yes
     mode: 0755

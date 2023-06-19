@@ -6,6 +6,52 @@
     mode: "0770"
   become: true
 
+- name: Set init total_vdi_file_num var
+  set_fact:
+    total_vdi_file_num: 0
+
+- name: 获取 vdi 文件总存储
+  set_fact: "{{ total_vdi_file_num | int + hostvars[item].vdi_storage_num | int }}"
+  with_items: "{{ groups['storage'] }}"
+  when: 
+    - enable_local | bool
+
+- name: Set init total_voi_file_num var
+  set_fact:
+    total_voi_file_num: 0
+  when: 
+    - enable_local | bool
+
+- name: 获取 voi 文件总存储
+  set_fact: "{{ total_voi_file_num | int + hostvars[item].voi_storage_num | int }}"
+  with_items: "{{ groups['storage'] }}"
+  when: 
+    - enable_local | bool
+
+  - name: Set init total_iso_share_num var
+  set_fact:
+    total_iso_share_num: 0
+  when: 
+    - enable_local | bool
+
+- name: 获取 iso 共享总存储
+  set_fact: "{{ total_iso_share_num | int + hostvars[item].vdi_file_storage_num | int }}"
+  with_items: "{{ groups['storage'] }}"
+  when: 
+    - enable_local | bool
+
+- name: Set init total_net_share_num var
+  set_fact:
+    total_net_share_num: 0
+  when: 
+    - enable_local | bool
+
+- name: 获取网盘总存储
+  set_fact: "{{ total_net_share_num | int + hostvars[item].cloud_disk_num | int }}"
+  with_items: "{{ groups['storage'] }}"
+  when: 
+    - enable_local | bool
+
 - name: Ensuring fsd_console config directories exist
   file:
     path: "{{ config_directory }}/fsd_console"
@@ -22,7 +68,7 @@
 
 - name: Create Tdesktop app dir
   file:
-    path: "{{ desktop_mount_dir }}/static/vdiUpgradePackage/"
+    path: "{{ share_disk_mount_path }}/static/vdiUpgradePackage/"
     state: "directory"
     mode: "0777"
     recurse: yes
@@ -38,7 +84,7 @@
   become: true
   copy:
     src: "{{ item }}"
-    dest: "{{ desktop_mount_dir }}/static/vdiUpgradePackage/"
+    dest: "{{ share_disk_mount_path }}/static/vdiUpgradePackage/"
     mode: "0644"
   with_items: "{{ tdesktop_path_name }}"
   when:
@@ -58,7 +104,7 @@
 
 - name: Copying over fsd_nginx.conf
   template:
-    src: "fsd_nginx.conf.j2"
+    src: "fsd{{ deploy_type }}_nginx.conf.j2"
     dest: "{{ config_directory }}/fsd/fsd.conf"
     mode: "0660"
   become: true

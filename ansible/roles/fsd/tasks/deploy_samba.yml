@@ -20,7 +20,7 @@
 
 - name: Create Samba Script Dir
   file:
-    path: "/var/lib/trochilus/111/samba/"
+    path: "{{ share_disk_mount_path }}/111/samba/"
     state: directory
     mode: 0755
     recurse: True
@@ -28,7 +28,7 @@
 
 - name: Create Samba Script
   file:
-    path: "/var/lib/trochilus/111/samba/disksize"
+    path: "{{ share_disk_mount_path }}/111/samba/disksize"
     state: touch
     mode: 0777
   run_once: True
@@ -36,7 +36,7 @@
 - name: Copy Samba Script
   template:
     src: "diskSize.sh.j2"
-    dest: "/var/lib/trochilus/111/samba/diskSize.sh"
+    dest: "{{ share_disk_mount_path }}/111/samba/diskSize.sh"
     mode: 0777
   run_once: True
 
