@@ -1,0 +1,46 @@
+spring:
+  profiles: docker
+
+custom:
+  spring_datasource_password: {{ mariadb_root_password }}
+  spring_redis_sentinel_nodes: {% for host in groups['redis'] %}{{ host }}:26379{% if not loop.last %},{% endif %}{% endfor %}
+  spring_redis_password: {{ redis_master_password }}
+  fsd_common_netty_codec_mac: 60f81dad19ae
+  fsd_edumix_biz_deploy_mode: {{ fsd_deploy_mode }}
+  fsd_edumix_biz_deploy_node_type: {{ fsd_deploy_node_type }}
+  fsd_edumix_biz_deploy_storage_type: {{ volume_enabled_backends }}
+  fsd_edumix_biz_deploy_inner_vip: {{ default_internal_server_visit_ip }}
+  fsd_edumix_biz_deploy_ssh_port: {{ fsd_ssd_port }}
+  fsd_edumix_biz_path_shareRootPath: {{ share_mount_dir }}
+  fsd_edumix_biz_path_vdiRootPath: {{ trochilus_vdi_base_path }}
+  fsd_edumix_biz_path_voiRootPath: {{ trochilus_voi_base_path }}
+  fsd_edumix_biz_front_frontDir: /var/www/html
+  fsd_edumix_biz_front_nginxConfigFile: /etc/nginx/conf.d/fsd.conf
+  fsd_edumix_biz_front_vipConfigFile: /etc/keepalived/keepalived.conf
+  fsd_edumix_biz_desktop_tracker_configFile: /etc/klcloud/btserver/
+
+  fsd_edumix_biz_netdisk_host: {{ fsd_ngxin_proxy_pass }}
+  fsd_edumix_biz_netdisk_username: {{ netdisk_username }}
+  fsd_edumix_biz_netdisk_password: {{ netdisk_password }}
+  fsd_edumix_biz_netdisk_flavor: {{ netdisk_flavor }}
+
+  port_mysql: {{ mariadb_external_listen_port }}
+  port_mqtt: {{ emqx_external_mqtt_port }}
+  port_prometheus_server: {{ prometheus_port }}
+  port_prometheus_alert: {{ alertmanager_external_port }}
+  port_prometheus_pushgateway: {{ pushgateway_external_port }}
+  port_prometheus_thanos: {{ thanos_external_query_port }}
+  port_bt_start: {{ bt_download_external_port_start }}
+  port_bt_end: {{ bt_download_external_port_end }}
+  port_bt_server: {{ bt_server_external_port }}
+  port_bt_tracker: {{ bt_tracker_external_port }}
+  port_virtual_api: {{ trochilus_external_api_listen_port }}
+  port_virtual_vnc: {{ websockify_external_port }}
+  port_java_front: {{ fsd_listen_nginx_port }}
+  port_java_main: {{ fsd_listen_main_port }}
+  port_java_job: {{ fsd_listen_job_port }}
+  port_java_tcp: {{ fsd_listen_tcp_port }}
+  port_java_tcp_vip: {{ fsd_external_tcp_port }}
+  port_java_file: {{ fsd_listen_tcp_file_port }}
+  port_java_tcp_file_vip: {{ fsd_external_tcp_file_port }}
+  port_java_console: {{ fsd_console_port }}
