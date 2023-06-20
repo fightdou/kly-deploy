@@ -12,7 +12,7 @@ custom:
   fsd_edumix_biz_deploy_storage_type: {{ storage_backends|map(attribute='name')|join(',') }}
   fsd_edumix_biz_deploy_inner_vip: {{ default_internal_server_visit_ip }}
   fsd_edumix_biz_deploy_ssh_port: {{ fsd_ssd_port }}
-  fsd_edumix_biz_path_shareRootPath: {{ share_mount_dresize_bcache_minimun.serviceir }}
+  fsd_edumix_biz_path_shareRootPath: {{ share_mount_dir }}
   fsd_edumix_biz_path_vdiRootPath: {{ trochilus_vdi_base_path }}
   fsd_edumix_biz_path_voiRootPath: {{ trochilus_voi_base_path }}
   fsd_edumix_biz_front_frontDir: /var/www/html
