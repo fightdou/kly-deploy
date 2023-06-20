@@ -1,8 +1,8 @@
 #!/bin/bash
 a=1
-mount_state="mountpoint -q {{ desktop_mount_dir }}"
+mount_state="mountpoint -q {{ share_disk_mount_path }}"
 if $mount_state;then
-    echo "{{ desktop_mount_dir }} 已挂载" >> /var/log/cephmount.log
+    echo "{{ share_disk_mount_path }} 已挂载" >> /var/log/cephmount.log
     exit 1
 fi
 while true
@@ -11,9 +11,9 @@ do
     if [ "$ceph_active" -ne 0 ]
     then
         sleep 5
-        mount -t ceph {{ mon_hosts }}:/ {{ desktop_mount_dir }} -o name=admin,secret={{ mons_secret.client_admin.client_admin_secret }},_netdev,noatime
-        mountpoint -q {{ desktop_mount_dir }}
-        echo "$(date +"%Y-%m-%d %T") ==> 查看 {{ desktop_mount_dir }} 是否是一个挂载点,结果 $?" >> /var/log/cephmount.log
+        mount -t ceph {{ mon_hosts }}:/ {{ share_disk_mount_path }} -o name=admin,secret={{ mons_secret.client_admin.client_admin_secret }},_netdev,noatime
+        mountpoint -q {{ share_disk_mount_path }}
+        echo "$(date +"%Y-%m-%d %T") ==> 查看 {{ share_disk_mount_path }} 是否是一个挂载点,结果 $?" >> /var/log/cephmount.log
         if [ $? -eq 0 ]
         then
             echo "$(date +"%Y-%m-%d %T")==>第$a次尝试挂载:成功" >> /var/log/cephmount.log

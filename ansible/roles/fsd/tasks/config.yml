@@ -11,7 +11,8 @@
     total_vdi_file_num: 0
 
 - name: 获取 vdi 文件总存储
-  set_fact: "{{ total_vdi_file_num | int + hostvars[item].vdi_storage_num | int }}"
+  set_fact: 
+    total_vdi_file_num: "{{ total_vdi_file_num | int + hostvars[item].vdi_storage_num | int }}"
   with_items: "{{ groups['storage'] }}"
   when: 
     - enable_local | bool
@@ -23,7 +24,8 @@
     - enable_local | bool
 
 - name: 获取 voi 文件总存储
-  set_fact: "{{ total_voi_file_num | int + hostvars[item].voi_storage_num | int }}"
+  set_fact: 
+    total_voi_file_num: "{{ total_voi_file_num | int + hostvars[item].voi_storage_num | int }}"
   with_items: "{{ groups['storage'] }}"
   when: 
     - enable_local | bool
@@ -35,7 +37,8 @@
     - enable_local | bool
 
 - name: 获取 iso 共享总存储
-  set_fact: "{{ total_iso_share_num | int + hostvars[item].vdi_file_storage_num | int }}"
+  set_fact: 
+    total_iso_share_num: "{{ total_iso_share_num | int + hostvars[item].vdi_file_storage_num | int }}"
   with_items: "{{ groups['storage'] }}"
   when: 
     - enable_local | bool
@@ -47,7 +50,8 @@
     - enable_local | bool
 
 - name: 获取网盘总存储
-  set_fact: "{{ total_net_share_num | int + hostvars[item].cloud_disk_num | int }}"
+  set_fact: 
+    total_net_share_num: "{{ total_net_share_num | int + hostvars[item].cloud_disk_num | int }}"
   with_items: "{{ groups['storage'] }}"
   when: 
     - enable_local | bool
