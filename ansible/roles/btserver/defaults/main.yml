@@ -16,7 +16,7 @@ btserver_services:
     group: btserver_tracker
     enabled: true
     image: "{{ btserver_tracker_image_full }}"
-    command: "-redisAddr {{ inventory_hostname }}:{{ redis_external_server_port }} -redisPassword {{ redis_master_password }} -udpAddr {{ bt_tracker_external_port }}"
+    command: "-redisAddr {{ inventory_hostname }}:{{ redis_external_server_port }} -redisPassword {{ redis_master_password }} -udpAddr :{{ bt_tracker_external_port }}"
     pid_mode: "host"
     privileged: True
     volumes: "{{ btserver_tracker_default_volumes }}"

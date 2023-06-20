@@ -11,6 +11,7 @@ ceph_local_ip: "{{ hostvars[inventory_hostname]['ansible_' + ceph_public_interfa
 monmaptool: "monmaptool --create  {% for host in groups['ceph-mons'] %} --add {{ hostvars[host]['ansible_hostname']}}  {{ hostvars[host]['ansible_' + hostvars[host]['ceph_public_interface']]['ipv4']['address'] }}:6789 {% endfor %}    --fsid {{ fsid }} monmap "
 client_images_cap: "{{ osds_pool_secret.client_images.client_images_ceph_authtool_cap }}"
 client_volumes_cap: "{{ osds_pool_secret.client_volumes.client_volumes_ceph_authtool_cap }}"
+share_disk_mount_path: "{% if deploy_comm | bool %}{{ desktop_mount_dir }}{% elif deploy_edu | bool %}{{ share_mount_dir }}{% endif %}"
 
 ## monitor service keyring和subsystemd权限
 mons_secret:

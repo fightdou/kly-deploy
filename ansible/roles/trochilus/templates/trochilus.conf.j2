@@ -52,7 +52,7 @@ thin_virtualsize = {{ thin_lv_size }}G
 {% endif %}
 
 {% if enable_local | bool %}
-[local]
+[local1]
 volume_driver = trochilus.agent.storage.volume.drivers.local.LocalStorageVolumeDriver
 {% endif %}
 
