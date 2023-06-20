@@ -90,6 +90,7 @@ enable_ceph: false
 # 本地存储
 enable_local: true
 enable_glusterfs: '{% if enable_local | bool and groups["glusterfs"] | length > 1 %}true{% else %}false{% endif %}'
+enable_seafile: '{% if deploy_edu | bool %}true{% else %}false{% endif %}'
 
 ##########
 # VOI 配置
@@ -291,6 +292,11 @@ gluster_metadata_path: "/data"
 share_metadata_path: "{{ gluster_metadata_path }}/share_data"
 
 ## seaflie
-netdisk_username: admin@seafile.local
-netdisk_password: 123456
-netdisk_flavor: 50
+seafile_mariadb_password: "60738ab7c0ba6413a7bc2304c756d328"
+seafile_port: 8000
+seafile_fileserver_port: 8082
+seafile_username: admin
+seafile_flavor: 50
+seafile_admin_pass: "Troila"
+seafile_admin_e: "admin@seafile.local"
+seafile_default_tag: "latest"

@@ -1,0 +1,19 @@
+---
+# handlers file for baremetal
+- name: Starting seafile container
+  vars:
+    service_name: "seafile"
+    service: "{{ seafile_services[service_name] }}"
+  become: true
+  kolla_docker:
+    action: "start_container"
+    common_options: "{{ docker_common_options }}"
+    environment:
+      SEAFILE_ADMIN_PASSWORD: "{{ seafile_admin_pass }}"
+      SEAFILE_ADMIN_EMAIL: "{{ seafile_admin_e }}"
+    image: "{{ service.image }}"
+    name: "{{ service.container_name }}"
+    volumes: "{{ service.volumes }}"
+    pid_mode: "{{ service.pid_mode | default('') }}"
+    command: "/root/seafile-server-latest/start.sh"
+  listen: Restart seafile container
