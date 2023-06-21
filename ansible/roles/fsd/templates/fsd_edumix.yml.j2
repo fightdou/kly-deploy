@@ -20,8 +20,8 @@ custom:
   fsd_edumix_biz_front_vipConfigFile: /etc/keepalived/keepalived.conf
   fsd_edumix_biz_desktop_tracker_configFile: /etc/klcloud/btserver/
 
-  fsd_edumix_biz_netdisk_host: {{ fsd_ngxin_proxy_pass }}
-  fsd_edumix_biz_netdisk_username: {{ seafile_username }}
+  fsd_edumix_biz_netdisk_host: {{ fsd_ngxin_proxy_pass }}:{{ seafile_port }}
+  fsd_edumix_biz_netdisk_username: {{ seafile_admin_e }}
   fsd_edumix_biz_netdisk_password: {{ seafile_admin_pass }}
   fsd_edumix_biz_netdisk_flavor: {{ seafile_flavor }}
 

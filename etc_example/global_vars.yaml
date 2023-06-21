@@ -296,8 +296,7 @@ share_metadata_path: "{{ gluster_metadata_path }}/share_data"
 seafile_mariadb_password: "60738ab7c0ba6413a7bc2304c756d328"
 seafile_port: 8000
 seafile_fileserver_port: 8082
-seafile_username: admin
-seafile_flavor: 50
+seafile_flavor: 1
 seafile_admin_pass: "Troila"
 seafile_admin_e: "admin@seafile.local"
 seafile_default_tag: "latest"
