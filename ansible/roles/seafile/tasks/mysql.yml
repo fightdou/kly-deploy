@@ -1,0 +1,78 @@
+---
+- name: create seafile databases
+  mysql_db: 
+    login_host: "{{ default_internal_server_visit_ip }}"
+    login_port: "{{ mariadb_external_listen_port }}"
+    login_user: "{{ mariadb_root_username }}"
+    login_password: "{{ mariadb_root_password }}"
+    name: "{{ item }}"
+    state: "present"
+  run_once: True
+  delegate_to: "{{ groups['trochilus-api'][0] }}"
+  with_items:
+    - "ccnet_db"
+    - "seafile_db"
+    - "seahub_db"
+
+- name: create seafile databases
+  mysql_db: 
+    login_host: "{{ default_internal_server_visit_ip }}"
+    login_port: "{{ mariadb_external_listen_port }}"
+    login_user: "{{ mariadb_root_username }}"
+    login_password: "{{ mariadb_root_password }}"
+    name: "{{ item }}"
+    state: "present"
+  run_once: True
+  delegate_to: "{{ groups['seafile'][0] }}"
+  with_items:
+    - "ccnet_db"
+    - "seafile_db"
+    - "seahub_db"
+
+- name: create seafile databases user
+  become: true
+  mysql_user:
+    login_host: "{{ default_internal_server_visit_ip }}"
+    login_port: "{{ mariadb_external_listen_port }}"
+    login_user: "{{ mariadb_root_username }}"
+    login_password: "{{ mariadb_root_password }}"
+    name: "seafile"
+    password: "{{ seafile_mariadb_password }}"
+    host: "%"
+    priv: "{{ item }}.*:ALL"
+    append_privs: "yes"
+  run_once: True
+  delegate_to: "{{ groups['seafile'][0] }}"
+  with_items:
+    - "ccnet_db"
+    - "seafile_db"
+    - "seahub_db"
+
+- name: copy seafile sql
+  copy:
+    src: "{{ item }}"
+    dest: "{{ config_directory }}/seafile/db"
+  with_items:
+    - ccnet_db.sql
+    - seafile_db.sql
+    - seahub_db.sql
+  run_once: True
+  delegate_to: "{{ groups['seafile'][0] }}"
+
+- name: load seafile sql
+  shell: "docker run -i --name {{ item }}  -v {{ config_directory }}/seafile/db:{{ config_directory }}/seafile/db {{ mariadb_image_full }} mysql -h {{ default_internal_server_visit_ip }} -u{{ mariadb_root_username }} -p{{ mariadb_root_password }} {{ item }} < {{ config_directory }}/seafile/db/{{ item }}.sql"
+  with_items:
+    - ccnet_db
+    - seafile_db
+    - seahub_db
+  run_once: True
+  delegate_to: "{{ groups['seafile'][0] }}"
+
+- name: del seafile containerd
+  shell: "docker rm {{ item }}"
+  with_items:
+    - ccnet_db
+    - seafile_db
+    - seahub_db
+  run_once: True
+  delegate_to: "{{ groups['seafile'][0] }}"

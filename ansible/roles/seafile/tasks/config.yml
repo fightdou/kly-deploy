@@ -1,0 +1,36 @@
+---
+- name: Ensuring seafile config directories exist
+  file:
+    path: "{{ config_directory }}/seafile/conf"
+    state: "directory"
+    mode: "0775"
+  become: true
+
+- name: 创建 seafile conf 目录
+  file:
+    path: "{{ config_directory }}/seafile/conf"
+    state: directory
+    mode: 0755
+
+- name: 创建 seafile db 目录
+  file:
+    path: "{{ config_directory }}/seafile/db"
+    state: directory
+    mode: 0755
+
+- import_tasks: mysql.yml
+
+- name: Copy seafile config 文件
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ config_directory }}/seafile/conf/{{ item }}"
+    owner: root
+    mode: 0644
+  with_items:
+    - ccnet.conf
+    - gunicorn.conf.py
+    - seafdav.conf
+    - seafile.conf
+    - seahub_settings.py
+  notify:
+    - Restart seafile container

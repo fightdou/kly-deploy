@@ -1,0 +1,12 @@
+[fileserver]
+port = {{ seafile_fileserver_port }}
+
+[database]
+type = mysql
+host = {{ default_internal_server_visit_ip }}
+port = {{ mariadb_external_listen_port }}
+user = seafile
+password = {{ seafile_mariadb_password }}
+db_name = seafile_db
+connection_charset = utf8
+

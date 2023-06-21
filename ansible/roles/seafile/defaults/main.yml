@@ -1,0 +1,33 @@
+---
+# defaults file for baremetal
+project_name: "seafile"
+
+seafile_services:
+  seafile:
+    container_name: seafile
+    image: "{{ seafile_image_full }}"
+    pid_mode: "host"
+    volumes: "{{ seafile_default_volumes }}"
+  seahub:
+    container_name: seahub
+    image: "{{ seafile_image_full }}"
+    pid_mode: "host"
+    volumes: "{{ seafile_default_volumes }}"
+
+############
+# images
+############
+seafile_image: "{{ docker_image_repository }}/seafile"
+seafile_tag: "{{ seafile_default_tag }}"
+seafile_image_full: "{{ seafile_image }}:{{ seafile_tag }}"
+seafile_service: "{{ seafile_services }}"
+mariadb_image: "{{ docker_image_repository }}/mariadb"
+mariadb_tag: "{{ mariadb_default_tag }}"
+mariadb_image_full: "{{ mariadb_image }}:{{ mariadb_tag }}"
+
+############
+# volume
+############
+seafile_default_volumes:
+  - "{{ config_directory }}/seafile/conf/:/root/conf/:rw"
+  - "/etc/localtime:/etc/localtime:ro"

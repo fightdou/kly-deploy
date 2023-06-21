@@ -1,0 +1,15 @@
+# -*- coding: utf-8 -*-
+SECRET_KEY = "b'gbaj=*$*68qfsnoyg6j=n_y3(v_9qekvb9a3mx@i878%gn)da+'"
+SERVICE_URL = "http://127.0.0.1/"
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'seahub_db',
+        'USER': 'seafile',
+        'PASSWORD': '{{ seafile_mariadb_password }}',
+        'HOST': '{{ default_internal_server_visit_ip }}',
+        'PORT': '{{ mariadb_external_listen_port }}',
+        'OPTIONS': {'charset': 'utf8mb4'},
+    }
+}
