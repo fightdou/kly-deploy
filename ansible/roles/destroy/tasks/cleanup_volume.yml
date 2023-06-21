@@ -4,8 +4,14 @@
   ignore_errors: true
 
 - name: Unmount directory if mounted
-  command: "umount {{ desktop_mount_dir }}"
+  shell: "umount {{ desktop_mount_dir }}"
   when: mount_check.rc == 0
+
+- name: delete fstab mount
+  lineinfile:
+    path: /etc/fstab
+    state: absent
+    regexp: '^/dev/{{ local_vg_name }}/{{ local_trochilus_lv_name }}'
 
 - name: Check if directory is mounted
   shell: "mountpoint -q {{ share_mount_dir }}"
@@ -15,6 +21,12 @@
 - name: Unmount directory if mounted
   command: "umount {{ share_mount_dir }}"
   when: mount_check.rc == 0
+
+- name: delete fstab mount
+  lineinfile:
+    path: /etc/fstab
+    state: absent
+    regexp: '^/dev/{{ local_vg_name }}/{{ local_net_lv_name }}'
 
 - name: Remove GlusterFS Volume
   gluster_volume:
@@ -36,6 +48,12 @@
   when: 
     - mount_check.rc == 0
     - enable_glusterfs | bool
+
+- name: delete gluster_metadata_path fstab mount
+  lineinfile:
+    path: /etc/fstab
+    state: absent
+    regexp: '^{{ inventory_hostname }}'
 
 - name: Remove peer from GlusterFS cluster
   command: rm -rf /var/lib/glusterd/vols/* && systemctl restart glusterd.service

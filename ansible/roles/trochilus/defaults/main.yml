@@ -66,6 +66,7 @@ trochilus_default_volumes:
   - "aavmf:/usr/share/AAVMF"
   - "/var/log/trochilus/:/var/log/trochilus/"
   - "{{ desktop_mount_dir }}:/var/lib/trochilus/"
+  - "{{ share_mount_dir }}:{{ share_mount_dir }}"
 
 websockify_default_volumes:
   - "/etc/localtime:/etc/localtime"

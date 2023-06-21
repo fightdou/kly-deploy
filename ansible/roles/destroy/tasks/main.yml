@@ -77,6 +77,45 @@
   shell: ip netns del {{ item }}
   with_items: "{{ trochilus_netns.stdout_lines }}"
 
+- name: 查看 coredump file 是否挂载
+  shell: "mountpoint -q {{ coredump_libvirt_path }}"
+  register: coredump_check
+  ignore_errors: true
+
+- name: 取消挂载 coredump 文件
+  shell: "umount {{ coredump_libvirt_path }}"
+  when:
+    - coredump_check.rc == 0
+
+- name: 删除 coredump 文件
+  shell: "rm -rf {{ coredump_img_file_path }}/coredump.img"
+  when:
+    - coredump_check.rc == 0
+
+- name: 取消挂载 coredump 文件
+  lineinfile:
+    path: /etc/fstab
+    state: absent
+    regexp: '^{{ coredump_img_file_path }}/coredump.img'
+
+- name: 关闭 swap 分区
+  shell: swapoff -a
+  when:
+    - create_swap_file | bool 
+
+- name: 删除 coredump 文件
+  shell: "rm -rf {{ swap_file_path }}"
+  when:
+    - create_swap_file | bool 
+
+- name: 取消挂载 swap 文件
+  lineinfile:
+    path: /etc/fstab
+    state: absent
+    regexp: '^{{ swap_file_path }}'
+  when:
+    - create_swap_file | bool
+  
 - name: 移除添加的 hosts 信息
   blockinfile:
     path: "/etc/hosts"
@@ -93,5 +132,3 @@
     name: docker
     state: restarted
   ignore_errors: true
-
-
