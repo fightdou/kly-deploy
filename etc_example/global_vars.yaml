@@ -4,6 +4,7 @@ system_type: '{% if ansible_architecture == "x86_64" %}x86{% else %}{{ ansible_a
 docker_namespace_name: klcloud_{{ system_type }}
 docker_image_repository: "{{ docker_register_domain }}/{{ docker_namespace_name }}"
 docker_image_tag: latest
+docker_network: 169.17.0.0/16
 #配置文件目录
 config_directory: "/etc/klcloud"
 
@@ -115,7 +116,7 @@ share_mount_dir: "/opt/share"
 ceph_rbd_secret_uuid: e2338e01-6f82-4236-885b-056847028c77
 ceph_rbd_admin_user: client.admin
 hugepages_size: 2M
-enable_hugepages: "{% if only_deploy_voi | bool or deploy_edu | bool %}false{% else %}true{% endif %}"
+enable_hugepages: "{% if only_deploy_voi | bool %}false{% else %}true{% endif %}"
 libvirt_tag: 2.0.3
 guest_service_tag: 2.0.3
 coredump_img_file_path: /opt/coredump
