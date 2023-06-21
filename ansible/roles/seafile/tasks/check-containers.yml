@@ -9,4 +9,4 @@
     volumes: "{{ item.value.volumes }}"
   with_dict: "{{ seafile_services }}"
   notify:
-    - "Restart {{ item.key }} container"
+    - "Restart seafile container"
