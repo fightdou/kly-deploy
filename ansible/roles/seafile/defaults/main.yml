@@ -31,3 +31,5 @@ mariadb_image_full: "{{ mariadb_image }}:{{ mariadb_tag }}"
 seafile_default_volumes:
   - "{{ config_directory }}/seafile/conf/:/root/conf/:rw"
   - "/etc/localtime:/etc/localtime:ro"
+  - "{{ share_mount_dir }}/seafile-data/:/root/seafile-data/:rw"
+  - "{{ share_mount_dir }}/seahub-data/:/root/seahub-data/:rw"

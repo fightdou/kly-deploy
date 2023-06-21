@@ -18,6 +18,16 @@
     state: directory
     mode: 0755
 
+- name: 创建seafile和seahub的data目录
+  file:
+    path: "{{ share_mount_dir }}/{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - seafile-data
+    - seahub-data
+
+
 - import_tasks: mysql.yml
 
 - name: Copy seafile config 文件
