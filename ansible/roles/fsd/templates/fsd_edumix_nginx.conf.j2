@@ -1,5 +1,5 @@
 server {
-  listen       0.0.0.0:9000;
+  listen       {{ default_internal_server_listen_ip }}:{{ fsd_listen_nginx_port }};
   server_name  127.0.0.1;
 
   sendfile off;
