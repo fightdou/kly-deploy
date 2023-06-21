@@ -1,5 +1,5 @@
 server {
-  listen       {{ default_internal_server_listen_ip }}:{{ fsd_listen_nginx_port }};
+  listen       0.0.0.0:9000;
   server_name  127.0.0.1;
 
   sendfile off;
@@ -47,6 +47,11 @@ server {
 
   location /share_image {
     alias   /mnt/voi/share_image/;
+    index   index.php index.html index.htm;
+  }
+
+  location /iso_file {
+    alias   /mnt/iso/;
     index   index.php index.html index.htm;
   }
   

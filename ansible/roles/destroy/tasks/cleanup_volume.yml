@@ -54,6 +54,8 @@
     path: /etc/fstab
     state: absent
     regexp: '^{{ inventory_hostname }}'
+  when:
+    - enable_glusterfs | bool
 
 - name: Remove peer from GlusterFS cluster
   command: rm -rf /var/lib/glusterd/vols/* && systemctl restart glusterd.service
