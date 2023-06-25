@@ -12,6 +12,9 @@ monmaptool: "monmaptool --create  {% for host in groups['ceph-mons'] %} --add {{
 client_images_cap: "{{ osds_pool_secret.client_images.client_images_ceph_authtool_cap }}"
 client_volumes_cap: "{{ osds_pool_secret.client_volumes.client_volumes_ceph_authtool_cap }}"
 share_disk_mount_path: "{% if deploy_comm | bool %}{{ desktop_mount_dir }}{% elif deploy_edu | bool %}{{ share_mount_dir }}{% endif %}"
+ceph_internal_network: "{{ inventory_hostname.split('.')[:-1] | join('.') }}"
+ceph_cluster_ip: "{% if ceph_cluster_network is defined %}{% if api_interface == ceph_cluster_interface %}{{ ceph_internal_network }}.0/24{% else %}{{ ceph_cluster_network }}{% endif %}{% endif %}"
+ceph_public_ip: "{% if api_interface == ceph_public_interface %}{{ ceph_internal_network }}.0/24{% else %}{{ ceph_public_network }}{% endif %}"
 
 ## monitor service keyring和subsystemd权限
 mons_secret:

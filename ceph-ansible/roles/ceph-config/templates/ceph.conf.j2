@@ -1,8 +1,8 @@
 [global]
 cluster                     = {{ cluster }}
 fsid                        = {{ fsid }}
-public network              = {{ ceph_public_network }}
-{% if ceph_cluster_network is defined %}cluster network             = {{ ceph_cluster_network }}  {% endif %}
+public network              = {{ ceph_public_ip }}
+{% if ceph_cluster_network is defined %}cluster network             = {{ ceph_cluster_ip }}  {% endif %}
 
 auth cluster required       = {% if cephx %}cephx  {%- else -%} none {% endif %}
 
