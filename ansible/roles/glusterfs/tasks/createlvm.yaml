@@ -5,9 +5,13 @@
     state: directory
     mode: 0755
 
+- name: cat net UUID
+  shell: "blkid | grep {{ local_vg_name }}-{{ local_net_lv_name }} | awk -F' ' '{print $2}'"
+  register: net_uuid
+
 - name: Mount Glusterfs Metadata Lvm To Glusterfs Metadata Path
   mount:
-    src: "/dev/{{ local_vg_name }}/{{ local_net_lv_name }}"
+    src: "{{ net_uuid.stdout | replace('\"', '') }}"
     path: "{{ gluster_metadata_path }}"
     state: "mounted"
     fstype: ext4
