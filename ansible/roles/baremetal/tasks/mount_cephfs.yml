@@ -5,7 +5,7 @@
 
 - name: set cephfs_mount ip
   set_fact:
-    mon_hosts: "{% for host in groups['ceph-mons'] %}{{ hostvars[host]['cephf_ceph_local_ip'] }}:6789{% if not loop.last %},{% endif %}{% endfor %}"
+    mon_hosts: "{% for host in groups['ceph-mons'] %}{{ hostvars[host]['inventory_hostname'] }}:6789{% if not loop.last %},{% endif %}{% endfor %}"
 
 - name: Check cephfs whether mount
   shell: "mount | grep {{ share_disk_mount_path }}"
