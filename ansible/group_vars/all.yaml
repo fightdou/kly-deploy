@@ -3,6 +3,7 @@ system_type: "{% if ansible_architecture == 'x86_64' %}x86{% else %}{{ ansible_a
 api_interface_address: "{{ 'api' | filter_address }}"
 enable_keepalived: "{% groups['keepalived'] | length == 1 %}false{% else %}true{% endif %}"
 fsd_deploy_node_type: "{% if groups['fsd'] | length > 1 %}cluster{% else %}single{% endif %}"
+share_disk_mount_path: "{% if deploy_comm | bool %}{{ desktop_mount_dir }}{% elif deploy_edu | bool %}{{ share_mount_dir }}{% endif %}"
 
 
 enable_internal_communication: true

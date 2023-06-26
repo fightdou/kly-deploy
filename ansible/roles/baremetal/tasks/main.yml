@@ -2,13 +2,14 @@
 - name: Create trochilus dir
   become: true
   file:
-    path: "{{ desktop_mount_dir }}"
+    path: "{{ share_disk_mount_path }}"
     state: directory
     mode: 0755
 
 - import_tasks: mount_cephfs.yml
   when:
     - enable_ceph | bool
+    - not enable_local | bool
 
 - import_tasks: create_vg_volume.yaml
   when:
@@ -18,11 +19,6 @@
   when:
     - enable_local | bool
     - create_local_vg | bool
-
-- import_tasks: mount_local_disk.yml
-  when:
-    - enable_local | bool
-    - mount_local_disk | bool
 
 - import_tasks: hugepages_config.yml
   when:

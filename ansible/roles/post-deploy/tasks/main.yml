@@ -6,6 +6,7 @@
 - import_tasks: create_mount_crontab.yml
   when:
     - enable_ceph | bool
+    - not enable_local | bool
 
 - import_tasks: create_bcache_script.yml
   when:

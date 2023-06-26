@@ -5,17 +5,17 @@
 
 - name: set cephfs_mount ip
   set_fact:
-    mon_hosts: "{% for host in groups['ceph-mons'] %}{{ hostvars[host]['cephf_ceph_local_ip'] }}:6789{% if not loop.last %},{% endif %}{% endfor %}"
+    mon_hosts: "{% for host in groups['ceph-mons'] %}{{ hostvars[host]['inventory_hostname'] }}:6789{% if not loop.last %},{% endif %}{% endfor %}"
 
 - name: Check cephfs whether mount
-  shell: "mount | grep {{ desktop_mount_dir }}"
+  shell: "mount | grep {{ share_disk_mount_path }}"
   register: cephfs_mount_result
   ignore_errors: true
 
 - name: Mount cephfs share dir
   become: true
   mount:
-    path: "{{ desktop_mount_dir }}"
+    path: "{{ share_disk_mount_path }}"
     src: "{{ mon_hosts }}:/"
     state: mounted
     fstype: ceph

@@ -7,8 +7,6 @@
   vars:
     package:
       - "glusterfs-server"
-      - "lvm2"
-      # - "nfs-ganesha-gluster"
 
 - name: Start glusterfs versions
   systemd:

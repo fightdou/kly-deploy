@@ -60,8 +60,13 @@ trochilus_default_volumes:
   - "/lib/modules/:/lib/modules/:rw"
   - "/etc/ceph/:/etc/ceph/"
   - "libvirtd:/var/lib/libvirt"
+  - "edk2:/usr/share/edk2/"
+  - "ovmf:/usr/share/OVMF/"
+  - "ovmf_qemu:/usr/share/qemu/"
+  - "aavmf:/usr/share/AAVMF"
   - "/var/log/trochilus/:/var/log/trochilus/"
   - "{{ desktop_mount_dir }}:/var/lib/trochilus/"
+  - "{{ share_mount_dir }}:{{ share_mount_dir }}"
 
 websockify_default_volumes:
   - "/etc/localtime:/etc/localtime"
@@ -71,13 +76,14 @@ virt_v2v_default_volumes:
     - /tmp:/tmp:rw
     - /etc/localtime:/etc/localtime:rw
     - /dev:/dev:rw
-    - /var/lib/trochilus/p2v:/var/lib/trochilus/p2v:rw
+    - "{{ desktop_mount_dir }}/p2v:{{ desktop_mount_dir }}/p2v:rw"
     - /etc/shadow:/etc/shadow:rw
 
 support_flat_physicals: "{% for host in groups['trochilus-agent'] -%}{% set flat_interface_list = hostvars[host]['flat_network_interface'] %} {% for flat in flat_interface_list %}{{ 'flat' + loop.index | string }}{% if not loop.last %},{% endif %}{% endfor %}{% endfor %}"
 physical_vlan_ranges: "{% for vlan,vlan_ranges in vlan_network_interface.items() %}{% set index = loop.index %}{% for vlan_range in vlan_ranges %}{{ 'vlan' + index | string }}:{{ vlan_range }}{% if not loop.last %},{% endif %}{% endfor %}{% endfor %}"
 physical_vlan_interface: "{% for vlan_interface,vlan_range in vlan_interface_dict.items() %}{% if enable_single_net | bool %}{{ 'vlan' + loop.index | string }}:{{ vtap_name }}{% else %}{{ 'vlan' + loop.index | string }}:{{ vlan_interface }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}" 
 physical_flat_interface: "{% for flat_interface in flat_network_interface %}{% if enable_single_net | bool %}{{'flat' + loop.index | string }}:{{ vtap_name }}{% else %}{{ 'flat' + loop.index | string }}:{{ flat_interface }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
+share_disk_mount_path: "{% if deploy_comm | bool %}{{ desktop_mount_dir }}{% elif deploy_edu | bool %}{{ share_mount_dir }}{% endif %}"
 
 
 physical_interface_mappings: "{% if trochilus_support_flat_network and trochilus_support_vlan_network %}{{ physical_flat_interface }},{{ physical_vlan_interface }} {% elif trochilus_support_flat_network %} {{ physical_flat_interface }}{% elif trochilus_support_vlan_network %} {{ physical_vlan_interface }} {% endif %}"
@@ -85,7 +91,7 @@ physical_interface_mappings: "{% if trochilus_support_flat_network and trochilus
 webhook_target_ip: "{% if enable_keepalived | bool %}{{ internal_vip_address }}{% else %}0.0.0.0{% endif %}"
 
 volume_backends:
-  - name: "local"
+  - name: "local1"
     enabled: "{{ enable_local | bool }}"
     image: "filesystem"
   - name: "thin_lvm1"

@@ -95,6 +95,15 @@
         tags: btserver,
         when: enable_btserver| bool }
 
+- name: Apply role seafile
+  gather_facts: false
+  hosts:
+    - seafile
+  roles:
+    - { role: seafile,
+        tags: seafile,
+        when: enable_seafile| bool }
+
 - name: Apply role fsd
   gather_facts: false
   hosts: fsd

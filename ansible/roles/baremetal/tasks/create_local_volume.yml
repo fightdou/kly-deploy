@@ -69,12 +69,17 @@
   when:
     - trochilus_lv_exist.stdout == "0"
 
+- name: cat trochilus UUID
+  shell: "blkid | grep {{ local_vg_name }}-{{ local_trochilus_lv_name }} | awk -F' ' '{print $2}'"
+  register: trochilus_uuid
+
 - name: Mount trochilus logical volume
   mount:
     path: "{{ desktop_mount_dir }}"
-    src: "/dev/{{ local_vg_name }}/{{ local_trochilus_lv_name }}"
+    src: "{{ trochilus_uuid.stdout | replace('\"', '') }}"
     fstype: ext4
     state: mounted
+  
 
 - name: 查看 net lv 卷是否创建
   shell: "lvs | grep {{ local_net_lv_name }} | wc -l"
@@ -91,10 +96,14 @@
   when:
     - net_lv_exist.stdout == "0"
 
+- name: cat net UUID
+  shell: "blkid | grep {{ local_vg_name }}-{{ local_net_lv_name }} | awk -F' ' '{print $2}'"
+  register: net_uuid
+
 - name: Mount share net logical volume
   mount:
     path: "{{ share_mount_dir }}"
-    src: "/dev/{{ local_vg_name }}/{{ local_net_lv_name }}"
+    src: "{{ net_uuid.stdout | replace('\"', '') }}"
     fstype: ext4
     state: mounted
   when: groups['glusterfs'] | length < 3

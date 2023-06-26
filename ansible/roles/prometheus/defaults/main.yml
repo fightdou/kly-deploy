@@ -118,13 +118,13 @@ prometheus_default_volumes:
   - "{{ config_directory }}/prometheus/:/etc/prometheus/:rw"
   - "{{ config_directory }}/prometheus/data:/etc/prometheus/data:rw"
   - "/etc/localtime:/etc/localtime:ro"
-  - "{{ desktop_mount_dir }}/prometheus/rules:/mnt/prometheus/rules"
+  - "{{ share_disk_mount_path }}/prometheus/rules:/mnt/prometheus/rules"
 
 pushgateway_default_volumes:
   - "/etc/localtime:/etc/localtime:ro"
 
 alertmanager_default_volumes:
-  - "{{ desktop_mount_dir }}/prometheus/alertmanager/:/etc/alertmanager/:rw"
+  - "{{ share_disk_mount_path }}/prometheus/alertmanager/:/etc/alertmanager/:rw"
   - "/etc/localtime:/etc/localtime:ro"
 
 node_exporter_default_volumes:
@@ -165,3 +165,4 @@ collectd_exporter_dimensions: "{{ default_container_dimensions }}"
 host_exporter_dimensions: "{{ default_container_dimensions }}"
 consul_dimensions: "{{ default_container_dimensions }}"
 thanos_dimensions: "{{ default_container_dimensions }}"
+share_disk_mount_path: "{% if deploy_comm | bool %}{{ desktop_mount_dir }}{% elif deploy_edu | bool %}{{ share_mount_dir }}{% endif %}"

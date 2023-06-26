@@ -46,7 +46,6 @@ scrape_configs:
           host_ip: '127.0.0.1'
 {% endif %}
 
-{% if only_deploy_voi | bool %}
   - job_name: docker
     static_configs:
 {% if enable_internal_communication | bool %}
@@ -64,7 +63,7 @@ scrape_configs:
           host: '{{ ansible_hostname }}'
           host_ip: '127.0.0.1'
 {% endif %}
-{% endif %}
+
 
   - job_name: host
     static_configs:
