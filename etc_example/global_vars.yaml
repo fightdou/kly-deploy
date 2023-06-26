@@ -89,7 +89,7 @@ enable_lvm: false
 enable_ceph: false
 # 本地存储
 enable_local: true
-enable_glusterfs: '{% if enable_local | bool and groups["glusterfs"] | length > 1 and enable_ceph | bool == false %}true{% else %}false{% endif %}'
+enable_glusterfs: '{% if enable_local | bool and groups["glusterfs"] | length > 1 %}true{% else %}false{% endif %}'
 
 ##########
 # VOI 配置
@@ -100,6 +100,7 @@ enable_single_net: false
 single_net_bridge_name: br0
 vpair_tap_name: klcloud-br
 vtap_name: klcloud-vpc
+system_device: /dev/sda
 
 #############
 # local 配置

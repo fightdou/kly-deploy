@@ -13,6 +13,34 @@
     pv_volume: "{% for pv in local_device %} {{ pv }} {% if not loop.last %} {% endif %}{% endfor %}"
   when:
     - vg_exist.stdout == "0"
+    - local_device | length >= 1
+
+- name: 生成创建命令
+  block:
+    - name: Get starting sector
+      shell: "sudo parted {{ system_device }} unit s print free | awk '/Free Space/ {last=$1} END {print last}'"
+      register: start_sector
+
+    - name: Create data partition
+      shell: "parted -s {{ system_device }} mkpart primary ext4 {{ start_sector.stdout }} 100%"
+      become: true
+
+    - name: Get new partition name
+      shell: ls {{ system_device }}* | grep -P '{{ system_device }}\d+$' | tail -1
+      register: data_part_name
+
+    - name: Format new partition
+      filesystem:
+        fstype: ext4
+        force: true
+        dev: "{{ data_part_name.stdout }}"
+
+    - name: Generate creation command
+      set_fact:
+        pv_volume: "{{ data_part_name.stdout }}"
+  when:
+    - vg_exist.stdout == "0"
+    - local_device | length == 0
 
 - name: 创建 pv
   become: true
