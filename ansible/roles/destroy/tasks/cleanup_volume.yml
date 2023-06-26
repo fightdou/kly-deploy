@@ -7,11 +7,19 @@
   shell: "umount {{ desktop_mount_dir }}"
   when: mount_check.rc == 0
 
+- name: cat trochilus UUID
+  shell: "blkid | grep {{ local_vg_name }}-{{ local_trochilus_lv_name }} | awk -F' ' '{print $2}'"
+  register: trochilus_uuid
+
+- name: set trochilus uuid
+  set_fact:
+    trochilus_mount: "{{ trochilus_uuid.stdout | replace('\"', '') }}"
+
 - name: delete fstab mount
   lineinfile:
     path: /etc/fstab
     state: absent
-    regexp: '^/dev/{{ local_vg_name }}/{{ local_trochilus_lv_name }}'
+    regexp: '^{{ trochilus_mount }}'
 
 - name: Check if directory is mounted
   shell: "mountpoint -q {{ share_mount_dir }}"
@@ -22,11 +30,19 @@
   command: "umount {{ share_mount_dir }}"
   when: mount_check.rc == 0
 
+- name: cat net UUID
+  shell: "blkid | grep {{ local_vg_name }}-{{ local_net_lv_name }} | awk -F' ' '{print $2}'"
+  register: net_uuid
+
+- name: set trochilus uuid
+  set_fact:
+    net_mount: "{{ net_uuid.stdout | replace('\"', '') }}"
+
 - name: delete fstab mount
   lineinfile:
     path: /etc/fstab
     state: absent
-    regexp: '^/dev/{{ local_vg_name }}/{{ local_net_lv_name }}'
+    regexp: '^{{ net_mount }}'
 
 - name: Remove GlusterFS Volume
   gluster_volume:

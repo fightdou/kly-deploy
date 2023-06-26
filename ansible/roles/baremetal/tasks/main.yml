@@ -20,11 +20,6 @@
     - enable_local | bool
     - create_local_vg | bool
 
-- import_tasks: mount_local_disk.yml
-  when:
-    - enable_local | bool
-    - mount_local_disk | bool
-
 - import_tasks: hugepages_config.yml
   when:
     - enable_hugepages | bool

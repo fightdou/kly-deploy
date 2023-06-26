@@ -16,6 +16,7 @@
   with_items: "{{ groups['storage'] }}"
   when: 
     - enable_local | bool
+    - fsd_deploy_mode != "voi"
 
 - name: Set init total_voi_file_num var
   set_fact:
@@ -29,6 +30,7 @@
   with_items: "{{ groups['storage'] }}"
   when: 
     - enable_local | bool
+    - fsd_deploy_mode != "vdi"
 
 - name: Set init total_iso_share_num var
   set_fact:
