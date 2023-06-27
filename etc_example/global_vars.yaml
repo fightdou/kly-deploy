@@ -102,6 +102,7 @@ enable_single_net: false
 single_net_bridge_name: br0
 vpair_tap_name: klcloud-br
 vtap_name: klcloud-vpc
+system_device: /dev/sda
 
 #############
 # local 配置
