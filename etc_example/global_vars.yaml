@@ -264,6 +264,8 @@ fsd_voi_version: edu
 tdesktop_path_name: 
   - /opt/offline/UOS_X86-TDesktop.deb
   - /opt/offline/Win-TDesktop.exe
+  - /opt/offline/kylin_ARM-TDesktop.deb
+  - /opt/offline/UOS_ARM-TDesktop.deb
 
 ##################
 # Samba
