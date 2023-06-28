@@ -1,0 +1,31 @@
+---
+- name: Check the public keys of each node
+  stat:
+    path: '/root/.ssh/id_rsa'
+  register: file_status
+
+- name: Generate a public key for nodes without a public key 
+  shell: ssh-keygen -t rsa -b 2048 -N '' -f /root/.ssh/id_rsa
+  when: 
+    - not file_status.stat.exists
+
+- name: Copy public key to control node
+  fetch: 
+    src: /root/.ssh/id_rsa.pub
+    dest: /tmp/ssh/
+
+- name: Splicing public keys of each node
+  shell: find /tmp/ssh/* -type f -exec sh -c 'cat {}>>/tmp/ssh/authorized_keys.log' \;
+  run_once: True
+
+- name: Copy authorized_ Keys file to each node
+  copy:
+    src: /tmp/ssh/authorized_keys.log
+    dest: /root/.ssh/authorized_keys
+    mode: 0600
+
+- name: Del Temporary Files authorized_keys.log
+  file:
+    path: /tmp/ssh/
+    state: absent
+  run_once: True
