@@ -1,0 +1,30 @@
+- name: Get current ip and prefix
+  shell: nmcli device show {{ api_interface }} | grep IP4.ADDRESS | awk '{print $2}'
+  register: ip_output
+
+- name: Parse IP addresses
+  set_fact:
+    ip_list: "{{ ip_output.stdout_lines | map('trim') | list }}"
+
+- name: Check if IP address exists and print
+  set_fact:
+    external_manage_ip_and_prefix: "{{ item }}"
+  loop: "{{ ip_list }}"
+  when: "'{{ external_manage_ip }}' in item"
+
+- name: Modify network settings
+  shell: |
+    nmcli connection modify {{ api_interface }} -ipv4.addresses {{ external_manage_ip_and_prefix }}
+    nmcli connection modify {{ api_interface }} +ipv4.addresses {{ new_external_manage_ip }}/{{ new_external_manage_prefix }}
+    nmcli connection modify {{ api_interface }} ipv4.gateway {{ new_external_manage_getway }}
+    nmcli connection down {{ api_interface }} && nmcli connection up {{ api_interface }}
+
+- name: Replace the IP in the host file
+  replace:
+    path: "{{ inventory_file }}"
+    regexp: '{{ hostvars[item].external_manage_ip }}'
+    replace: '{{ hostvars[item].new_external_manage_ip }}'
+    backup: yes
+  run_once: True
+  delegate_to: "{{ groups['baremetal'][0] }}"
+  with_items: "{{ groups['baremetal'] }}"

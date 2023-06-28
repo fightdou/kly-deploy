@@ -1,0 +1,11 @@
+# btserver
+- name: Update btserver configuration
+  lineinfile:
+    path: "{{ config_directory }}/btserver/torrent.ini"
+    regexp: "^torrentIp="
+    line: "torrentIp={{ new_external_manage_ip }}"
+  when: new_external_manage_ip != external_manage_ip
+
+- name: Restart btserver and btserver_tracker containers
+  command: "docker restart btserver btserver_tracker"
+  when: new_external_manage_ip != external_manage_ip

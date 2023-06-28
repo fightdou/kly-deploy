@@ -1,0 +1,8 @@
+---
+- name: 
+  gather_facts: yes
+  hosts: baremetal
+  roles:
+    - { role: update-ip,
+        tags: update-ip,
+        when: deploy_edu | bool }

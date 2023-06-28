@@ -1,5 +1,8 @@
 #!/bin/bash
 
+inventory_file="../etc_example/hosts"
+variable_file="../etc_example/global_vars.yaml"
+
 die() {
   local msg=$1
   local code=${2:-1}
@@ -8,104 +11,81 @@ die() {
 }
 
 parse_params() {
-  # default values of variables set from params
-  netcard=""
-  ipaddr=""
+  declare -a -g ipaddr
   prefix=""
-  gateway=""
-  dns=""
-  current_ipaddr=""
-  global_vars_file="../etc_example/global_vars.yaml"
-  
+  gateway="" 
+  vip=""
+
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      -n|--netcard) netcard="${2-}" ; shift ;;
-      -i|--ipaddr) ipaddr="${2-}" ; shift ;;
+      -i|--ipaddr) ipaddr+=("${2-}") ; shift ;;
       -p|--prefix) prefix="${2-}" ; shift ;;
       -g|--gateway) gateway="${2-}" ; shift ;;
-      -d|--dns) dns="${2-}" ; shift ;;
-      -c|--current_ipaddr) current_ipaddr="${2-}" ; shift ;;
+      -v|--vip) vip="${2-}" ; shift ;;
       -?*) die "Unknown option: $1" ;;
       *) break ;;
     esac
     shift
   done
 
-  if [[ -z $netcard || -z $ipaddr || -z $prefix || -z $gateway ]]; then
-    die "eg: ./$(basename "${BASH_SOURCE[0]}") --netcard eth_name --ipaddr 192.168.100.10 --prefix 24 --gateway 192.168.100.254"
+  if [[ -z $ipaddr || -z $prefix || -z $gateway ]]; then
+    die "eg: ./$(basename "${BASH_SOURCE[0]}") --ipaddr 192.168.100.10 --ipaddr 192.168.100.11 --ipaddr 192.168.100.12 --vip 192.168.100.100 --prefix 24 --gateway 192.168.100.254"
   fi
 }
 
-gat_current_ipaddr() {
-  if [[ $current_ipaddr == "" ]]; then
-    current_ipaddr=$(grep -Eo 'IPADDR=[0-9.]+' /etc/sysconfig/network-scripts/ifcfg-$netcard | cut -d= -f2)
-  fi
-
-  if [[ -z $current_ipaddr || $current_ipaddr == 169.168* ]]; then
-    die "Failed to get the current IP address, Set it by adding the --current_ipaddr parameter." 
-  fi
-
-  echo "The current IP address is: $current_ipaddr"
-}
-
-update_network() {
-  sudo nmcli connection modify $netcard ipv4.addresses $ipaddr/$prefix
-  sudo nmcli connection modify $netcard ipv4.gateway $gateway
-  if [ ! -z "${dns-}" ]; then
-    sudo nmcli connection modify $netcard ipv4.dns $dns
-  fi
-  sudo nmcli connection down $netcard >/dev/null && sudo nmcli connection up $netcard >/dev/null
-
-  result=$(ip address show $netcard | grep "$ipaddr/$prefix" | wc -l)
-  if [ $result -eq 0 ]; then
-    die "netcard $netcard Change failed!!!" 
-  fi
-}
-
-update_config_file() {
-  # btserver
-  if [[ $current_ipaddr != $ipaddr ]]; then
-    sudo sed -i "s/${current_ipaddr}/${ipaddr}/g" /etc/klcloud/btserver/torrent.ini
-    result=$(cat /etc/klcloud/btserver/torrent.ini | grep $ipaddr | wc -l)
-    if [ $result -eq 0 ]; then
-      die "update btserver config failed!!!" 
+update_inventory_file() {
+  while IFS= read -r line; do
+    if [[ -n $line && ! $line =~ ^# ]]; then
+      all_data+=("$line")
     fi
-    docker restart btserver btserver_tracker
-  fi
+  done < "$inventory_file"
 
-  # fsd_console
-  if [[ $current_ipaddr != $ipaddr ]]; then
-    sudo sed -i "s/${current_ipaddr}/${ipaddr}/g" /etc/klcloud/fsd_console/fsd_console_start.sh
-    result=$(cat /etc/klcloud/fsd_console/fsd_console_start.sh | grep $ipaddr | wc -l)
-    if [ $result -eq 0 ]; then
-      die "update fsd_console config failed!!!" 
+  readarray -t allnodes_contents < <(grep -A $host_num '\[allnodes\]' $inventory_file | sed '1d')
+  for i in "${!allnodes_contents[@]}"; do
+    line=${allnodes_contents[$i]}
+    if [[ $line == *"new_external_manage_prefix"* ]]; then
+      line=$(echo "$line" | sed -E 's/ (new_external_manage_prefix|new_external_manage_ip|new_external_manage_getway)=[^[:space:]]*//g')
     fi
-    docker restart fsd_console_web
-  fi
+    line=$(echo "$line" | sed "s/$/ new_external_manage_prefix=$prefix new_external_manage_getway=$gateway/")
 
-  # fsd_database
-  java_db_name="klcloud_fsd_edu"
-  mariadb_root_username=$(grep -E '^mariadb_root_username:' "$global_vars_file" | cut -d':' -f2 | awk '{print $1}')
-  mariadb_root_password=$(grep -E '^mariadb_root_password:' "$global_vars_file" | cut -d':' -f2 | awk '{print $1}')
-  select_setting_sql="select info from sys_setting where uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8c7';"
-  setting_info=$(docker exec -it mariadb mysql -N -s -u"$mariadb_root_username" -p"$mariadb_root_password" -e "use ${java_db_name}; $select_setting_sql")
-  
-  if [[ $setting_info == *"$current_ipaddr"* ]]; then
-    new_setting_info=$(echo "$setting_info" | sed "s/${current_ipaddr}/${ipaddr}/g")
-    update_setting_sql="UPDATE sys_setting SET info = '${new_setting_info}' WHERE uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8c7';" 
-    update_server_sql="UPDATE des_server SET ip = '${ipaddr}';"
+    ip=${ipaddr[$i]}
+    updated_line="$line new_external_manage_ip=$ip"
+    new_allnodes_contents+=("$updated_line")
+  done
 
-    docker exec -it mariadb mysql -u"$mariadb_root_username" -p"$mariadb_root_password" -e "use ${java_db_name}; $update_setting_sql $update_server_sql"
-  fi
+  # 更新 [allnodes] 组的内容
+  for i in "${!all_data[@]}"; do
+    line=${all_data[$i]}
+    if [[ $line == "[allnodes]" ]]; then
+      start_index=$i+1
+      end_index=$((${start_index}+${#new_allnodes_contents[@]}))
+      all_data=("${all_data[@]:0:$start_index}" "${new_allnodes_contents[@]}" "${all_data[@]:$end_index}")
+    fi
+  done
+
+  # Write the updated all_data array to the inventory file
+  printf "%s\n" "${all_data[@]}" > "$inventory_file"
 }
 
+exec_ansible_script() {
+  if [[ -z $vip ]]; then
+    vip=${ipaddr[0]}
+  fi
+  ansible-playbook -i $inventory_file -e @$variable_file -e new_external_vip_address=$vip ../ansible/97-update-ip.yml
+  sed -i "s/^external_vip_address:.*/external_vip_address: $new_external_vip_address/" "$variable_file"
+}
+
+
+host_num=$(grep -A9999 "# BEGIN ANSIBLE GENERATED HOSTS" /etc/hosts | grep -B9999 "# END ANSIBLE GENERATED HOSTS" | grep -v "#" | wc -l)
+echo "The current environment number of nodes is $host_num"
 parse_params "$@"
 
-deploy_version=$(grep -E '^deploy_edu:' $global_vars_file | cut -d':' -f2)
-if [ $deploy_version != true ]; then
-  die "This script is only available in a single node Edition VOI environment!"
+echo ipaddr="${ipaddr[@]}" prefix=$prefix gateway=$gateway
+ipaddr_num=${#ipaddr[@]}
+if [ "$ipaddr_num" -ne "$host_num" ]; then
+  die "You entered $ipaddr_num IP addresses, but the number of nodes is $host_num"
 fi
 
-gat_current_ipaddr
-update_network
-update_config_file
+update_inventory_file
+exec_ansible_script
+

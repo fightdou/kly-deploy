@@ -1,0 +1,18 @@
+- import_tasks: "update_network.yml"
+
+- import_tasks: "update_haproxy.yml"
+  when: 
+    - enable_haproxy | bool
+    - groups["haproxy"] | length > 1
+
+- import_tasks: "update_keepalived.yml"
+  when: 
+    - enable_keepalived | bool
+
+- import_tasks: "update_btserver.yml"
+  when: 
+    - enable_btserver | bool
+
+- import_tasks: "update_fsd_console_web.yml"
+
+- import_tasks: "update_fsd_db.yml"
