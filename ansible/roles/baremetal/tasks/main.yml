@@ -18,7 +18,6 @@
 - import_tasks: create_local_volume.yml
   when:
     - enable_local | bool
-    - create_local_vg | bool
 
 - import_tasks: hugepages_config.yml
   when:
