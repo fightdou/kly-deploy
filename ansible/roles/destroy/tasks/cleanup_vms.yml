@@ -1,0 +1,19 @@
+---
+- name: list all VMs
+  virt:
+    command: list_vms
+  register: all_vms
+
+- name: destroy all vms
+  virt:
+    name: "{{ item }}"
+    command: destroy
+  with_items:
+    - "{{ all_vms.list_vms }}"
+
+- name: undefine all vms
+  virt:
+    name: "{{ item }}"
+    command: undefine
+  with_items:
+    - "{{ all_vms.list_vms }}"

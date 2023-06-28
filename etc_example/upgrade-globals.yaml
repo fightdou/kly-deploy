@@ -39,5 +39,5 @@ seafile_mariadb_password: "60738ab7c0ba6413a7bc2304c756d328"
 seafile_port: 8000
 seafile_fileserver_port: 8082
 seafile_admin_pass: "Troila"
-seafile_admin_e: "123@aaa.com"
+seafile_admin_e: "admin"
 seafile_default_tag: "latest"
