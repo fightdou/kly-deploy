@@ -3,6 +3,7 @@
   "registry-mirrors" : [
     "https://8xpk5wnt.mirror.aliyuncs.com"
   ],
+  "default-address-pools": [{"base": "{{ docker_network }}", "size": 24}],
   "insecure-registries": [
     "{{ docker_register_domain }}"
   ]

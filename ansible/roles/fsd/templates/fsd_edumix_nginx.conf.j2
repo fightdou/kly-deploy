@@ -1,0 +1,68 @@
+server {
+  listen       {{ default_internal_server_listen_ip }}:{{ fsd_listen_nginx_port }};
+  server_name  127.0.0.1;
+
+  sendfile off;
+  tcp_nopush on;
+  #tcp_nodelay on;
+
+  gzip on;
+  gzip_min_length 50k;
+  gzip_buffers 4 16k;
+  gzip_http_version 1.0;
+  gzip_comp_level 2;
+  gzip_types text/plain application/javascript text/css application/xml;
+  gzip_vary on;
+
+  client_header_timeout 7200s;
+  client_body_timeout 7200s;
+  send_timeout 7200s;
+  keepalive_timeout 7200s;
+        
+  location / {
+    root    /usr/local/dist/;
+    index   index.php index.html index.htm;
+    #try_files $uri $uri/ /index.html;
+  }
+          
+  location /vms {
+    alias   /mnt/voi/vms/;
+    index   index.php index.html index.htm;
+  }
+	
+  location /backup_disk {
+    alias   /mnt/voi/backup_disk/;
+    index   index.php index.html index.htm;
+  }
+
+  location /images {
+    alias   /mnt/voi/images/;
+    index   index.php index.html index.htm;
+  }
+
+  location /share_disk {
+    alias   /mnt/voi/share_disk/;
+    index   index.php index.html index.htm;
+  }
+
+  location /share_image {
+    alias   /mnt/voi/share_image/;
+    index   index.php index.html index.htm;
+  }
+
+  location /iso_file {
+    alias   /mnt/iso/;
+    index   index.php index.html index.htm;
+  }
+  
+  #vue hash路由刷新页面会把第一个api接口赋予20080端口导致404，所以做一层转发
+  location /api/ {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header REMOTE-HOST $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_read_timeout 120;
+    proxy_pass http://{{ fsd_ngxin_proxy_pass }}:{{ fsd_external_main_port }}/api/;
+  }
+
+}

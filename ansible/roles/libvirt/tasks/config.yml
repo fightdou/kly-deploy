@@ -80,7 +80,7 @@
       filesystem:
         fstype: ext4
         force: true
-        dev: "{{ coredump_loop_device_name }}"
+        dev: "{{ coredump_img_file_path }}/coredump.img"
       when:
         - loop_mount.stdout != "1"
 

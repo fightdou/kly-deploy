@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 # 用于单网卡 VDI 部署，替换物理网卡为网桥, 并创建虚拟网卡对用于打通 VPC 和 物理网络。
+modprobe br_netfilter
 
 # 检查是否以root权限运行
 if [ "$(id -u)" -ne 0 ]; then

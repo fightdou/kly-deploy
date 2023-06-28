@@ -3,7 +3,7 @@ fsd_services:
     enabled: True
     container_name: fsd
     image: "{{ fsd_image_full }}"
-    volumes: "{% if deploy_edu %}{{ fsd_default_volumes + fsd_edu_volumes }}{% else %}{{ fsd_default_volumes }}{% endif %}"
+    volumes: "{{ fsd_default_volumes }}"
     dimensions: "{{ fsd_dimensions }}"
     privileged: True
   fsd-job:
@@ -42,12 +42,14 @@ fsd_services:
     dimensions: "{{ fsd_dimensions }}"
     privileged: True
 
-deploy_type: "{% if deploy_edu | bool %}_edu{% else %}{% endif %}"
-deploy_storage_type: "{% if enable_lvm | bool %}lvm{% elif enable_ceph | bool %}ceph{% else %}qcow2{% endif %}"
+deploy_type: "{% if deploy_edu | bool %}_edumix{% else %}{% endif %}"
+deploy_storage_type: "{% if enable_local | bool %}qemu{% elif enable_ceph | bool %}ceph{% endif %}"
 fsd_proxy_ip: "{% if proxy_ip != '' %}{{ proxy_ip }}{% elif enable_keepalived | bool %}{{ external_vip_address }}{% else %}{{ api_interface_address }}{% endif %}"
 fsd_vip: "{% if enable_keepalived | bool %}{{ external_vip_address }}{% else %}{{ api_interface_address }}{% endif %}"
 fsd_ngxin_proxy_pass: "{{ default_internal_server_visit_ip }}"
 fsd_mysql_conn_ip: "{{ default_internal_server_visit_ip }}"
+share_disk_mount_path: "{% if deploy_comm | bool %}{{ desktop_mount_dir }}{% elif deploy_edu | bool %}{{ share_mount_dir }}{% endif %}"
+
 ####################
 # fsd
 ####################
@@ -56,18 +58,12 @@ fsd_tag: "{{ fsd_default_tag }}"
 fsd_image_full: "{{ fsd_image }}:{{ fsd_tag }}"
 fsd_default_volumes:
   - "{{ desktop_mount_dir }}:{{ desktop_mount_dir }}:rw"
-  - "{{ desktop_mount_dir }}/prometheus/rules:/home/static/prometheus/rules:rw"
-  - "{{ desktop_mount_dir }}/prometheus/alertmanager/:/home/static/prometheus/alert/:rw"
+  - "{{ share_mount_dir }}:{{ share_mount_dir }}:rw"
+  - "{{ share_disk_mount_path }}/prometheus/rules:/home/static/prometheus/rules:rw"
+  - "{{ share_disk_mount_path }}/prometheus/alertmanager/:/home/static/prometheus/alert/:rw"
   - "{{ config_directory }}/fsd/application-docker.yml:/home/static/java/application-docker.yml:rw"
   - "/var/log/fsd:/log:rw"
   - "/etc/localtime:/etc/localtime:ro"
-
-fsd_edu_volumes:
-  - "{{ config_directory }}/fsd/fsd.conf:/etc/nginx/conf/fsd.conf:rw"
-  - "{{ config_directory }}/btserver/torrent.ini:/opt/torrent_server_bin/torrent.ini:rw"
-  - "{{ config_directory }}/btserver/opentracker.conf:/opt/torrent_server_bin/opentracker.conf:rw"
-  - "{{ config_directory }}/keepalived/conf.d/external.conf:/etc/keepalived/keepalived.conf:rw"
-  - "{{ desktop_mount_dir }}/static:/var/www/html/static:rw"
 
 ####################
 # fsd-job
@@ -87,8 +83,9 @@ fsd_nginx_tag: "{{ fsd_default_tag }}"
 fsd_nginx_image_full: "{{ fsd_nginx_image }}:{{ fsd_nginx_tag }}"
 fsd_nginx_default_volumes: 
   - "/etc/localtime:/etc/localtime:ro"
-  - "{{ desktop_mount_dir }}:/mnt:rw"
-  - "{{ desktop_mount_dir }}/static:/usr/local/dist/static:rw"
+  - "{{ desktop_mount_dir }}/voi:/mnt/voi:rw"
+  - "{{ share_disk_mount_path }}/iso_file:/mnt/iso:rw"
+  - "{{ share_disk_mount_path }}/static:/usr/local/dist/static:rw"
   - "{{ config_directory }}/fsd/fsd.conf:/etc/nginx/conf/fsd.conf:rw"
 
 ####################
@@ -99,7 +96,7 @@ fsd_init_tag: "{{ fsd_default_tag }}"
 fsd_init_image_full: "{{ fsd_init_image }}:{{ fsd_init_tag }}"
 fsd_init_default_volumes:
   - "/etc/localtime:/etc/localtime:ro"
-  - "{{ desktop_mount_dir }}/static:/home/tmp:rw"
+  - "{{ share_disk_mount_path }}/static:/home/tmp:rw"
   - "{{ config_directory }}/fsd/trochilus.sql:/home/trochilus/trochilus.sql:rw"
 
 ####################
@@ -120,3 +117,11 @@ fsd_dimensions:
     nproc:
       soft: 65535
       hard: 65535
+
+cluster_storage:
+  - name: "qemu"
+    enabled: "{{ enable_local | bool }}"
+  - name: "ceph"
+    enabled: "{{ enable_ceph | bool }}"
+
+storage_backends: "{{ cluster_storage|selectattr('enabled', 'equalto', true)|list }}"

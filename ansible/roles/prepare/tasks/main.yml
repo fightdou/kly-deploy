@@ -4,3 +4,5 @@
 - import_tasks: post_install.yml
 
 - include_tasks: chrony.yaml
+
+- include_tasks: all_node_authorized_key.yaml
