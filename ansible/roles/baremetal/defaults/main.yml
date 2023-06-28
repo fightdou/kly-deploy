@@ -3,7 +3,6 @@ ceph_local_ip: "{{ hostvars[inventory_hostname]['ansible_' + ceph_public_interfa
 desktop_mount_shell_dir: "/etc/ceph/cephmount"
 cephmount_service_dir: "/usr/lib/systemd/system/"
 
-create_local_vg: "{% if local_device | length > 0 %}true{% else %}false{% endif %}"
 create_local_part: "{% if local_device | length == 0 %}true{% else %}false{% endif %}"
 trochilus_lv_size: "{{ vdi_storage_num + voi_storage_num }}G"
 share_lv_size: "{{ vdi_file_storage_num + cloud_disk_num }}G"
