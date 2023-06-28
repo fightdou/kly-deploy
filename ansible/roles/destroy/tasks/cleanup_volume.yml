@@ -20,6 +20,8 @@
     path: /etc/fstab
     state: absent
     regexp: '^{{ trochilus_mount }}'
+  when:
+    - trochilus_mount != ""
 
 - name: Check if directory is mounted
   shell: "mountpoint -q {{ share_mount_dir }}"
@@ -43,6 +45,8 @@
     path: /etc/fstab
     state: absent
     regexp: '^{{ net_mount }}'
+  when:
+    - net_mount != "" 
 
 - name: Remove GlusterFS Volume
   gluster_volume:
