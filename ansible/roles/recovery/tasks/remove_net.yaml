@@ -1,2 +1,0 @@
-- name: del all netns in env 
-  shell: "sudo ip -all netns delete"

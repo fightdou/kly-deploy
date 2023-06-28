@@ -1,0 +1,14 @@
+- name: 生成 update fsd sql 文件
+  template:
+    src: update_fsd_db_sql.j2
+    dest: "{{ config_directory }}/fsd/update_fsd_db.sql"
+    owner: root
+    mode: 0644
+
+- name: Copy update fsd sql to mariadb container
+  command: >
+    docker cp "{{ config_directory }}/fsd/update_fsd_db.sql" mariadb:/tmp/
+  become: true
+
+- name: exec update sql
+  shell: 'docker exec -it mariadb mysql -u{{ mariadb_root_username }} -p{{ mariadb_root_password }} -e "source /tmp/update_fsd_db.sql"'

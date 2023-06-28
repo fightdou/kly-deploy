@@ -1,0 +1,9 @@
+- name: Replace the IP in the haproxy file
+  replace:
+    path: "{{ config_directory }}/haproxy/haproxy.cfg"
+    regexp: '{{ hostvars[item].external_manage_ip }}'
+    replace: '{{ hostvars[item].new_external_manage_ip }}'
+  with_items: "{{ groups['haproxy'] }}"
+
+- name: Restart haproxy container
+  command: "docker restart haproxy"

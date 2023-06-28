@@ -62,8 +62,8 @@
 - name: Unmount directory if mounted
   command: "umount {{ gluster_metadata_path }}"
   when: 
-    - mount_check.rc == 0
     - enable_glusterfs | bool
+    - mount_check.rc == 0
 
 - name: delete gluster_metadata_path fstab mount
   lineinfile:

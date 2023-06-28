@@ -1,0 +1,9 @@
+- name: Replace the IP in the keepalived file
+  replace:
+    path: "{{ config_directory }}/keepalived/conf.d/external.conf"
+    regexp: '{{ external_vip_address }}'
+    replace: '{{ new_external_vip_address }}'
+  with_items: "{{ groups['keepalived'] }}"
+
+- name: Restart keepalived container
+  command: "docker restart keepalived"

@@ -1,0 +1,23 @@
+# fsd_console_web
+- name: Check if fsd_console_start.sh file exists
+  stat:
+    path: "{{ config_directory }}/fsd_console/fsd_console_start.sh"
+  register: fsd_console_start_file
+  run_once: True
+  delegate_to: "{{ groups['fsd'][0] }}"
+
+- name: Copying over fsd_console_start script
+  template:
+    src: "fsd_console_start.sh.j2"
+    dest: "{{ config_directory }}/fsd_console/fsd_console_start.sh"
+    mode: "0777"
+  become: true
+  run_once: True
+  delegate_to: "{{ groups['fsd'][0] }}"
+  when: fsd_console_start_file.stat.exists
+
+- name: Restart fsd_console_web container
+  command: "docker restart fsd_console_web"
+  when: fsd_console_start_file.stat.exists
+  run_once: True
+  delegate_to: "{{ groups['fsd'][0] }}"
