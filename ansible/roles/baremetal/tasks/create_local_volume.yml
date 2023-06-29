@@ -25,17 +25,24 @@
       shell: "sudo parted -s {{ system_device }} mkpart primary ext4 {{ start_sector.stdout }} 100%"
       become: true
 
-    - name: Get last partition num
-      shell: "sudo parted /dev/sda print --script | awk '/^ [0-9]/ {last=$1} END {print last}'"
-      register: partition_num
+    - name: Get partition list
+      shell: "ls {{ system_device }}*"
+      register: partition_list
+
+    - name: Determine last partition number
+      set_fact:
+        partition_num: "{{ partition_list.stdout_lines[-1][-1] }}"
+      when: partition_list.stdout_lines | length > 0
 
     - name: Create data partition
-      shell: "parted -s {{ system_device }} set {{ partition_num.stdout }} lvm on"
+      shell: "parted -s {{ system_device }} set {{ partition_num}} lvm on"
+      when: partition_num is defined
       become: true
 
     - name: Generate creation command
       set_fact:
-        pv_volume: "{{ system_device }}{{ partition_num.stdout }}"
+        pv_volume: "{{ system_device }}{{ partition_num }}"
+      when: partition_num is defined
   when:
     - vg_exist.stdout == "0"
     - local_device | length == 0
