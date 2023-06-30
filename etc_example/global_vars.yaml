@@ -42,7 +42,7 @@ ipmi_username: root
 ipmi_password: Troila12#$
 host_username: root
 host_password: Troila12#$
-create_swap_file: true
+create_swap_file: "{% if enable_single_net | bool %}false{% else %}true{% endif %}"
 swap_file_path: /swapfile
 swap_file_block_size: 2M
 swap_file_true: 10240
@@ -123,7 +123,7 @@ libvirt_tag: 3.0.0
 guest_service_tag: 3.0.0
 coredump_img_file_path: /opt/coredump
 coredump_libvirt_path: /opt/coredump_file
-coredump_block_size: 1024M
+coredump_block_size: "{% if enable_single_net | bool %}1024{% else %}1024M{% endif %}"
 coredump_count: 20
 coredump_loop_device_name: /dev/loop0
 
