@@ -17,13 +17,14 @@
 - name: 获取 osd 数量
   shell: systemctl | grep running | grep osd@ | wc -l
   register: osd_num
+  when: enable_ceph | bool
 
 - name: Set total_mems vars
   set_fact:
     total_mems: "{{ total_mems | int + ((hostvars[item].ansible_memtotal_mb  - reserved_osd_memory_mb * osd_num.stdout | int - reserved_mds_memory_mb - reserved_mon_memory_mb - reseverd_system_memory_mb - reserved_host_memory_mb) /1024) | int }}"
   run_once: True
   with_items: "{{ groups['compute'] }}"
-  when: not only_deploy_voi | bool
+  when: enable_ceph | bool
 
 # 内存每台机器保留16
 - name: Set total_mems vars
@@ -31,4 +32,11 @@
     total_mems: "{{ total_mems | int + ((hostvars[item].ansible_memtotal_mb - reserved_host_memory_mb) / 1024) | int }}"
   run_once: True
   with_items: "{{ groups['compute'] }}"
-  when: only_deploy_voi | bool
+  when: not enable_ceph | bool
+
+- name: Set total_mems vars
+  set_fact:
+    total_mems: 4
+  run_once: True
+  with_items: "{{ groups['compute'] }}"
+  when: ansible_memtotal_mb <= 16384
