@@ -64,13 +64,13 @@
 
 - name: set flat_interface_mappings
   set_fact:
-    flat_interface_mappings: "{% for flat_interface in flat_network_interface %}{{ 'flat' + loop.index | string }}:{{ flat_interface }}{% if not loop.last %},{% endif %}{% endfor %}"
+    flat_interface_mappings: "{% for flat_interface in flat_network_interface %}{% if enable_single_net | bool %}{{'flat' + loop.index | string }}:{{ vtap_name }}{% else %}{{ 'flat' + loop.index | string }}:{{ flat_interface }}{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
   when:
     - trochilus_support_flat_network | bool
 
 - name: set vlan_interface_mappings
   set_fact:
-    vlan_interface_mappings: "{% for vlan_interface,vlan_ranges in vlan_network_interface.items() %}{% set index = loop.index %}{{ 'vlan' + index | string }}:{{ vlan_interface }}{% if not loop.last %},{% endif %}{% endfor %}"
+    vlan_interface_mappings: "{% for vlan_interface,vlan_ranges in vlan_network_interface.items() %}{% if enable_single_net | bool %}{{'flat' + loop.index | string }}:{{ vtap_name }}{% else %}{% set index = loop.index %}{{ 'vlan' + index | string }}:{{ vlan_interface }}{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
   when:
     - trochilus_support_vlan_network | bool
 
