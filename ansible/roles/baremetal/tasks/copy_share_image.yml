@@ -5,6 +5,13 @@
     state: directory
     mode: 0755
 
+- name: Create p2v dir
+  become: true
+  file:
+    path: "{{ desktop_mount_dir }}/p2v"
+    state: directory
+    mode: 0755
+
 - name: copy share images file
   block:
   - name: copy 5G init share images file

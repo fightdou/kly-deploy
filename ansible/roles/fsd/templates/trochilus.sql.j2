@@ -1,15 +1,15 @@
 USE klcloud_fsd{{ deploy_type }};
 {% if deploy_edu | bool and enable_ceph | bool and enable_local | bool %}
 UPDATE `des_resource_pool` SET `vdi_cpu_num` = {{ total_vcpus }}, `vdi_memory_num` = {{ total_mems }}, `vdi_ceph_num` = {{ ceph_storage_num }}, `vdi_file_num` = {{ total_vdi_file_num }}, `iso_file_num` = {{ total_iso_share_num }}, `cloud_disk_num` = {{ total_net_share_num }}, `voi_file_num` = {{ total_voi_file_num }} WHERE `uuid` = '0'; 
-UPDATE `sys_setting` set info = '{"proxyIp":"{{ fsd_proxy_ip }}","vip":"{{ fsd_vip }}","trackerPort":9020,"frontPort":{{ fsd_external_nginx_port }},"netMode":"INNER"}' where uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8Z1';
+UPDATE `sys_setting` set info = '{"proxyIp":"{{ fsd_proxy_ip }}","vip":"{{ fsd_vip }}","trackerPort":{{ bt_tracker_external_port }},"frontPort":{{ fsd_external_nginx_port }},"netMode":"INNER"}' where uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8Z1';
 
 {% elif deploy_edu | bool and not enable_ceph | bool and enable_local | bool %}
 UPDATE `des_resource_pool` SET `vdi_cpu_num` = {{ total_vcpus }}, `vdi_memory_num` = {{ total_mems }}, `vdi_ceph_num`=0, `vdi_file_num` = {{ total_vdi_file_num }}, `iso_file_num` = {{ total_iso_share_num }}, `cloud_disk_num` = {{ total_net_share_num }}, `voi_file_num` = {{ total_voi_file_num }} WHERE `uuid` = '0'; 
-UPDATE `sys_setting` set info = '{"proxyIp":"{{ fsd_proxy_ip }}","vip":"{{ fsd_vip }}","trackerPort":9020,"frontPort":{{ fsd_external_nginx_port }},"netMode":"INNER"}' where uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8Z1';
+UPDATE `sys_setting` set info = '{"proxyIp":"{{ fsd_proxy_ip }}","vip":"{{ fsd_vip }}","trackerPort":{{ bt_tracker_external_port }},"frontPort":{{ fsd_external_nginx_port }},"netMode":"INNER"}' where uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8Z1';
 
 {% elif deploy_edu | bool and enable_ceph | bool and not enable_local | bool %}
-UPDATE `des_resource_pool` SET `vdi_cpu_num` = {{ total_vcpus }}, `vdi_memory_num` = {{ total_mems }}, `vdi_ceph_num`= {{ ceph_storage_num }}, `vdi_file_num` = {{ vdi_storage_num }}, `iso_file_num` = {{ vdi_file_storage_num }}, `cloud_disk_num` = {{ cloud_disk_num }}, `voi_file_num` = {{ voi_storage_num }} WHERE `uuid` = '0'; 
-UPDATE `sys_setting` set info = '{"proxyIp":"{{ fsd_proxy_ip }}","vip":"{{ fsd_vip }}","trackerPort":9020,"frontPort":{{ fsd_external_nginx_port }},"netMode":"INNER"}' where uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8Z1';
+UPDATE `des_resource_pool` SET `vdi_cpu_num` = {{ total_vcpus }}, `vdi_memory_num` = {{ total_mems }}, `vdi_ceph_num`= {{ vdi_storage_num }}, `vdi_file_num` = 0, `iso_file_num` = {{ vdi_file_storage_num }}, `cloud_disk_num` = {{ cloud_disk_num }}, `voi_file_num` = {{ voi_storage_num }} WHERE `uuid` = '0'; 
+UPDATE `sys_setting` set info = '{"proxyIp":"{{ fsd_proxy_ip }}","vip":"{{ fsd_vip }}","trackerPort":{{ bt_tracker_external_port }},"frontPort":{{ fsd_external_nginx_port }},"netMode":"INNER"}' where uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8Z1';
 
 {% elif deploy_comm | bool %}
 UPDATE `des_resource_pool` SET `vdi_desktop_num` = {{ vdi_desktop_num }}, `vdi_cpu_num` = {{ total_vcpus }}, `vdi_memory_num` = {{ total_mems }}, `vdi_storage_num` = {{ (vdi_storage_num| int * 0.9) | int }}, `cloud_disk_num` = {{ cloud_disk_num }}, `voi_storage_num` = {{ voi_storage_num }}, `vdi_file_storage_num` = {{ (vdi_storage_num| int * 0.1) | int }} WHERE `uuid` = '0'; 

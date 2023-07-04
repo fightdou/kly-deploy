@@ -1,5 +1,5 @@
 USE klcloud_fsd_edumix; 
-UPDATE `sys_setting` SET `info` = '{"proxyIp": "{{ new_external_vip_address }}","vip": "{{ new_external_vip_address }}","trackerPort":{{ bt_listen_tracker_port }},"frontPort":9000,"netMode":"INNER"}' where uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8Z1';
+UPDATE `sys_setting` SET `info` = '{"proxyIp": "{{ new_external_vip_address }}","vip": "{{ new_external_vip_address }}","trackerPort":{{ bt_tracker_external_port }},"frontPort":{{ fsd_external_nginx_port }},"netMode":"INNER"}' where uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8Z1';
 {% for host in groups['control'] %}
 UPDATE `des_server` SET `ip` = '{{ hostvars[host].new_external_manage_ip }}' where ip = '{{ hostvars[host].external_manage_ip }}';
 {% endfor %}

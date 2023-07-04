@@ -1,0 +1,27 @@
+---
+- name: list all VMs
+  virt:
+    command: list_vms
+  register: all_vms
+  ignore_errors: True
+
+- name: destroy all vms
+  virt:
+    name: "{{ item }}"
+    command: destroy
+    state: destroyed
+  ignore_errors: True
+  with_items:
+    - "{{ all_vms.list_vms }}"
+  when:
+    - all_vms is success
+    - all_vms.list_vms != []
+
+- name: undefine all vms
+  shell: virsh undefine {{ item }} --nvram
+  ignore_errors: True
+  with_items:
+    - "{{ all_vms.list_vms }}"
+  when:
+    - all_vms is success
+    - all_vms.list_vms != []

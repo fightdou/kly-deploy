@@ -2,6 +2,7 @@
 - import_tasks: get_node_data.yaml
 
 - import_tasks: deploy_samba.yml
+  when: deploy_comm | bool
 
 - import_tasks: config.yml
 

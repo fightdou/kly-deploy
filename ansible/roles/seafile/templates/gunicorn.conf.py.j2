@@ -5,7 +5,7 @@ daemon = True
 workers = 5
 
 # default localhost:8000
-bind = "{{ default_internal_server_visit_ip }}:{{ seafile_port }}"
+bind = "0.0.0.0:{{ seafile_port }}"
 
 # Pid
 pids_dir = '/root/pids'
