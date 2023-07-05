@@ -1,7 +1,7 @@
 ---
 - name: create p2v dir
   file:
-    path: "/var/lib/trochilus/p2v"
+    path: "/var/lib/trochilus/voi/p2v"
     state: directory
     mode: 0755
   run_once: True
