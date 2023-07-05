@@ -12,9 +12,3 @@ vgchange -ay -K {{ lvm_volgroup_name }}
 {% if not only_deploy_voi | bool %}
 echo "{{ coredump_libvirt_path }}/corefile-%e-%p-%t" > /proc/sys/kernel/core_pattern
 {% endif %}
-
-
-{% if enable_local | bool %}
-sleep 10
-docker restart trochilus_api trochilus_agent fsd fsd_nginx libvirt btserver seafile btserver_tracker virt_v2v_with_ssh
-{% endif %}
