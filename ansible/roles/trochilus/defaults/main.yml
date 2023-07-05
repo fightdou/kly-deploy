@@ -76,7 +76,7 @@ virt_v2v_default_volumes:
     - /tmp:/tmp:rw
     - /etc/localtime:/etc/localtime:rw
     - /dev:/dev:rw
-    - "{{ desktop_mount_dir }}/p2v:{{ desktop_mount_dir }}/p2v:rw"
+    - "{{ desktop_mount_dir }}/voi/p2v/:{{ desktop_mount_dir }}/voi/p2v/"
     - /etc/shadow:/etc/shadow:rw
 
 share_disk_mount_path: "{% if deploy_comm | bool %}{{ desktop_mount_dir }}{% elif deploy_edu | bool %}{{ share_mount_dir }}{% endif %}"

@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+sysctl -p /etc/sysctl.d/95-sysctl.conf
 iptables -P FORWARD ACCEPT
 systemctl restart chronyd
 {% if enable_hugepages | bool %}
