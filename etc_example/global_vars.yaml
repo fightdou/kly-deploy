@@ -209,8 +209,8 @@ trochilus_internal_api_listen_port: 19001
 trochilus_external_agent_listen_port: 9002
 trochilus_internal_agent_listen_port: 19002
 trochilus_base_path: "{{ desktop_mount_dir }}"
-trochilus_voi_base_path: "{{ desktop_mount_dir }}/voi"
-trochilus_vdi_base_path: "{{ desktop_mount_dir }}/local_disks"
+trochilus_voi_base_path: "{{ desktop_mount_dir }}/voi/"
+trochilus_vdi_base_path: "{{ desktop_mount_dir }}/local_disks/"
 trochilus_tag: 3.0.0
 virt_v2v_tag: latest
 # 如果vdi盒子和管理网不在同一个网段，就填管理网网关ip。如果vdi盒子和管理网在同一个网段，就啥也不填

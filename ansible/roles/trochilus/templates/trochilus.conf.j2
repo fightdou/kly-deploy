@@ -23,6 +23,8 @@ nic = {{nic}}
 [api_settings]
 bind_host = {{ default_internal_server_listen_ip }}
 bind_port = {{ trochilus_listen_api_port }}
+internal_vip = {{ internal_vip_address }}
+vm_app_post = {{ fsd_external_tcp_port }}
 supported_instance_metadatas = k1, k2
 internal_ip = {{ default_internal_server_listen_ip }}
 
@@ -95,7 +97,7 @@ disable_subnets = {{ disable_subnets }}
 
 [vm_settings]
 virt_type = kvm
-default_root_disk_backend = {% if enable_ceph | bool %}rbd1{% elif enable_lvm | bool %}thin_lvm1{% endif %}
+default_root_disk_backend = {% if enable_ceph | bool %}rbd1{% elif enable_lvm | bool %}thin_lvm1{% elif enable_local | bool %}local1{% endif %}
 
 {% if enable_ceph %}
 rbd_secret_uuid = {{ ceph_rbd_secret_uuid }}
