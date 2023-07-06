@@ -36,7 +36,7 @@
 
 - name: Set total_mems vars
   set_fact:
-    total_mems: 4
+    total_mems: "{% if ansible_memtotal_mb > 8192 %}8{% else %}4{% endif %}"
   run_once: True
   with_items: "{{ groups['compute'] }}"
   when: ansible_memtotal_mb <= 16384
