@@ -95,4 +95,3 @@
     name: "reboot chronyd"
     hour: "2"
     job: "systemctl restart chronyd"
-  when: inventory_hostname in groups["control"]
