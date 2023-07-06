@@ -89,3 +89,10 @@
     hour: "2"
     job: "sync && echo 1 > /proc/sys/vm/drop_caches"
   when: inventory_hostname in groups["control"]
+
+- name: 创建定时任务,每天晚上2点重启chronyd
+  cron:
+    name: "reboot chronyd"
+    hour: "2"
+    job: "systemctl restart chronyd"
+  when: inventory_hostname in groups["control"]
