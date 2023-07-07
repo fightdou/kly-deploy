@@ -1,0 +1,14 @@
+- name: Get partition list
+  shell: "ls {{ system_device }}*"
+  register: partition_list
+
+- name: Determine last partition number
+  set_fact:
+    partition_num: "{{ partition_list.stdout_lines[-1][-1] }}"
+  when: partition_list.stdout_lines | length > 0
+
+- name: Delete data partition
+  shell: "parted {{ system_device }} rm {{ partition_num}}"
+  when: partition_num is defined
+  become: true
+  ignore_errors: True

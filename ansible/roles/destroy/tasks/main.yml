@@ -42,7 +42,11 @@
   shell: pvremove -y {{ pv_volume }}
   when:
     - enable_lvm | bool
-
+- include_tasks: cleanup_partition.yml
+  when:
+    - local_device | length == 0
+    - ceph_volume_data | length == 0
+    
 - name: 清除清除系统缓存的定时任务
   cron:
     name: "clean linux cache"

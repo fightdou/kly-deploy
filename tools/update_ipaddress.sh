@@ -40,7 +40,19 @@ update_inventory_file() {
     fi
   done < "$inventory_file"
 
-  readarray -t allnodes_contents < <(grep -A $host_num '\[allnodes\]' $inventory_file | sed '1d')
+  allnodes_contents=()
+  is_matching=false
+  line_counter=0
+  for line in "${all_data[@]}"; do
+    if [[ $line =~ ^\[allnodes\] ]]; then
+      is_matching=true
+    elif $is_matching && ((line_counter < $host_num)); then
+      allnodes_contents+=("$line")
+      ((line_counter++))
+    fi
+  done
+  echo "${allnodes_contents[@]}"
+
   for i in "${!allnodes_contents[@]}"; do
     line=${allnodes_contents[$i]}
     if [[ $line == *"new_external_manage_prefix"* ]]; then
