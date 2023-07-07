@@ -6,6 +6,14 @@
     mode: "0770"
   become: true
 
+- name: Get the node cidr
+  shell: "ip r | egrep -v 'default' | awk -F' '  '{print $1}'"
+  register: cidr_address
+
+- name: Get the cidr address
+  set_fact:
+    disable_subnets: "{{ cidr_address.stdout_lines | list | join(',') }}"
+
 - name: Set init total_vdi_file_num var
   set_fact:
     total_vdi_file_num: 0
