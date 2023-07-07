@@ -6,7 +6,7 @@
 - name: 获取可分配的大页数量
   set_fact:
     hugepages_total: >-
-      {% if ansible_memtotal_mb >= 65536 %}{{ (ansible_memtotal_mb - reserved_osd_memory_mb * osd_num.stdout | int - reserved_mds_memory_mb - reserved_mon_memory_mb - reseverd_system_memory_mb - reserved_host_memory_mb) // 2 | int }}{% elif ansible_memtotal_mb >= 32768 %}8192{% elif ansible_memtotal_mb >= 16384 %}2048{% else %}1024{% endif %}
+      {% if ansible_memtotal_mb >= 65536 %}{{ (ansible_memtotal_mb - reserved_osd_memory_mb * osd_num.stdout | int - reserved_mds_memory_mb - reserved_mon_memory_mb - reseverd_system_memory_mb - reserved_host_memory_mb) // 2 | int }}{% elif ansible_memtotal_mb >= 32768 %}8192{% elif ansible_memtotal_mb >= 16384 %}4096{% elif ansible_memtotal_mb > 8192 %}2048{% else %}1024{% endif %}
 
 - name: 分配大页内存
   become: true
