@@ -23,10 +23,10 @@ nic = {{nic}}
 [api_settings]
 bind_host = {{ default_internal_server_listen_ip }}
 bind_port = {{ trochilus_listen_api_port }}
-internal_vip = {{ internal_vip_address }}
 vm_app_post = {{ fsd_external_tcp_port }}
 supported_instance_metadatas = k1, k2
 internal_ip = {{ default_internal_server_listen_ip }}
+internal_vip = {% if enable_keepalived | bool %}{{ internal_vip_address }}{% else %}{{ default_internal_server_listen_ip }}{% endif %}
 
 {% if volume_enabled_backends %}
 enabled_volume_backends = {{ volume_enabled_backends|map(attribute='name')|join(',') }}
