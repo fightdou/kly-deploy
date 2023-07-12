@@ -1,10 +1,10 @@
 [common]
-mode=72
+mode=64
 
 [display]
 full_stream=0
 full_pic=1
-scene_adapt=1
+scene_adapt=0
 
 high_band=20000
 middle_band=10000
@@ -33,6 +33,7 @@ min_cache_width=128
 enable_hwjpeg=0
 
 frame_interval_time=4
+nsc_compress_mode = {% if cpu_flag_int | int == 0 %}3{% else %}1{% endif %}
 
 [display.mix264]
 enable=1

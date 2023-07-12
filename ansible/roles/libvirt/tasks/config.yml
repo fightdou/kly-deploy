@@ -30,6 +30,20 @@
   when:
     - enable_ceph | bool
 
+- name: copy cat CPU model shell
+  copy:
+    src: nsc_adaption.sh
+    dest: "{{ config_directory }}/libvirt/vdi/"
+    mode: 0755
+
+- name: exec nsc_adaption.sh
+  shell: "sh {{ config_directory }}/libvirt/vdi/nsc_adaption.sh"
+  register: cpu_nsc_flag
+
+- name: set cpu_flag_int
+  set_fact:
+    cpu_flag_int: "{{ cpu_nsc_flag.stdout }}"
+
 - name: 创建 vdi 目录及文件
   block:
     - name: 创建 vdi 目录
@@ -39,8 +53,8 @@
         mode: 0755
 
     - name: Copy vdi.ini 文件
-      copy:
-        src: vdi_conf.ini
+      template:
+        src: vdi_conf.ini.j2
         dest: "{{ config_directory }}/libvirt/vdi/vdi_conf.ini"
         owner: root
         mode: 0644
