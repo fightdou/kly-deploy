@@ -3,7 +3,6 @@
 - import_tasks: "update_haproxy.yml"
   when: 
     - enable_haproxy | bool
-    - groups["haproxy"] | length > 1
 
 - import_tasks: "update_keepalived.yml"
   when: 
