@@ -33,6 +33,7 @@ min_cache_width=128
 enable_hwjpeg=0
 
 frame_interval_time=4
+nsc_compress_mode = {% if cpu_flag_int | int == 0 %}3{% else %}1{% endif %}
 
 [display.mix264]
 enable=1

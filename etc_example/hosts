@@ -1,7 +1,7 @@
 # 网卡配置，存在bond时，指定bond名称与对应物理网卡信息；不存在bond时，ip地址后跟随角色
-# 格式，存在bond时：nic_info = ["bond1:172.27.125.20:0011:enp125s0f1,ens5"] (bond名称:bond的IP地址:网卡角色(管理网，外网，业务网，存储网）有则为1，无则为0:组成bond的网卡名称);
+# 格式，存在bond时：nic_info = ["bond1::0011:enp125s0f1,ens5"] (bond名称:bond的IP地址:网卡角色(管理网，外网，业务网，存储网）有则为1，无则为0:组成bond的网卡名称);
 # 多个bond时，则需配置多个nic记录
-# 没有bond时：nic_info = ["enp125s0f0:169.168.107.103:1100"] (网卡名称:IP地址:网卡角色(管理网，外网，业务网，存储网）有则为1，无则为0)
+# 没有bond时：nic_info = ["enp125s0f0::1100"] (网卡名称:IP地址:网卡角色(管理网，外网，业务网，存储网）有则为1，无则为0)
 # ceph 有ssd时: bcache_map_list=[{'cache':'/dev/nvme0n1','data':'/dev/sda /dev/sdb /dev/sdc'},{'cache':'/dev/nvme1n1','data':'/dev/sdb /dev/sdc /dev/sdd'}]
 # local_device 本地存储磁盘名称
 # lvm_pv_device lvm 存储磁盘名称
