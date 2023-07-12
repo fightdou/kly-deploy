@@ -1,4 +1,16 @@
 ---
+- name: copy ssh config file StrictHostKeyChecking=no
+  copy:
+    src: ssh_config
+    dest: /etc/ssh/ssh_config
+    mode: 0644
+
+- name: 重启 sshd
+  service:
+    name: sshd
+    state: restarted
+    enabled: yes
+
 - name: Check the public keys of each node
   stat:
     path: '/root/.ssh/id_rsa'

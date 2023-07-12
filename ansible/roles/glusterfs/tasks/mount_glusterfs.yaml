@@ -9,7 +9,7 @@
 
 - name: Mount Shared Storage not control node
   mount:
-    src: "groups['glusterfs'][0]:/{{ share_volume_name }}"
+    src: "{{ groups['glusterfs'][0] }}:/{{ share_volume_name }}"
     path: "{{ share_mount_dir }}"
     state: "mounted"
     fstype: glusterfs
