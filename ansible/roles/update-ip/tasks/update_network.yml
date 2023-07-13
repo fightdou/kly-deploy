@@ -18,13 +18,3 @@
     nmcli connection modify {{ api_interface }} +ipv4.addresses {{ new_external_manage_ip }}/{{ new_external_manage_prefix }}
     nmcli connection modify {{ api_interface }} ipv4.gateway {{ new_external_manage_getway }}
     nmcli connection down {{ api_interface }} && nmcli connection up {{ api_interface }}
-
-- name: Replace the IP in the host file
-  replace:
-    path: "{{ inventory_file }}"
-    regexp: '{{ hostvars[item].external_manage_ip }}'
-    replace: '{{ hostvars[item].new_external_manage_ip }}'
-    backup: yes
-  run_once: True
-  delegate_to: "{{ groups['baremetal'][0] }}"
-  with_items: "{{ groups['baremetal'] }}"
