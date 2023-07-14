@@ -15,3 +15,13 @@
 - import_tasks: "update_fsd_console_web.yml"
 
 - import_tasks: "update_fsd_db.yml"
+
+- name: Replace the IP in the host file
+  replace:
+    path: "{{ inventory_file }}"
+    regexp: '{{ hostvars[item].external_manage_ip }}'
+    replace: '{{ hostvars[item].new_external_manage_ip }}'
+    backup: yes
+  run_once: True
+  delegate_to: "{{ groups['baremetal'][0] }}"
+  with_items: "{{ groups['baremetal'] }}"

@@ -83,8 +83,14 @@ exec_ansible_script() {
   if [[ -z $vip ]]; then
     vip=${ipaddr[0]}
   fi
-  ansible-playbook -i $inventory_file -e @$variable_file -e new_external_vip_address=$vip ../ansible/97-update-ip.yml
-  sed -i "s/^external_vip_address:.*/external_vip_address: $new_external_vip_address/" "$variable_file"
+
+  ansible-playbook -i $inventory_file -e @$variable_file -e new_external_vip_address=$vip ../ansible/97-update-ip.yml  > update-ip.log
+  if ! [ "$(grep 'failed='  update-ip.log | awk '{print $6}' | awk -F '=' '{print $2}' | awk '$1 != 0')" = "" ] ; then
+    exit 1
+  else
+    sed -i "s/^external_vip_address:.*/external_vip_address: $vip/" "$variable_file"
+  fi
+  
 }
 
 
@@ -100,4 +106,3 @@ fi
 
 update_inventory_file
 exec_ansible_script
-
