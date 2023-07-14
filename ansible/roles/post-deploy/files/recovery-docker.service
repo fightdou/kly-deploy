@@ -1,0 +1,11 @@
+[Unit]
+Description=Recovery docker service
+After=containerd.service docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash /etc/klcloud/recovery_docker.sh
+
+[Install]
+WantedBy=multi-user.target
