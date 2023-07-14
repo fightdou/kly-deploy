@@ -14,4 +14,4 @@
   shell: 'docker exec -it mariadb mysql -u{{ mariadb_root_username }} -p{{ mariadb_root_password }} -e "source /tmp/update_fsd_db.sql"'
 
 - name: Restart trochilus-agent and fsd
-  command: "docker restart trochilus-agent fsd"
+  command: "docker restart trochilus_agent fsd"
