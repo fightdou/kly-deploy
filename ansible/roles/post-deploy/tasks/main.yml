@@ -47,6 +47,25 @@
     daemon_reload: true
     enabled: true
 
+- name: 复制开机执行脚本 recovery_docker.sh
+  copy:
+    src: recovery_docker.sh
+    dest: "{{ config_directory }}/recovery_docker.sh"
+    mode: 755
+
+- name: 设置开机启动 recovery_docker 服务
+  become: true
+  copy:
+    src: recovery-docker.service
+    dest: /usr/lib/systemd/system/recovery-docker.service
+
+- name: Reload systemctl and enable recovery-docker service
+  become: true
+  systemd:
+    name: recovery-docker
+    daemon_reload: true
+    enabled: true
+
 - import_tasks: log_rotate.yml
 
 - import_tasks: create_cronjob.yml
