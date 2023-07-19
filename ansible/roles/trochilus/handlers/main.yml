@@ -69,6 +69,6 @@
     dimensions: "{{ service.dimensions }}"
     environment:
       LIBGUESTFS_BACKEND: direct
-    command: "{% if ansible_architecture == 'x86_64' %}/sbin/init{% elif ansible_architecture == 'aarch64' %}/run.sh{% endif %}"
+    command: "/usr/sbin/sshd -D"
   when:
     - service.enabled | bool
