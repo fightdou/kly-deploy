@@ -7,8 +7,16 @@
     partition_num: "{{ partition_list.stdout_lines[-1][-1] }}"
   when: partition_list.stdout_lines | length > 0
 
-- name: Delete data partition
-  shell: "parted {{ system_device }} rm {{ partition_num}}"
+- name: Get last partition mount point
+  shell: "lsblk -n -o MOUNTPOINT {{ system_device }}{{ partition_num }}"
+  register: last_partition_mount
   when: partition_num is defined
-  become: true
-  ignore_errors: True
+
+- name: print last_partition_mount
+  debug: var=last_partition_mount
+
+- name: Delete data partition
+  shell: "parted {{ system_device }} rm {{ partition_num }}"
+  when: 
+    - partition_num is defined 
+    - last_partition_mount.stdout_lines | length == 0

@@ -42,6 +42,7 @@
   shell: pvremove -y {{ pv_volume }}
   when:
     - enable_lvm | bool
+
 - include_tasks: cleanup_partition.yml
   when:
     - local_device | length == 0
@@ -127,6 +128,16 @@
     path: "/etc/hosts"
     state: absent
     marker: "# {mark} ANSIBLE GENERATED HOSTS"
+
+- name: 移除 logs 信息
+  shell: "rm -rf /var/log/{{ item }}"
+  with_items:
+    - "trochilus"
+    - "fsd"
+    - "guest-service"
+    - "emqx"
+    - "mariadb"
+    - "redis"
 
 - name: 重启网络
   systemd:
