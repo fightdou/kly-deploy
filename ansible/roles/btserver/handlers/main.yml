@@ -26,7 +26,7 @@
     common_options: "{{ docker_common_options }}"
     name: "{{ service.container_name }}"
     image: "{{ service.image }}"
-    command: "{% if deploy_edu | bool %}{{ service.command }}{% else %}{% endif %}"
+    command: "{{ service.command }}"
     pid_mode: "{{ service.pid_mode | default('') }}"
     privileged: "{{ service.privileged | default(False) }}"
     volumes: "{{ service.volumes|reject('equalto', '')|list }}"
