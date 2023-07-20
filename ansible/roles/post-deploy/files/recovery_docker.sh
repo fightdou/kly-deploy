@@ -51,27 +51,23 @@ for i in {1..10}; do
     # 检查 docker 是否异常
     docker_status=$(systemctl is-failed docker)
     if [ "$docker_status" == "failed" ]; then
-        echo "`date` ------ docker is not active. Performing recovery. ---------" | tee -a $log_file
-        log_line=$(cat /var/log/messages | grep 'panic: page 10 already freed' | wc -l)
-        if [ $log_line -gt 0 ]; then
-            echo "`date` ------ docker 文件系统损坏，自动修复 ---------" | tee -a $log_file
-            # 备份local-kv.db 文件
-            cp /var/lib/docker/network/files/local-kv.db /var/lib/docker/network/files/local-kv.db.bak-`date '+%Y-%m-%d-%H:%M:%S'`
-            # 删除源文件
-            rm -f /var/lib/docker/network/files/local-kv.db
+        echo "`date` ------ docker 文件系统损坏，自动修复 ---------" | tee -a $log_file
+        # 备份local-kv.db 文件
+        cp /var/lib/docker/network/files/local-kv.db /var/lib/docker/network/files/local-kv.db.bak-`date '+%Y-%m-%d-%H:%M:%S'`
+        # 删除源文件
+        rm -f /var/lib/docker/network/files/local-kv.db
 
-            systemctl restart docker
-            recovery_status=$(systemctl is-active docker)
-                # 如果还是失败，打印错误信息
-                if [ "$recovery_status" == "failed" ]; then
-                    echo "`date` ------ Docker 服务重启失败, 打印日志..." | tee -a $log_file
-                    # 打印docker服务的日志
-                    journalctl -u docker.service | tee -a $log_file
-                else
-                    echo "`date` ------ Docker 服务重启成功 !" | tee -a $log_file
-                fi
-            echo "`date` ------ Recovery completed ---------" | tee -a $log_file
-        fi
+        systemctl restart docker
+        recovery_status=$(systemctl is-active docker)
+            # 如果还是失败，打印错误信息
+            if [ "$recovery_status" == "failed" ]; then
+                echo "`date` ------ Docker 服务重启失败, 打印日志..." | tee -a $log_file
+                # 打印docker服务的日志
+                journalctl -u docker.service | tee -a $log_file
+            else
+                echo "`date` ------ Docker 服务重启成功 !" | tee -a $log_file
+            fi
+        echo "`date` ------ Recovery completed ---------" | tee -a $log_file
     else
         echo "`date` ------ docker is active. No recovery needed ---------" | tee -a $log_file
         break

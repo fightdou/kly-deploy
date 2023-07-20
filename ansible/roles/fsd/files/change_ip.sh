@@ -32,9 +32,12 @@ if [ "$response" -eq 201 ]; then
     #重启服务
     docker restart haproxy
 
+    docker restart keepalived
+
     docker restart btserver
 
-    docker restart keepalived
+    docker restart btserver_tracker
+
 else
     echo "trochilus change ip fail" >> change_ip.log
 fi
