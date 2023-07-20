@@ -11,7 +11,7 @@
 # vdi_file_storage_num ISO 文件共享存储大小
 # cloud_disk_num 网盘 seafile 存储大小
 [allnodes]
-169.168.107.103 ansible_ssh_extra_args='-o StrictHostKeyChecking=no' hostname=control1  api_interface=ens33 ceph_public_interface=ens33 ceph_cluster_interface=ens33 flat_network_interface="['enp7s0f1']" vlan_network_interface="{'enp7s0f1': ['1:4094']}" ceph_volume_data="[]" bcache_map_list="[]" nic_info="['ens33:null:1011']" local_device="['/dev/sdb']" lvm_pv_device="[]" vlan_network_interface="{'enp2s0f1':['1:4094']}" external_manage_ip="172.27.134.201" ceph_storage_num=100 vdi_storage_num=100 voi_storage_num=100 vdi_file_storage_num=100 cloud_disk_num=100
+169.168.107.103 ansible_ssh_extra_args='-o StrictHostKeyChecking=no' hostname=control1  api_interface=ens33 ceph_public_interface=ens33 ceph_cluster_interface=ens33 flat_network_interface="['enp7s0f1']" vlan_network_interface="{'enp7s0f1': ['1:4094']}" ceph_volume_data="[]" bcache_map_list="[]" nic_info="['ens33:null:1011']" local_device="['/dev/sdb']" lvm_pv_device="[]" vlan_network_interface="{'enp2s0f1':['1:4094']}" external_manage_ip="172.27.134.201" ceph_storage_num=100 vdi_storage_num=100 voi_storage_num=100 vdi_file_storage_num=100 cloud_disk_num=100 voi_reserved_memory=0
 
 [control]
 169.168.107.103
