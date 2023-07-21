@@ -79,7 +79,7 @@
     physical_interface_mappings: "{{ flat_interface_mappings }},{{ vlan_interface_mappings }}"
 
 - name: Get the node cidr
-  shell: "ip r | egrep -v 'default' | awk -F' '  '{print $1}'"
+  shell: "ip r | egrep -v 'default' | egrep -v 'brq' | awk -F' '  '{print $1}'"
   register: cidr_address
 
 - name: Get the cidr address
