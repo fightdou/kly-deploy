@@ -13,7 +13,7 @@ else
 fi
 
 # 执行升级命令
-java -jar {{ upgrade_resource_path }}/upgrade-web.jar \
+/opt/jdk1.8.0_331/bin/java -jar {{ upgrade_resource_path }}/upgrade-web.jar \
     --spring.datasource.password={{ mariadb_root_password }} \
     --upgrade.biz.deploy.nodeIp={{ fsd_proxy_ip }} \
     --upgrade.biz.deploy.project=klcloud_fsd{{deploy_type}} \
