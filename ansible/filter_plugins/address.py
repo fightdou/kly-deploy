@@ -187,7 +187,24 @@ def put_address_in_context(address, context):
         return 'inet6:[{address}]'.format(address=address)
 
     return address
+    
+def listintersection(source_list, dest_list):
+    """This function returns the intersection of the passed collections
 
+    :return: Returns the value of the unit conversion, is a type type.
+
+    """
+    if not isinstance (source_list, list):
+         raise ValueError("source_list:[{}] must is a list type".format(source_list))
+    if not isinstance (dest_list, list):
+         raise ValueError("dest_list:[{}] must is a list type".format(dest_list))
+
+    source_set = set(source_list)
+    dest_set = set(dest_list)
+    re_list = sorted(list(source_set & dest_set))
+
+    return re_list
+    
 class FilterModule(object):
 
     def filters(self):
@@ -195,4 +212,5 @@ class FilterModule(object):
             'filter_interface_name': filter_interface_name,
             'filter_address': filter_address,
             'put_address_in_context': put_address_in_context,
+            'listintersection': listintersection
             }
