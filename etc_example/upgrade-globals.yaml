@@ -5,11 +5,16 @@ upgrade_service:
   - libvirt
   - trochilus
   - guest-service
+  - btserver
   - fsd
 
 enable_local: false
 fsd_default_tag: "{{ upgrade_version }}"
 trochilus_tag: "{{ upgrade_version }}"
+btserver_tag: "{{ upgrade_version }}"
+guest_service_tag: "{{ upgrade_version }}"
+libvirt_tag: "{{ upgrade_version }}"
+
 trochilus_cpu_weight_multiplier: 100
 trochilus_memory_weight_multiplier: 1
 fsd_upgrade_server_port: 9014

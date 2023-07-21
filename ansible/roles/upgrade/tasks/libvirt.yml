@@ -9,6 +9,8 @@
     owner: root
     group: root
     mode: "0755"
+  run_once: true
+  delegate_to: "{{ groups['libvirt'][0] }}"
 
 - name: upgade libvirt service
   import_role:
