@@ -24,14 +24,14 @@
 
 - name: Set total_mems vars
   set_fact:
-    total_mems: "{{ total_mems | int + ((hostvars[item].ansible_memtotal_mb  - reserved_osd_memory_mb * osd_num.stdout | int - reserved_mds_memory_mb - reserved_mon_memory_mb - reseverd_system_memory_mb - reserved_host_memory_mb) /1024) | int }}"
+    total_mems: "{{ total_mems | int + ((hostvars[item].ansible_memtotal_mb  - reserved_osd_memory_mb * osd_num.stdout | int - reserved_mds_memory_mb - reserved_mon_memory_mb - reseverd_system_memory_mb - reserved_host_memory_mb) / 1024) | int }}"
   run_once: True
   with_items: "{{ groups['compute'] }}"
   when: enable_ceph | bool
 
 - name: Set node_mems vars
   set_fact:
-    node_mems: "{{ (ansible_memtotal_mb  - reserved_osd_memory_mb * osd_num.stdout | int - reserved_mds_memory_mb - reserved_mon_memory_mb - reseverd_system_memory_mb - reserved_host_memory_mb) /1024) | int }}"
+    node_mems: "{{ ((ansible_memtotal_mb  - reserved_osd_memory_mb * osd_num.stdout | int - reserved_mds_memory_mb - reserved_mon_memory_mb - reseverd_system_memory_mb - reserved_host_memory_mb) / 1024) | int }}"
   when: enable_ceph | bool
 
 # 内存每台机器保留16

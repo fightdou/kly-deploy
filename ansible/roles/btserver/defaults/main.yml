@@ -16,7 +16,7 @@ btserver_services:
     group: btserver_tracker
     enabled: true
     image: "{{ btserver_tracker_image_full }}"
-    command: "/bin/klcloud-tracker -redisAddr {% for host in groups['redis'] %}{{ host }}:26379{% if not loop.last %},{% endif %}{% endfor %}  -redisPassword {{ redis_master_password }} -udpAddr :{{ bt_tracker_external_port }}"
+    command: "/bin/klcloud-tracker -redisAddr {% for host in groups['redis'] %}{{ host }}:26379{% if not loop.last %},{% endif %}{% endfor %}  -redisPassword {{ redis_master_password }} -udpAddr 0.0.0.0:{{ bt_tracker_external_port }}"
     pid_mode: "host"
     privileged: True
     volumes: "{{ btserver_tracker_default_volumes }}"
