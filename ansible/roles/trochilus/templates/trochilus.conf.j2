@@ -15,7 +15,7 @@ host_password = {{ host_password }}
 agent_lock_file = /etc/trochilus/trochilus-agent-lock
 system = {{ ansible_distribution }}
 version = {{ ansible_distribution_version }}
-role = compute,control,storage
+role = "{{ ['control', 'compute', 'storage'] | listintersection(hostvars[inventory_hostname]['group_names']) | join(',') }}"
 {% for nic in nic_info %}
 nic = {{nic}}
 {% endfor %}
