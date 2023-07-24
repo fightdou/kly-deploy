@@ -1,9 +1,13 @@
 {% set node_resource_info = [] %}
 {% for host in groups['compute'] %}
-    {% set cpuNum = (hostvars[host].ansible_processor_vcpus - reserved_host_cpus) * cpu_allocation_ratio %}
-    {% set memoryVdiNum = hostvars[host]['node_mems'] %}
-    {% set memoryVoiNum = hostvars[host]['voi_reserved_memory'] %}
-    {% set uuid = hostvars[host]['agent_uuid'] %}
+    {% set cpuNum = host | filter_node_vcpus() %}
+    {% set memoryVdiNum =  host | filter_vdi_node_mems() %}
+    {% if fsd_deploy_mode == 'voi' %}
+        {% set memoryVoiNum = host | filter_vdi_node_mems() %}
+    {% else %}
+        {% set memoryVoiNum = hostvars[host]['voi_reserved_memory'] %}
+    {% endif %}
+    {% set uuid = host | get_trochilus_agent_id() %}
     {% set vdiFileNum = hostvars[host]['vdi_storage_num'] %}
     {% set voiFileNum = hostvars[host]['voi_storage_num'] %}
 
