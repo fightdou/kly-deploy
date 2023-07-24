@@ -116,12 +116,26 @@
     force: yes
   when: vg_exist.stdout != "0"
 
+- name: 删除share vg
+  lvg:
+    vg: "{{ local_share_vg_name }}"
+    state: absent
+    force: yes
+  when: local_share_vg_name in ansible_lvm.vgs
+
 - name: Remove pv
   become: true
   shell: "pvremove -y {{ item }}"
   with_items: "{{ local_device }}"
   when: vg_exist.stdout != "0"
 
+- name: 删除share pv
+  become: true
+  shell: "pvremove -y {{ item }}"
+  with_items: "{{ share_device }}"
+  when: local_share_vg_name in ansible_lvm.vgs
+
 - name: Wipe Disk
   command: "wipefs -a {{ item }}"
-  with_items: "{{ local_device }}"
+  with_items: "{{ local_device + share_device }}"
+  

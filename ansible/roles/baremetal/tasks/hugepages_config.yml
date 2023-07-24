@@ -6,7 +6,7 @@
 - name: 获取可分配的大页数量
   set_fact:
     hugepages_total: >-
-      {% if ansible_memtotal_mb >= 65536 %}{{ (ansible_memtotal_mb - reserved_osd_memory_mb * osd_num.stdout | int - reserved_mds_memory_mb - reserved_mon_memory_mb - reseverd_system_memory_mb - reserved_host_memory_mb) - (voi_reserved_memory * 1024) // 2 | int }}{% elif ansible_memtotal_mb >= 32768 %}{{ 16384 - (voi_reserved_memory * 1024) // 2 | int }}{% elif ansible_memtotal_mb >= 16384 %}{{ 8192 - (voi_reserved_memory * 1024) // 2}}{% elif ansible_memtotal_mb > 8192 %}{{4096 - (voi_reserved_memory * 1024) // 2}}{% else %}{{ 2048 - (voi_reserved_memory * 1024) // 2 }}{% endif %}
+      {% if ansible_memtotal_mb >= 65536 %}{{ ((ansible_memtotal_mb - reserved_osd_memory_mb * osd_num.stdout | int - reserved_mds_memory_mb - reserved_mon_memory_mb - reseverd_system_memory_mb - reserved_host_memory_mb) - (voi_reserved_memory * 1024)) // 2 | int }}{% elif ansible_memtotal_mb >= 32768 %}{{ 16384 - (voi_reserved_memory * 1024) // 2 | int }}{% elif ansible_memtotal_mb >= 16384 %}{{ 8192 - (voi_reserved_memory * 1024) // 2}}{% elif ansible_memtotal_mb > 8192 %}{{4096 - (voi_reserved_memory * 1024) // 2}}{% else %}{{ 2048 - (voi_reserved_memory * 1024) // 2 }}{% endif %}
 
 - name: 分配大页内存
   become: true
