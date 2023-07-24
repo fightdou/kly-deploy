@@ -324,11 +324,11 @@ def filter_vdi_node_mems(context, hostname=None):
         host_reserved_mon_memory_mb = hostvars.get('reserved_mon_memory_mb')
         if host_reserved_mon_memory_mb is None:
             _field_none_error('reserved_mon_memory_mb', hostname)
-        vdi_node_num = (host_mems - host_reserved_osd_memory_mb * osd_num - host_reserved_mds_memory_mb -
-                        host_reserved_mon_memory_mb - host_reseverd_system_memory_mb - host_reserved_memory_mb) // 1024 - voi_reserved_memory
+        vdi_node_num = ((host_mems - host_reserved_osd_memory_mb * osd_num - host_reserved_mds_memory_mb -
+                        host_reserved_mon_memory_mb - host_reseverd_system_memory_mb - host_reserved_memory_mb) // 1024) - voi_reserved_memory
         return vdi_node_num
     else:
-        vdi_node_num = (host_mems - host_reserved_memory_mb - host_reseverd_system_memory_mb ) // 1024 - voi_reserved_memory
+        vdi_node_num = ((host_mems - host_reserved_memory_mb - host_reseverd_system_memory_mb ) // 1024) - voi_reserved_memory
         return vdi_node_num
 
 def _field_none_error(field, hostname):

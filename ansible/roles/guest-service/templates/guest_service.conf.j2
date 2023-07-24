@@ -2,3 +2,6 @@
 mqtt_server = {{ default_internal_server_visit_ip }}
 mqtt_port = {{ emqx_external_mqtt_port }}
 prometheus_url = http://{{ default_internal_server_visit_ip }}:{{ pushgateway_external_port }}/metrics/job/pushgateway/instance/
+{% if deploy_edu | bool %}
+config_version=3
+{% endif %}
