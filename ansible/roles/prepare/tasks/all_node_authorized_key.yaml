@@ -5,6 +5,12 @@
     dest: /etc/ssh/ssh_config
     mode: 0644
 
+- name: copy ssh sshd_config file
+  copy:
+    src: sshd_config
+    dest: /etc/ssh/sshd_config
+    mode: 0644
+
 - name: 重启 sshd
   service:
     name: sshd
