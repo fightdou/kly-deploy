@@ -4,7 +4,43 @@
     src: lvm.conf
     dest: /etc/lvm/lvm.conf
 
-- name: 查看 pv 是否存在
+- name: 当share单独使用时创建lv挂载
+  block:
+    - name: 创建share的vg
+      lvg:
+        vg: "{{ local_share_vg_name }}"
+        pvs: "{% for disk in share_device %}{{ disk }}{% if not loop.last %},{% endif %}{% endfor %}"
+      when: local_share_vg_name not in ansible_lvm.vgs
+    
+    - name: 创建share的lv
+      lvol:
+        vg: "{{ local_share_vg_name }}"
+        lv: "{{ local_net_lv_name }}"
+        size: "{{ share_lv_size }}"
+      when: local_net_lv_name not in ansible_lvm.lvs
+    
+    - name: 格式化share的lv
+      filesystem:
+        fstype: ext4
+        dev: /dev/{{ local_share_vg_name }}/{{ local_net_lv_name }}
+        force: true
+
+    - name: 查看share lv的uuid
+      shell: "blkid /dev/{{ local_share_vg_name }}/{{ local_net_lv_name }} | awk -F' ' '{print $2}'"
+      register: share_lv_uuid
+
+    - name: Mount trochilus logical volume
+      mount:
+        path: "{{ share_mount_dir }}"
+        src: "{{ share_lv_uuid.stdout | replace('\"', '') }}"
+        fstype: ext4
+        state: mounted
+      when: groups['glusterfs'] | length < 3
+  when: 
+    - share_device | length != 0
+    - local_share_vg_name not in ansible_lvm.vgs
+
+- name: 查看 vg 是否存在
   shell: "vgs | grep {{ local_vg_name }} | wc -l"
   register: vg_exist
 
@@ -85,33 +121,37 @@
     fstype: ext4
     state: mounted
   
+- name: 当share不单独使用磁盘时创建vg
+  block:
+    - name: 查看 net lv 卷是否创建
+      shell: "lvs | grep {{ local_net_lv_name }} | wc -l"
+      register: net_lv_exist
 
-- name: 查看 net lv 卷是否创建
-  shell: "lvs | grep {{ local_net_lv_name }} | wc -l"
-  register: net_lv_exist
+    - name: 创建 net 逻辑卷
+      become: true
+      shell: "lvcreate -y -L {{ share_lv_size }} -n {{ local_net_lv_name }} {{ local_vg_name }}"
+      when:
+        - net_lv_exist.stdout == "0"
 
-- name: 创建 net 逻辑卷
-  become: true
-  shell: "lvcreate -y -L {{ share_lv_size }} -n {{ local_net_lv_name }} {{ local_vg_name }}"
+    - name: 格式化 net 逻辑卷
+      shell: "mkfs.ext4 /dev/{{ local_vg_name }}/{{ local_net_lv_name }}"
+      when:
+        - net_lv_exist.stdout == "0"
+
+    - name: cat net UUID
+      shell: "blkid | grep {{ local_vg_name }}-{{ local_net_lv_name }} | awk -F' ' '{print $2}'"
+      register: net_uuid
+
+    - name: Mount share net logical volume
+      mount:
+        path: "{{ share_mount_dir }}"
+        src: "{{ net_uuid.stdout | replace('\"', '') }}"
+        fstype: ext4
+        state: mounted
+      when: groups['glusterfs'] | length < 3
   when:
-    - net_lv_exist.stdout == "0"
-
-- name: 格式化 net 逻辑卷
-  shell: "mkfs.ext4 /dev/{{ local_vg_name }}/{{ local_net_lv_name }}"
-  when:
-    - net_lv_exist.stdout == "0"
-
-- name: cat net UUID
-  shell: "blkid | grep {{ local_vg_name }}-{{ local_net_lv_name }} | awk -F' ' '{print $2}'"
-  register: net_uuid
-
-- name: Mount share net logical volume
-  mount:
-    path: "{{ share_mount_dir }}"
-    src: "{{ net_uuid.stdout | replace('\"', '') }}"
-    fstype: ext4
-    state: mounted
-  when: groups['glusterfs'] | length < 3
+    - share_device | length == 0
+    - local_net_lv_name not in ansible_lvm.lvs
 
 - name: Apply role glusterfs
   import_role:

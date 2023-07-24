@@ -2,7 +2,7 @@
 - name: Create file share dir
   become: true
   file:
-    path: "{{ desktop_mount_dir }}"
+    path: "{{ share_mount_dir }}"
     state: directory
     mode: 0755
 
