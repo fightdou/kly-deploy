@@ -6,7 +6,6 @@
 - name: Set init total_mems var
   set_fact:
     total_mems: 0
-    node_mems: 0
     total_voi_mems: 0
     total_vdi_mems: 0
 
@@ -29,22 +28,12 @@
   with_items: "{{ groups['compute'] }}"
   when: enable_ceph | bool
 
-- name: Set node_mems vars
-  set_fact:
-    node_mems: "{{ ((ansible_memtotal_mb  - reserved_osd_memory_mb * osd_num.stdout | int - reserved_mds_memory_mb - reserved_mon_memory_mb - reseverd_system_memory_mb - reserved_host_memory_mb) / 1024) | int }}"
-  when: enable_ceph | bool
-
 # 内存每台机器保留16
 - name: Set total_mems vars
   set_fact:
     total_mems: "{{ total_mems | int + ((hostvars[item].ansible_memtotal_mb - reserved_host_memory_mb) / 1024)  | int }}"
   run_once: True
   with_items: "{{ groups['compute'] }}"
-  when: not enable_ceph | bool
-
-- name: Set node_mems vars
-  set_fact:
-    node_mems: "{{ ((ansible_memtotal_mb - reserved_host_memory_mb) / 1024) | int - voi_reserved_memory | int }}"
   when: not enable_ceph | bool
 
 - name: Set total_mems vars
@@ -54,10 +43,6 @@
   with_items: "{{ groups['compute'] }}"
   when: hostvars[item].ansible_memtotal_mb <= 16384
 
-- name: Set node_mems vars
-  set_fact:
-    node_mems: "{% if ansible_memtotal_mb > 8192 %}{{ 8 - voi_reserved_memory }}{% else %}{{ 4 - voi_reserved_memory }}{% endif %}"
-  when: ansible_memtotal_mb <= 16384
 
 - name: Set total_voi_mems vars
   set_fact:
