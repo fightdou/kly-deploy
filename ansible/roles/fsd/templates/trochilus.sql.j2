@@ -1,10 +1,16 @@
 {% set node_resource_info = [] %}
 {% for host in groups['compute'] %}
     {% set cpuNum = host | filter_node_vcpus() %}
-    {% set memoryVdiNum =  host | filter_vdi_node_mems() %}
     {% if fsd_deploy_mode == 'voi' %}
         {% set memoryVoiNum = host | filter_vdi_node_mems() %}
-    {% else %}
+        {% set memoryVdiNum =  0 %}
+    {% endif %}
+    {% if fsd_deploy_mode == 'vdi' %}
+        {% set memoryVdiNum = host | filter_vdi_node_mems() %}
+        {% set memoryVoiNum =  0 %}
+    {% endif %}
+    {% if fsd_deploy_mode == 'all' %}
+        {% set memoryVdiNum = host | filter_vdi_node_mems() %}
         {% set memoryVoiNum = hostvars[host]['voi_reserved_memory'] %}
     {% endif %}
     {% set uuid = host | get_trochilus_agent_id() %}
