@@ -95,31 +95,35 @@
   when: 
     - vg_exist.stdout == "0"
 
-- name: 查看 trochilus lv 卷是否创建
-  shell: "lvs | grep {{ local_trochilus_lv_name }} | wc -l"
-  register: trochilus_lv_exist
+- name: 当share不单独使用磁盘时创建vg
+  block:
+    - name: 查看 trochilus lv 卷是否创建
+      shell: "lvs | grep {{ local_trochilus_lv_name }} | wc -l"
+      register: trochilus_lv_exist
 
-- name: 创建 trochilus 逻辑卷
-  become: true
-  shell: "lvcreate -y -L {{ trochilus_lv_size }} -n {{ local_trochilus_lv_name }} {{ local_vg_name }}"
+    - name: 创建 trochilus 逻辑卷
+      become: true
+      shell: "lvcreate -y -L {{ trochilus_lv_size }} -n {{ local_trochilus_lv_name }} {{ local_vg_name }}"
+      when:
+        - trochilus_lv_exist.stdout == "0"
+
+    - name: 格式化 trochilus 逻辑卷
+      shell: "mkfs.ext4 /dev/{{ local_vg_name }}/{{ local_trochilus_lv_name }}"
+      when:
+        - trochilus_lv_exist.stdout == "0"
+
+    - name: cat trochilus UUID
+      shell: "blkid | grep {{ local_vg_name }}-{{ local_trochilus_lv_name }} | awk -F' ' '{print $2}'"
+      register: trochilus_uuid
+
+    - name: Mount trochilus logical volume
+      mount:
+        path: "{{ desktop_mount_dir }}"
+        src: "{{ trochilus_uuid.stdout | replace('\"', '') }}"
+        fstype: ext4
+        state: mounted
   when:
-    - trochilus_lv_exist.stdout == "0"
-
-- name: 格式化 trochilus 逻辑卷
-  shell: "mkfs.ext4 /dev/{{ local_vg_name }}/{{ local_trochilus_lv_name }}"
-  when:
-    - trochilus_lv_exist.stdout == "0"
-
-- name: cat trochilus UUID
-  shell: "blkid | grep {{ local_vg_name }}-{{ local_trochilus_lv_name }} | awk -F' ' '{print $2}'"
-  register: trochilus_uuid
-
-- name: Mount trochilus logical volume
-  mount:
-    path: "{{ desktop_mount_dir }}"
-    src: "{{ trochilus_uuid.stdout | replace('\"', '') }}"
-    fstype: ext4
-    state: mounted
+    - fsd_deploy_mode != "voi"
   
 - name: 当share不单独使用磁盘时创建vg
   block:
