@@ -3,7 +3,7 @@ log_file=/var/log/mariadb/check_mariadb.log
 STATUS="none"
 echo "`date` ------ mysql galera check start! ---------" | tee -a $log_file
 
-for i in {1..10}; do
+for i in {1..30}; do
     sleep 30
     echo "`date` Check Galera cluster running node" | tee -a $log_file
     {% for host in groups['mariadb'] %}
