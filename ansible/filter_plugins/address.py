@@ -238,7 +238,7 @@ def filter_node_ceph_osd_num(context, hostname=None):
     osd_json = osd_result.stdout
     osd_info = json.loads(osd_json)
     osd_list = []
-    for osd in osd_info:
+    for osd in osd_info['nodes']:
         if osd['type'] == 'host':
             osd_list = osd['children']
             break
