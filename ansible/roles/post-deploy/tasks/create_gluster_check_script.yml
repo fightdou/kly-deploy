@@ -1,0 +1,36 @@
+---
+- name: create gluster check dir
+  file:
+    path: "{{ config_directory }}/gluster_check/"
+    state: "directory"
+    mode: 0770
+  become: true
+
+- name: copy gluster check script
+  template:
+    src: check_gluster_status_control.sh.j2
+    dest: "{{ config_directory }}/gluster_check/check_glusterfs_status.sh"
+    mode: 0777
+  become: True
+  when: 
+    - inventory_hostname in groups['control']
+  
+- name: copy gluster check script
+  template:
+    src: check_gluster_status_no_control.sh.j2
+    dest: "{{ config_directory }}/gluster_check/check_glusterfs_status.sh"
+    mode: 0777
+  become: True
+  when: 
+    - inventory_hostname not in groups['control']
+
+- name: copy gluster check service
+  template:
+    src: check_gluster_status.service.j2
+    dest: /usr/lib/systemd/system/check_gluster_status.service
+
+- name: reload check_gluster_status.service
+  systemd:
+    name: check_gluster_status.service
+    daemon_reload: true
+    enabled: true

@@ -12,6 +12,10 @@
   when:
     - bcache | bool
 
+- import_tasks: create_gluster_check_script.yml
+  when:
+    - enable_glusterfs | bool
+
 - name: 获取 osd 数量
   shell: systemctl | grep running | grep osd@ | wc -l
   register: osd_num
