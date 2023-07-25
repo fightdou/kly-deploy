@@ -43,23 +43,21 @@
   with_items: "{{ groups['compute'] }}"
   when: hostvars[item].ansible_memtotal_mb <= 16384
 
-
-- name: Set total_voi_mems vars
+- name: Set total_voi_mems vars not voi
   set_fact:
     total_voi_mems: "{{ total_voi_mems | int + hostvars[item].voi_reserved_memory | int }}"
   run_once: True
   with_items: "{{ groups['compute'] }}"
+  when: fsd_deploy_mode != "voi"
 
-- name: Set total_vdi_mems vars
+- name: Set total_voi_mems vars voi
+  set_fact:
+    total_voi_mems: "{{ total_mems }}"
+  run_once: True
+  when: fsd_deploy_mode == "voi"
+
+- name: Set total_vdi_mems vars not voi
   set_fact:
     total_vdi_mems: "{{ total_mems | int - total_voi_mems | int }}"
   run_once: True
-
-# 获取 agent_uuid
-- name: get agent uuid
-  shell: cat /etc/klcloud/trochilus/trochilus-agent-lock
-  register: agent_uuid
-
-- name: Set agent uuid
-  set_fact:
-    agent_uuid: "{{ agent_uuid.stdout }}"
+  when: fsd_deploy_mode != "voi"
