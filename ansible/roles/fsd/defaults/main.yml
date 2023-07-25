@@ -83,7 +83,7 @@ fsd_nginx_tag: "{{ fsd_default_tag }}"
 fsd_nginx_image_full: "{{ fsd_nginx_image }}:{{ fsd_nginx_tag }}"
 fsd_nginx_default_volumes: 
   - "/etc/localtime:/etc/localtime:ro"
-  - "{{ desktop_mount_dir }}/voi:/mnt/voi:rw"
+  - "{{ share_disk_mount_path }}/voi:/mnt/voi:rw"
   - "{{ share_disk_mount_path }}/iso_file:/mnt/iso:rw"
   - "{{ share_disk_mount_path }}/static:/usr/local/dist/static:rw"
   - "{{ config_directory }}/fsd/fsd.conf:/etc/nginx/conf/fsd.conf:rw"
