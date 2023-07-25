@@ -1,0 +1,40 @@
+#!/bin/bash
+file_path='{{ share_mount_dir }}'
+
+function logger() {
+  TIMESTAMP=$(date +'%Y-%m-%d %H:%M:%S')
+  case "$1" in
+    info)
+      echo -e "$TIMESTAMP \033[32mINFO\033[0m $2"
+      ;;
+    warn)
+      echo -e "$TIMESTAMP \033[33mWARN\033[0m $2"
+      ;;
+    error)
+      echo -e "$TIMESTAMP \033[31mERROR\033[0m $2"
+      ;;
+    *)
+      ;;
+  esac
+}
+
+function main() {
+    logger info "Start checking if gluster can be mounted."
+    for i in {1..30}; do
+        if `mountpoint -q $file_path`; then
+            logger info "SUCCESS! Detected directory mount completion, exiting 0"
+            exit 0
+        fi
+        sleep 30
+        logger warn "No directory mounted detected for the $i time"
+        if `mount -a > /dev/null`; then
+            logger info "SUCCESS! Connected already exists in gluster, start mounting..."
+            sleep 1
+        fi
+    done
+    logger error "Long term failure to meet conditions"
+    exit 1
+}
+
+
+main

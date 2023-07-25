@@ -1,0 +1,11 @@
+[Unit]
+Description=Exec glusterfs check scripts
+Before=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash {{ config_directory }}/gluster_check/check_glusterfs_status.sh
+
+[Install]
+WantedBy=multi-user.target
