@@ -108,8 +108,11 @@ spice_enabled = true
 spice_server_listen = 0.0.0.0
 vdi_disk_path = {{ trochilus_vdi_base_path }}
 [voi_setting]
-voi_image_base_path = {{ share_mount_dir }}/voi/images
 voi_vm_base_path = {{ share_mount_dir }}/voi/vms
+voi_image_base_path = {{ share_mount_dir }}/voi/images
+voi_image_tmp_path = {{ share_mount_dir }}/voi/images/tmp
+voi_public_base_disk_base_path = {{ share_mount_dir }}/voi/public-base-disks
+share_template_disk_path = {{ share_mount_dir }}/voi/share-template-disks
 vm_name_template = voi-%s
 [ha_settings]
 detected_mgmt_net_ip = {{ trochilus_detected_mgmt_net_ip }}
