@@ -53,25 +53,25 @@
         pvs: "{% for disk in share_device %}{{ disk }}{% if not loop.last %},{% endif %}{% endfor %}"
       when: 
         - local_share_vg_name not in ansible_lvm.vgs
-        - pv_volume is not define
+        - pv_volume is not defined
     
     - name: 判断share_lv是否存在
       set_fact:
-        share_lvbool: local_net_lv_name in ansible_lvm.lvs | bool
+        share_lvbool: "{{ local_net_lv_name in ansible_lvm.lvs }}"
 
     - name: 创建share的lv
       lvol:
         vg: "{{ local_share_vg_name }}"
         lv: "{{ local_net_lv_name }}"
         size: "{{ share_lv_size }}"
-      when: not share_lvbool
+      when: not share_lvbool | bool
     
     - name: 格式化share的lv
       filesystem:
         fstype: ext4
         dev: /dev/{{ local_share_vg_name }}/{{ local_net_lv_name }}
         force: true
-      when: not share_lvbool
+      when: not share_lvbool | bool
 
     - name: 查看share lv的uuid
       shell: "blkid /dev/{{ local_share_vg_name }}/{{ local_net_lv_name }} | awk -F' ' '{print $2}'"
@@ -107,21 +107,21 @@
 
     - name: 判断local的lv是否存在
       set_fact:
-        local_lvbool: local_trochilus_lv_name in ansible_lvm.lvs | bool
+        local_lvbool: "{{ local_trochilus_lv_name in ansible_lvm.lvs }}"
 
     - name: 创建local的lv
       lvol:
         vg: "{{ local_vg_name }}"
         lv: "{{ local_trochilus_lv_name }}"
         size: "{{ trochilus_lv_size }}"
-      when: not local_lvbool
+      when: not local_lvbool | bool
     
     - name: 格式化local的lv
       filesystem:
         fstype: ext4
         dev: /dev/{{ local_vg_name }}/{{ local_trochilus_lv_name }}
         force: true
-      when: not local_lvbool
+      when: not local_lvbool | bool
 
     - name: cat trochilus UUID
       shell: "blkid | grep {{ local_vg_name }}-{{ local_trochilus_lv_name }} | awk -F' ' '{print $2}'"
