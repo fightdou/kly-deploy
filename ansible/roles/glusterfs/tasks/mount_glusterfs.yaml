@@ -5,7 +5,7 @@
     path: "{{ share_mount_dir }}"
     state: "mounted"
     fstype: glusterfs
-    opts: backup-volfile-servers={{ groups['glusterfs'] | join(':') }}
+    opts: backup-volfile-servers={{ groups['glusterfs'] | difference(inventory_hostname) | join(':') }}
   when: inventory_hostname in groups['glusterfs']
 
 - name: Mount Shared Storage not control node
@@ -14,7 +14,7 @@
     path: "{{ share_mount_dir }}"
     state: "mounted"
     fstype: glusterfs
-    opts: backup-volfile-servers={{ groups['glusterfs'] | join(':') }}
+    opts: backup-volfile-servers={{ groups['glusterfs'] | difference(groups['glusterfs'][0]) | join(':') }}
   when: inventory_hostname not in groups['glusterfs']
 
 - name: Check Mounting

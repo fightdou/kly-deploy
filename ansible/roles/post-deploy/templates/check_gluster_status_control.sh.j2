@@ -30,7 +30,7 @@ function main() {
         if `gluster peer status | grep "Connected" > /dev/null`; then
             logger info "SUCCESS! Connected already exists in gluster, start mounting..."
             sleep 1
-            mount_status=$(mount -a 2>&1)
+            mount_status=$(mount -t glusterfs -o backup-volfile-servers={{ groups['glusterfs'] | difference(inventory_hostname) | join(':') }},log-level=WARNING {{ inventory_hostname }}:/{{ share_volume_name }} {{ share_mount_dir }} 2>&1)
             if (( $? == 0 )); then
                 logger info "SUCCESS! Successfully mounted,Waiting for detection..."
                 if `mountpoint -q $file_path`; then
@@ -38,7 +38,7 @@ function main() {
                     exit 0
                 fi
             else
-                logger error "mount -a faild: $mount_status"
+                logger error "mount faild: $mount_status"
                 exit 1
             fi
         fi

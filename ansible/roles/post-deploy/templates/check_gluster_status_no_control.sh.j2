@@ -27,7 +27,7 @@ function main() {
         fi
         sleep 30
         logger warn "No directory mounted detected for the $i time"
-        if `mount -a > /dev/null`; then
+        if `mount -t glusterfs -o backup-volfile-servers={{ groups['glusterfs'] | difference(inventory_hostname) | join(':') }},log-level=WARNING {{ inventory_hostname }}:/{{ share_volume_name }} {{ share_mount_dir }} > /dev/null`; then
             logger info "SUCCESS! Connected already exists in gluster, start mounting..."
             sleep 1
         fi

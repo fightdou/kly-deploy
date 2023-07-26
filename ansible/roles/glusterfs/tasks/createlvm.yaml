@@ -7,19 +7,31 @@
 
 - name: cat net UUID
   shell: "blkid | grep {{ local_vg_name }}-{{ local_net_lv_name }} | awk -F' ' '{print $2}'"
-  register: net_uuid
-  when: 
+  register: local_net_uuid
+  when:
     - share_device | length == 0
 
 - name: cat share UUID
   shell: "blkid /dev/{{ local_share_vg_name }}/{{ local_net_lv_name }} | awk -F' ' '{print $2}'"
-  register: net_uuid
-  when: 
+  register: share_net_uuid
+  when:
+    - share_device | length != 0
+
+- name: set net uuid
+  set_fact:
+    net_uuid: "{{ local_net_uuid.stdout }}"
+  when:
+    - share_device | length == 0
+
+- name: set share uuid
+  set_fact:
+    net_uuid: "{{ share_net_uuid.stdout }}"
+  when:
     - share_device | length != 0
 
 - name: Mount Glusterfs Metadata Lvm To Glusterfs Metadata Path
   mount:
-    src: "{{ net_uuid.stdout | replace('\"', '') }}"
+    src: "{{ net_uuid | replace('\"', '') }}"
     path: "{{ gluster_metadata_path }}"
     state: "mounted"
     fstype: ext4
