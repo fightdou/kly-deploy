@@ -15,5 +15,5 @@
     name: "{{ service.container_name }}"
     volumes: "{{ service.volumes }}"
     pid_mode: "{{ service.pid_mode | default('') }}"
-    command: "/root/seafile-server-latest/start.sh"
+    command: "bash /root/conf/start.sh"
   listen: Restart seafile container

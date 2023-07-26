@@ -27,7 +27,6 @@
     - seafile-data
     - seahub-data
 
-
 - import_tasks: mysql.yml
 
 - name: Copy seafile config 文件
@@ -42,5 +41,6 @@
     - seafdav.conf
     - seafile.conf
     - seahub_settings.py
+    - start.sh
   notify:
     - Restart seafile container

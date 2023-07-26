@@ -1,0 +1,50 @@
+#!/bin/bash
+  
+function logger() {
+  TIMESTAMP=$(date +'%Y-%m-%d %H:%M:%S')
+  case "$1" in
+    info)
+      echo -e "$TIMESTAMP \033[32mINFO\033[0m $2"
+      ;;
+    warn)
+      echo -e "$TIMESTAMP \033[33mWARN\033[0m $2"
+      ;;
+    error)
+      echo -e "$TIMESTAMP \033[31mERROR\033[0m $2"
+      ;;
+    *)
+      ;;
+  esac
+}
+
+for i in {1..30}; do
+    sleep 4
+    if mysql -useafile -p{{ seafile_mariadb_password }} -h {{ default_internal_server_visit_ip }} -e 'show databases;'; then
+        logger info "Successfully connected to the database, starting seafile...."
+        if /root/seafile-server-latest/seafile.sh start; then
+            logger info "Successfully started seafile service, starting seahub...."
+            if /root/seafile-server-latest/seahub.sh start; then
+                logger info "Successfully started seahub service, all services have been started."
+                break
+            else
+                logger error " Failed to start seahub service. "
+                cat /root/logs/seafile.log
+                exit 1
+            fi
+        else
+            logger error "Failed to start seafile service. "
+            cat /root/logs/seafile.log
+            exit 1
+        fi
+    fi
+done
+
+logger info " Start listening to database ports..."
+while :
+do
+    sleep 5
+    if ! nc -n -z {{ inventory_hostname }} {{ seafile_port }}; then
+        logger error  "Seahub is not running."
+        exit 1
+    fi
+done
