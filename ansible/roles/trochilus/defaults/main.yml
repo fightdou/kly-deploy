@@ -76,7 +76,7 @@ virt_v2v_default_volumes:
     - /tmp:/tmp:rw
     - /etc/localtime:/etc/localtime:rw
     - /dev:/dev:rw
-    - "{{ desktop_mount_dir }}/p2v:{{ desktop_mount_dir }}/p2v:rw"
+    - "{{ desktop_mount_dir }}/voi/p2v:{{ desktop_mount_dir }}/voi/p2v:rw"
     - /etc/shadow:/etc/shadow:rw
 
 support_flat_physicals: "{% for host in groups['trochilus-agent'] -%}{% set flat_interface_list = hostvars[host]['flat_network_interface'] %} {% for flat in flat_interface_list %}{{ 'flat' + loop.index | string }}{% if not loop.last %},{% endif %}{% endfor %}{% endfor %}"
