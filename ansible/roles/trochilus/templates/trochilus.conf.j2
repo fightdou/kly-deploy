@@ -4,7 +4,8 @@ debug = false
 [agent_settings]
 bind_host = {{ default_internal_server_listen_ip }}
 bind_port = {{ trochilus_listen_agent_port }}
-voi_vm_create_timeout = 1800
+vm_create_timeout = 3600
+voi_vm_create_timeout = 3600
 reserved_cores_num = {{ trochilus_reserved_cores_num }}
 enable_reserved_core = true
 ipmi_username = {{ ipmi_username }}
