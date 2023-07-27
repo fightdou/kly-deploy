@@ -86,7 +86,7 @@
       when: groups['glusterfs'] | length < 3
   when: 
     - share_device | length != 0 or share_device | length == 0 and fsd_deploy_mode == 'voi'
-    - inventory_hostname in groups['gluster']
+    - inventory_hostname in groups['glusterfs']
 
 - name: 非单voi时创建local资源
   block:
@@ -167,7 +167,7 @@
       when: groups['glusterfs'] | length < 3
   when:
     - share_device | length == 0
-    - inventory_hostname in groups['gluster']
+    - inventory_hostname in groups['glusterfs']
 
 - name: Apply role glusterfs
   import_role:
