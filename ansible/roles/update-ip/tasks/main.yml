@@ -12,6 +12,10 @@
   when: 
     - enable_btserver | bool
 
+- import_tasks: "update_seafile.yml"
+  when: 
+    - enable_seafile | bool
+
 - import_tasks: "update_fsd_console_web.yml"
 
 - import_tasks: "update_fsd_db.yml"
