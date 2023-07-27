@@ -20,8 +20,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for Branch
 -- ----------------------------
-DROP TABLE IF EXISTS `Branch`;
-CREATE TABLE `Branch`  (
+CREATE TABLE IF NOT EXISTS `Branch`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `repo_id` char(41) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -33,8 +32,7 @@ CREATE TABLE `Branch`  (
 -- ----------------------------
 -- Table structure for FileLockTimestamp
 -- ----------------------------
-DROP TABLE IF EXISTS `FileLockTimestamp`;
-CREATE TABLE `FileLockTimestamp`  (
+CREATE TABLE IF NOT EXISTS `FileLockTimestamp`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(40) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `update_time` bigint NOT NULL,
@@ -45,8 +43,7 @@ CREATE TABLE `FileLockTimestamp`  (
 -- ----------------------------
 -- Table structure for FileLocks
 -- ----------------------------
-DROP TABLE IF EXISTS `FileLocks`;
-CREATE TABLE `FileLocks`  (
+CREATE TABLE IF NOT EXISTS `FileLocks`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `path` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -60,8 +57,7 @@ CREATE TABLE `FileLocks`  (
 -- ----------------------------
 -- Table structure for FolderGroupPerm
 -- ----------------------------
-DROP TABLE IF EXISTS `FolderGroupPerm`;
-CREATE TABLE `FolderGroupPerm`  (
+CREATE TABLE IF NOT EXISTS `FolderGroupPerm`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `path` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -74,8 +70,7 @@ CREATE TABLE `FolderGroupPerm`  (
 -- ----------------------------
 -- Table structure for FolderPermTimestamp
 -- ----------------------------
-DROP TABLE IF EXISTS `FolderPermTimestamp`;
-CREATE TABLE `FolderPermTimestamp`  (
+CREATE TABLE IF NOT EXISTS `FolderPermTimestamp`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(36) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `timestamp` bigint NULL DEFAULT NULL,
@@ -86,8 +81,7 @@ CREATE TABLE `FolderPermTimestamp`  (
 -- ----------------------------
 -- Table structure for FolderUserPerm
 -- ----------------------------
-DROP TABLE IF EXISTS `FolderUserPerm`;
-CREATE TABLE `FolderUserPerm`  (
+CREATE TABLE IF NOT EXISTS `FolderUserPerm`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `path` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -100,8 +94,7 @@ CREATE TABLE `FolderUserPerm`  (
 -- ----------------------------
 -- Table structure for GCID
 -- ----------------------------
-DROP TABLE IF EXISTS `GCID`;
-CREATE TABLE `GCID`  (
+CREATE TABLE IF NOT EXISTS `GCID`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(36) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `gc_id` char(36) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -112,8 +105,7 @@ CREATE TABLE `GCID`  (
 -- ----------------------------
 -- Table structure for GarbageRepos
 -- ----------------------------
-DROP TABLE IF EXISTS `GarbageRepos`;
-CREATE TABLE `GarbageRepos`  (
+CREATE TABLE IF NOT EXISTS `GarbageRepos`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(36) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
@@ -123,8 +115,7 @@ CREATE TABLE `GarbageRepos`  (
 -- ----------------------------
 -- Table structure for InnerPubRepo
 -- ----------------------------
-DROP TABLE IF EXISTS `InnerPubRepo`;
-CREATE TABLE `InnerPubRepo`  (
+CREATE TABLE IF NOT EXISTS `InnerPubRepo`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(37) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `permission` char(15) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -135,8 +126,7 @@ CREATE TABLE `InnerPubRepo`  (
 -- ----------------------------
 -- Table structure for LastGCID
 -- ----------------------------
-DROP TABLE IF EXISTS `LastGCID`;
-CREATE TABLE `LastGCID`  (
+CREATE TABLE IF NOT EXISTS `LastGCID`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(36) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `client_id` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -148,8 +138,7 @@ CREATE TABLE `LastGCID`  (
 -- ----------------------------
 -- Table structure for OrgGroupRepo
 -- ----------------------------
-DROP TABLE IF EXISTS `OrgGroupRepo`;
-CREATE TABLE `OrgGroupRepo`  (
+CREATE TABLE IF NOT EXISTS `OrgGroupRepo`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `org_id` int NULL DEFAULT NULL,
   `repo_id` char(37) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -165,8 +154,7 @@ CREATE TABLE `OrgGroupRepo`  (
 -- ----------------------------
 -- Table structure for OrgInnerPubRepo
 -- ----------------------------
-DROP TABLE IF EXISTS `OrgInnerPubRepo`;
-CREATE TABLE `OrgInnerPubRepo`  (
+CREATE TABLE IF NOT EXISTS `OrgInnerPubRepo`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `org_id` int NULL DEFAULT NULL,
   `repo_id` char(37) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -178,8 +166,7 @@ CREATE TABLE `OrgInnerPubRepo`  (
 -- ----------------------------
 -- Table structure for OrgQuota
 -- ----------------------------
-DROP TABLE IF EXISTS `OrgQuota`;
-CREATE TABLE `OrgQuota`  (
+CREATE TABLE IF NOT EXISTS `OrgQuota`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `org_id` int NULL DEFAULT NULL,
   `quota` bigint NULL DEFAULT NULL,
@@ -190,8 +177,7 @@ CREATE TABLE `OrgQuota`  (
 -- ----------------------------
 -- Table structure for OrgRepo
 -- ----------------------------
-DROP TABLE IF EXISTS `OrgRepo`;
-CREATE TABLE `OrgRepo`  (
+CREATE TABLE IF NOT EXISTS `OrgRepo`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `org_id` int NULL DEFAULT NULL,
   `repo_id` char(37) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -206,8 +192,7 @@ CREATE TABLE `OrgRepo`  (
 -- ----------------------------
 -- Table structure for OrgSharedRepo
 -- ----------------------------
-DROP TABLE IF EXISTS `OrgSharedRepo`;
-CREATE TABLE `OrgSharedRepo`  (
+CREATE TABLE IF NOT EXISTS `OrgSharedRepo`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `org_id` int NULL DEFAULT NULL,
   `repo_id` char(37) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -224,8 +209,7 @@ CREATE TABLE `OrgSharedRepo`  (
 -- ----------------------------
 -- Table structure for OrgUserQuota
 -- ----------------------------
-DROP TABLE IF EXISTS `OrgUserQuota`;
-CREATE TABLE `OrgUserQuota`  (
+CREATE TABLE IF NOT EXISTS `OrgUserQuota`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `org_id` int NULL DEFAULT NULL,
   `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -237,8 +221,7 @@ CREATE TABLE `OrgUserQuota`  (
 -- ----------------------------
 -- Table structure for Repo
 -- ----------------------------
-DROP TABLE IF EXISTS `Repo`;
-CREATE TABLE `Repo`  (
+CREATE TABLE IF NOT EXISTS `Repo`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(37) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
@@ -248,8 +231,7 @@ CREATE TABLE `Repo`  (
 -- ----------------------------
 -- Table structure for RepoFileCount
 -- ----------------------------
-DROP TABLE IF EXISTS `RepoFileCount`;
-CREATE TABLE `RepoFileCount`  (
+CREATE TABLE IF NOT EXISTS `RepoFileCount`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(36) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `file_count` bigint UNSIGNED NULL DEFAULT NULL,
@@ -260,8 +242,7 @@ CREATE TABLE `RepoFileCount`  (
 -- ----------------------------
 -- Table structure for RepoGroup
 -- ----------------------------
-DROP TABLE IF EXISTS `RepoGroup`;
-CREATE TABLE `RepoGroup`  (
+CREATE TABLE IF NOT EXISTS `RepoGroup`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(37) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `group_id` int NULL DEFAULT NULL,
@@ -276,8 +257,7 @@ CREATE TABLE `RepoGroup`  (
 -- ----------------------------
 -- Table structure for RepoHead
 -- ----------------------------
-DROP TABLE IF EXISTS `RepoHead`;
-CREATE TABLE `RepoHead`  (
+CREATE TABLE IF NOT EXISTS `RepoHead`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(37) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `branch_name` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -288,8 +268,7 @@ CREATE TABLE `RepoHead`  (
 -- ----------------------------
 -- Table structure for RepoHistoryLimit
 -- ----------------------------
-DROP TABLE IF EXISTS `RepoHistoryLimit`;
-CREATE TABLE `RepoHistoryLimit`  (
+CREATE TABLE IF NOT EXISTS `RepoHistoryLimit`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(37) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `days` int NULL DEFAULT NULL,
@@ -300,8 +279,7 @@ CREATE TABLE `RepoHistoryLimit`  (
 -- ----------------------------
 -- Table structure for RepoInfo
 -- ----------------------------
-DROP TABLE IF EXISTS `RepoInfo`;
-CREATE TABLE `RepoInfo`  (
+CREATE TABLE IF NOT EXISTS `RepoInfo`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(36) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -317,8 +295,7 @@ CREATE TABLE `RepoInfo`  (
 -- ----------------------------
 -- Table structure for RepoOwner
 -- ----------------------------
-DROP TABLE IF EXISTS `RepoOwner`;
-CREATE TABLE `RepoOwner`  (
+CREATE TABLE IF NOT EXISTS `RepoOwner`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(37) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `owner_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -330,8 +307,7 @@ CREATE TABLE `RepoOwner`  (
 -- ----------------------------
 -- Table structure for RepoSize
 -- ----------------------------
-DROP TABLE IF EXISTS `RepoSize`;
-CREATE TABLE `RepoSize`  (
+CREATE TABLE IF NOT EXISTS `RepoSize`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(37) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `size` bigint UNSIGNED NULL DEFAULT NULL,
@@ -343,8 +319,7 @@ CREATE TABLE `RepoSize`  (
 -- ----------------------------
 -- Table structure for RepoStorageId
 -- ----------------------------
-DROP TABLE IF EXISTS `RepoStorageId`;
-CREATE TABLE `RepoStorageId`  (
+CREATE TABLE IF NOT EXISTS `RepoStorageId`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `storage_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -355,8 +330,7 @@ CREATE TABLE `RepoStorageId`  (
 -- ----------------------------
 -- Table structure for RepoSyncError
 -- ----------------------------
-DROP TABLE IF EXISTS `RepoSyncError`;
-CREATE TABLE `RepoSyncError`  (
+CREATE TABLE IF NOT EXISTS `RepoSyncError`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `token` char(41) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `error_time` bigint UNSIGNED NULL DEFAULT NULL,
@@ -368,8 +342,7 @@ CREATE TABLE `RepoSyncError`  (
 -- ----------------------------
 -- Table structure for RepoTokenPeerInfo
 -- ----------------------------
-DROP TABLE IF EXISTS `RepoTokenPeerInfo`;
-CREATE TABLE `RepoTokenPeerInfo`  (
+CREATE TABLE IF NOT EXISTS `RepoTokenPeerInfo`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `token` char(41) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `peer_id` char(41) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -385,8 +358,7 @@ CREATE TABLE `RepoTokenPeerInfo`  (
 -- ----------------------------
 -- Table structure for RepoTrash
 -- ----------------------------
-DROP TABLE IF EXISTS `RepoTrash`;
-CREATE TABLE `RepoTrash`  (
+CREATE TABLE IF NOT EXISTS `RepoTrash`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(36) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `repo_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -404,8 +376,7 @@ CREATE TABLE `RepoTrash`  (
 -- ----------------------------
 -- Table structure for RepoUserToken
 -- ----------------------------
-DROP TABLE IF EXISTS `RepoUserToken`;
-CREATE TABLE `RepoUserToken`  (
+CREATE TABLE IF NOT EXISTS `RepoUserToken`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(37) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -419,8 +390,7 @@ CREATE TABLE `RepoUserToken`  (
 -- ----------------------------
 -- Table structure for RepoValidSince
 -- ----------------------------
-DROP TABLE IF EXISTS `RepoValidSince`;
-CREATE TABLE `RepoValidSince`  (
+CREATE TABLE IF NOT EXISTS `RepoValidSince`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(37) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `timestamp` bigint NULL DEFAULT NULL,
@@ -431,8 +401,7 @@ CREATE TABLE `RepoValidSince`  (
 -- ----------------------------
 -- Table structure for RoleQuota
 -- ----------------------------
-DROP TABLE IF EXISTS `RoleQuota`;
-CREATE TABLE `RoleQuota`  (
+CREATE TABLE IF NOT EXISTS `RoleQuota`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `role` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `quota` bigint NULL DEFAULT NULL,
@@ -443,8 +412,7 @@ CREATE TABLE `RoleQuota`  (
 -- ----------------------------
 -- Table structure for SeafileConf
 -- ----------------------------
-DROP TABLE IF EXISTS `SeafileConf`;
-CREATE TABLE `SeafileConf`  (
+CREATE TABLE IF NOT EXISTS `SeafileConf`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `cfg_group` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `cfg_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -456,8 +424,7 @@ CREATE TABLE `SeafileConf`  (
 -- ----------------------------
 -- Table structure for SharedRepo
 -- ----------------------------
-DROP TABLE IF EXISTS `SharedRepo`;
-CREATE TABLE `SharedRepo`  (
+CREATE TABLE IF NOT EXISTS `SharedRepo`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(37) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `from_email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -472,8 +439,7 @@ CREATE TABLE `SharedRepo`  (
 -- ----------------------------
 -- Table structure for SystemInfo
 -- ----------------------------
-DROP TABLE IF EXISTS `SystemInfo`;
-CREATE TABLE `SystemInfo`  (
+CREATE TABLE IF NOT EXISTS `SystemInfo`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `info_key` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `info_value` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -483,8 +449,7 @@ CREATE TABLE `SystemInfo`  (
 -- ----------------------------
 -- Table structure for UserQuota
 -- ----------------------------
-DROP TABLE IF EXISTS `UserQuota`;
-CREATE TABLE `UserQuota`  (
+CREATE TABLE IF NOT EXISTS `UserQuota`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `quota` bigint NULL DEFAULT NULL,
@@ -495,8 +460,7 @@ CREATE TABLE `UserQuota`  (
 -- ----------------------------
 -- Table structure for UserShareQuota
 -- ----------------------------
-DROP TABLE IF EXISTS `UserShareQuota`;
-CREATE TABLE `UserShareQuota`  (
+CREATE TABLE IF NOT EXISTS `UserShareQuota`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `quota` bigint NULL DEFAULT NULL,
@@ -507,8 +471,7 @@ CREATE TABLE `UserShareQuota`  (
 -- ----------------------------
 -- Table structure for VirtualRepo
 -- ----------------------------
-DROP TABLE IF EXISTS `VirtualRepo`;
-CREATE TABLE `VirtualRepo`  (
+CREATE TABLE IF NOT EXISTS `VirtualRepo`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(36) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `origin_repo` char(36) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -522,8 +485,7 @@ CREATE TABLE `VirtualRepo`  (
 -- ----------------------------
 -- Table structure for WebAP
 -- ----------------------------
-DROP TABLE IF EXISTS `WebAP`;
-CREATE TABLE `WebAP`  (
+CREATE TABLE IF NOT EXISTS `WebAP`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(37) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `access_property` char(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -534,8 +496,7 @@ CREATE TABLE `WebAP`  (
 -- ----------------------------
 -- Table structure for WebUploadTempFiles
 -- ----------------------------
-DROP TABLE IF EXISTS `WebUploadTempFiles`;
-CREATE TABLE `WebUploadTempFiles`  (
+CREATE TABLE IF NOT EXISTS `WebUploadTempFiles`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `repo_id` char(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `file_path` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,

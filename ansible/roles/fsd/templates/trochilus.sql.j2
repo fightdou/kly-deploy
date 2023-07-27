@@ -13,7 +13,7 @@
         {% set memoryVdiNum = host | filter_vdi_node_mems() %}
         {% set memoryVoiNum = hostvars[host]['voi_reserved_memory'] %}
     {% endif %}
-    {% set uuid = host | get_trochilus_agent_id() %}
+    {% set uuid = host | get_trochilus_agent_id(trochilus_api_addr) %}
     {% set vdiFileNum = hostvars[host]['vdi_storage_num'] %}
 
     {% set node_info = {

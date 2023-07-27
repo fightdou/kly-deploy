@@ -73,17 +73,6 @@
         force: true
       when: not share_lvbool | bool
 
-    - name: 查看share lv的uuid
-      shell: "blkid /dev/{{ local_share_vg_name }}/{{ local_net_lv_name }} | awk -F' ' '{print $2}'"
-      register: share_lv_uuid
-
-    - name: Mount trochilus logical volume
-      mount:
-        path: "{{ share_mount_dir }}"
-        src: "{{ share_lv_uuid.stdout | replace('\"', '') }}"
-        fstype: ext4
-        state: mounted
-      when: groups['glusterfs'] | length < 3
   when: 
     - share_device | length != 0 or share_device | length == 0 and fsd_deploy_mode == 'voi'
     - inventory_hostname in groups['glusterfs']
@@ -154,17 +143,6 @@
       when:
         - net_lv_exist.stdout == "0"
 
-    - name: cat net UUID
-      shell: "blkid | grep {{ local_vg_name }}-{{ local_net_lv_name }} | awk -F' ' '{print $2}'"
-      register: net_uuid
-
-    - name: Mount share net logical volume
-      mount:
-        path: "{{ share_mount_dir }}"
-        src: "{{ net_uuid.stdout | replace('\"', '') }}"
-        fstype: ext4
-        state: mounted
-      when: groups['glusterfs'] | length < 3
   when:
     - share_device | length == 0
     - inventory_hostname in groups['glusterfs']

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 SECRET_KEY = "b'gbaj=*$*68qfsnoyg6j=n_y3(v_9qekvb9a3mx@i878%gn)da+'"
-SERVICE_URL = "http://{{ default_internal_server_visit_ip }}/"
+SERVICE_URL = "http://{{ external_manage_ip }}/"
 
 FILE_SERVER_PORT = "{{ seafile_fileserver_port }}" 
-FILE_SERVER_ROOT = "http://{{ default_internal_server_visit_ip }}:" + FILE_SERVER_PORT
+FILE_SERVER_ROOT = "http://{{ file_server_root_addr }}:" + FILE_SERVER_PORT
 
 DATABASES = {
     'default': {

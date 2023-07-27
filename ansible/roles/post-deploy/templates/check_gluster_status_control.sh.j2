@@ -18,35 +18,65 @@ function logger() {
   esac
 }
 
-function main() {
-    logger info "Start checking if gluster can be mounted."
-    if `mountpoint -q $file_path`; then
-        logger info "SUCCESS! Detected directory mount completion, exiting 0"
-        exit 0
-    fi
-    for i in {1..30}; do
-        sleep 30
-        logger warn "No directory mounted detected for the $i time"
-        if `gluster peer status | grep "Connected" > /dev/null`; then
-            logger info "SUCCESS! Connected already exists in gluster, start mounting..."
-            sleep 1
-            mount_status=$(mount -t glusterfs -o backup-volfile-servers={{ groups['glusterfs'] | difference(inventory_hostname) | join(':') }},log-level=WARNING {{ inventory_hostname }}:/{{ share_volume_name }} {{ share_mount_dir }} 2>&1)
-            if (( $? == 0 )); then
-                logger info "SUCCESS! Successfully mounted,Waiting for detection..."
-                if `mountpoint -q $file_path`; then
-                    logger info "SUCCESS! Detected directory mount completion, exiting 0"
-                    exit 0
-                fi
-            else
-                logger error "mount faild: $mount_status"
-                exit 1
-            fi
-        fi
-    done
-    logger error "Long term failure to meet conditions"
-    exit 1
-
-}
+{% if groups['control'] | length == 1 %}
+  function main() {
+      logger info "Start checking if gluster can be mounted."
+      if `mountpoint -q $file_path`; then
+          logger info "SUCCESS! Detected directory mount completion, exiting 0"
+          exit 0
+      fi
+      for i in {1..30}; do
+          sleep 30
+          logger warn "No directory mounted detected for the $i time"
+          gluster_status=$(systemctl is-active glusterd 2>&1)
+          if [ $gluster_status = 'active' ]; then
+              logger info "SUCCESS! Connected already exists in gluster, start mounting..."
+              sleep 1
+              mount_status=$(mount -t glusterfs -o log-level=WARNING {{ inventory_hostname }}:/{{ share_volume_name }} {{ share_mount_dir }} 2>&1)
+              if (( $? == 0 )); then
+                  logger info "SUCCESS! Successfully mounted,Waiting for detection..."
+                  if `mountpoint -q $file_path`; then
+                      logger info "SUCCESS! Detected directory mount completion, exiting 0"
+                      exit 0
+                  fi
+              else
+                  logger error "mount faild: $mount_status"
+                  exit 1
+              fi
+          fi
+      done
+      logger error "Long term failure to meet conditions"
+      exit 1
+{% else %}
+  function main() {
+      logger info "Start checking if gluster can be mounted."
+      if `mountpoint -q $file_path`; then
+          logger info "SUCCESS! Detected directory mount completion, exiting 0"
+          exit 0
+      fi
+      for i in {1..30}; do
+          sleep 30
+          logger warn "No directory mounted detected for the $i time"
+          if `gluster peer status | grep "Connected" > /dev/null`; then
+              logger info "SUCCESS! Connected already exists in gluster, start mounting..."
+              sleep 1
+              mount_status=$(mount -t glusterfs -o backup-volfile-servers={{ groups['glusterfs'] | difference(inventory_hostname) | join(':') }},log-level=WARNING {{ inventory_hostname }}:/{{ share_volume_name }} {{ share_mount_dir }} 2>&1)
+              if (( $? == 0 )); then
+                  logger info "SUCCESS! Successfully mounted,Waiting for detection..."
+                  if `mountpoint -q $file_path`; then
+                      logger info "SUCCESS! Detected directory mount completion, exiting 0"
+                      exit 0
+                  fi
+              else
+                  logger error "mount faild: $mount_status"
+                  exit 1
+              fi
+          fi
+      done
+      logger error "Long term failure to meet conditions"
+      exit 1
+  }
+{% endif %}
 
 
 main
