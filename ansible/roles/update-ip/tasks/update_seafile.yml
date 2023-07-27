@@ -1,0 +1,10 @@
+- name: Update seafile configuration
+  lineinfile:
+    path: "{{ config_directory }}/seafile/conf/seahub_settings.py"
+    regexp: "^FILE_SERVER_ROOT"
+    line: 'FILE_SERVER_ROOT = "http://{{ new_external_manage_ip }}:" + FILE_SERVER_PORT'
+  when: new_external_manage_ip != external_manage_ip
+
+- name: Restart seafile containers
+  command: "docker restart seafile"
+  when: new_external_manage_ip != external_manage_ip
