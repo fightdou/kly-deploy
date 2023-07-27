@@ -18,7 +18,7 @@
   run_once: true
   delegate_to: "{{ groups['glusterfs'][0] }}"
   become: true
-  when: group['glusterfs'] >= 3
+  when: groups['glusterfs'] | length >= 3
 
 - name: Create GlusterFS Volume
   gluster_volume:
@@ -30,4 +30,4 @@
   run_once: true
   delegate_to: "{{ groups['glusterfs'][0] }}"
   become: true
-  when: group['glusterfs'] == 1
+  when: groups['glusterfs'] | length == 1
