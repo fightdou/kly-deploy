@@ -136,7 +136,7 @@
 
   when: fsd_deploy_mode != 'voi'
 
-- name: 当share不单独使用磁盘时创建vg
+- name: 当share不单独使用磁盘时控制节点创建vg
   block:
     - name: 查看 net lv 卷是否创建
       shell: "lvs | grep {{ local_net_lv_name }} | wc -l"
