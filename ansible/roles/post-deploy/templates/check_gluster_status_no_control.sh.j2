@@ -17,6 +17,11 @@ function logger() {
       ;;
   esac
 }
+{% if groups['control'] | length == 1 %}
+mount_shell="mount -t glusterfs -o log-level=WARNING {{ inventory_hostname }}:/{{ share_volume_name }} {{ share_mount_dir }} > /dev/null"
+{% else %}
+mount_shell="mount -t glusterfs -o backup-volfile-servers={{ groups['glusterfs'] | difference(inventory_hostname) | join(':') }},log-level=WARNING {{ inventory_hostname }}:/{{ share_volume_name }} {{ share_mount_dir }} > /dev/null"
+{% endif %}
 
 function main() {
     logger info "Start checking if gluster can be mounted."
@@ -27,7 +32,7 @@ function main() {
         fi
         sleep 30
         logger warn "No directory mounted detected for the $i time"
-        if `mount -t glusterfs -o backup-volfile-servers={{ groups['glusterfs'] | difference(inventory_hostname) | join(':') }},log-level=WARNING {{ inventory_hostname }}:/{{ share_volume_name }} {{ share_mount_dir }} > /dev/null`; then
+        if `$mount_shell`; then
             logger info "SUCCESS! Connected already exists in gluster, start mounting..."
             sleep 1
         fi

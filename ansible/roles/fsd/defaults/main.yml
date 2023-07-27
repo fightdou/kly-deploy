@@ -124,4 +124,5 @@ cluster_storage:
   - name: "ceph"
     enabled: "{{ enable_ceph | bool }}"
 
+trochilus_api_addr: "{{ default_internal_server_visit_ip }}"
 storage_backends: "{{ cluster_storage|selectattr('enabled', 'equalto', true)|list }}"

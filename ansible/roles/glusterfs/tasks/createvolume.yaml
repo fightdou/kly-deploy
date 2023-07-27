@@ -18,3 +18,16 @@
   run_once: true
   delegate_to: "{{ groups['glusterfs'][0] }}"
   become: true
+  when: group['glusterfs'] >= 3
+
+- name: Create GlusterFS Volume
+  gluster_volume:
+    state: present
+    name: "{{ share_volume_name }}"
+    bricks: "{{ share_metadata_path }}"
+    cluster: "{{ gluster_ip_list }}"
+    force: true
+  run_once: true
+  delegate_to: "{{ groups['glusterfs'][0] }}"
+  become: true
+  when: group['glusterfs'] == 1

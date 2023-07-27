@@ -43,8 +43,10 @@ logger info " Start listening to database ports..."
 while :
 do
     sleep 5
-    if ! nc -n -z {{ inventory_hostname }} {{ seafile_port }}; then
+    if ! nc -n -w 3 -z {{ inventory_hostname }} {{ seafile_port }}; then
         logger error  "Seahub is not running."
         exit 1
+    else
+        logger info "Seahub is running----"
     fi
 done

@@ -20,8 +20,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for Binding
 -- ----------------------------
-DROP TABLE IF EXISTS `Binding`;
-CREATE TABLE `Binding`  (
+CREATE TABLE IF NOT EXISTS `Binding`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `peer_id` char(41) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -33,8 +32,7 @@ CREATE TABLE `Binding`  (
 -- ----------------------------
 -- Table structure for EmailUser
 -- ----------------------------
-DROP TABLE IF EXISTS `EmailUser`;
-CREATE TABLE `EmailUser`  (
+CREATE TABLE IF NOT EXISTS `EmailUser`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `passwd` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -50,8 +48,7 @@ CREATE TABLE `EmailUser`  (
 -- ----------------------------
 -- Table structure for Group
 -- ----------------------------
-DROP TABLE IF EXISTS `Group`;
-CREATE TABLE `Group`  (
+CREATE TABLE IF NOT EXISTS `Group`  (
   `group_id` bigint NOT NULL AUTO_INCREMENT,
   `group_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `creator_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -64,8 +61,7 @@ CREATE TABLE `Group`  (
 -- ----------------------------
 -- Table structure for GroupDNPair
 -- ----------------------------
-DROP TABLE IF EXISTS `GroupDNPair`;
-CREATE TABLE `GroupDNPair`  (
+CREATE TABLE IF NOT EXISTS `GroupDNPair`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `group_id` int NULL DEFAULT NULL,
   `dn` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -75,8 +71,7 @@ CREATE TABLE `GroupDNPair`  (
 -- ----------------------------
 -- Table structure for GroupStructure
 -- ----------------------------
-DROP TABLE IF EXISTS `GroupStructure`;
-CREATE TABLE `GroupStructure`  (
+CREATE TABLE IF NOT EXISTS `GroupStructure`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `group_id` int NULL DEFAULT NULL,
   `path` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -87,8 +82,7 @@ CREATE TABLE `GroupStructure`  (
 -- ----------------------------
 -- Table structure for GroupUser
 -- ----------------------------
-DROP TABLE IF EXISTS `GroupUser`;
-CREATE TABLE `GroupUser`  (
+CREATE TABLE IF NOT EXISTS `GroupUser`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `group_id` bigint NULL DEFAULT NULL,
   `user_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -101,8 +95,7 @@ CREATE TABLE `GroupUser`  (
 -- ----------------------------
 -- Table structure for LDAPConfig
 -- ----------------------------
-DROP TABLE IF EXISTS `LDAPConfig`;
-CREATE TABLE `LDAPConfig`  (
+CREATE TABLE IF NOT EXISTS `LDAPConfig`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `cfg_group` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `cfg_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -114,8 +107,7 @@ CREATE TABLE `LDAPConfig`  (
 -- ----------------------------
 -- Table structure for LDAPUsers
 -- ----------------------------
-DROP TABLE IF EXISTS `LDAPUsers`;
-CREATE TABLE `LDAPUsers`  (
+CREATE TABLE IF NOT EXISTS `LDAPUsers`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -131,8 +123,7 @@ CREATE TABLE `LDAPUsers`  (
 -- ----------------------------
 -- Table structure for OrgGroup
 -- ----------------------------
-DROP TABLE IF EXISTS `OrgGroup`;
-CREATE TABLE `OrgGroup`  (
+CREATE TABLE IF NOT EXISTS `OrgGroup`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `org_id` int NULL DEFAULT NULL,
   `group_id` int NULL DEFAULT NULL,
@@ -144,8 +135,7 @@ CREATE TABLE `OrgGroup`  (
 -- ----------------------------
 -- Table structure for OrgUser
 -- ----------------------------
-DROP TABLE IF EXISTS `OrgUser`;
-CREATE TABLE `OrgUser`  (
+CREATE TABLE IF NOT EXISTS `OrgUser`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `org_id` int NULL DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -158,8 +148,7 @@ CREATE TABLE `OrgUser`  (
 -- ----------------------------
 -- Table structure for Organization
 -- ----------------------------
-DROP TABLE IF EXISTS `Organization`;
-CREATE TABLE `Organization`  (
+CREATE TABLE IF NOT EXISTS `Organization`  (
   `org_id` bigint NOT NULL AUTO_INCREMENT,
   `org_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `url_prefix` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -172,8 +161,7 @@ CREATE TABLE `Organization`  (
 -- ----------------------------
 -- Table structure for UserRole
 -- ----------------------------
-DROP TABLE IF EXISTS `UserRole`;
-CREATE TABLE `UserRole`  (
+CREATE TABLE IF NOT EXISTS `UserRole`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `role` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,

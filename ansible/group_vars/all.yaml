@@ -10,7 +10,7 @@ share_volume_name: "share_data"
 enable_internal_communication: true
 
 default_internal_server_listen_ip: "{% if enable_internal_communication | bool %}{{ inventory_hostname }}{% else %}0.0.0.0{% endif %}"
-default_internal_server_visit_ip: "{% if enable_internal_communication | bool %}{% if enable_keepalived | bool %}{{ internal_vip_address }}{% else %}{{ inventory_hostname }}{% endif %}{% else %}127.0.0.1{% endif %}"
+default_internal_server_visit_ip: "{% if enable_internal_communication | bool %}{% if enable_keepalived | bool %}{{ internal_vip_address }}{% elif inventory_hostname not in groups['control'] %}{{ groups['control'][0] }}{% else %}{{ inventory_hostname }}{% endif %}{% else %}127.0.0.1{% endif %}"
 
 ##############
 # btserver

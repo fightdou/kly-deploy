@@ -20,8 +20,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for abuse_reports_abusereport
 -- ----------------------------
-DROP TABLE IF EXISTS `abuse_reports_abusereport`;
-CREATE TABLE `abuse_reports_abusereport`  (
+CREATE TABLE IF NOT EXISTS `abuse_reports_abusereport`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `reporter` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
   `repo_id` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -39,8 +38,7 @@ CREATE TABLE `abuse_reports_abusereport`  (
 -- ----------------------------
 -- Table structure for admin_log_adminlog
 -- ----------------------------
-DROP TABLE IF EXISTS `admin_log_adminlog`;
-CREATE TABLE `admin_log_adminlog`  (
+CREATE TABLE IF NOT EXISTS `admin_log_adminlog`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(254) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `operation` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -54,8 +52,7 @@ CREATE TABLE `admin_log_adminlog`  (
 -- ----------------------------
 -- Table structure for api2_token
 -- ----------------------------
-DROP TABLE IF EXISTS `api2_token`;
-CREATE TABLE `api2_token`  (
+CREATE TABLE IF NOT EXISTS `api2_token`  (
   `key` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `created` datetime NOT NULL,
@@ -66,8 +63,7 @@ CREATE TABLE `api2_token`  (
 -- ----------------------------
 -- Table structure for api2_tokenv2
 -- ----------------------------
-DROP TABLE IF EXISTS `api2_tokenv2`;
-CREATE TABLE `api2_tokenv2`  (
+CREATE TABLE IF NOT EXISTS `api2_tokenv2`  (
   `key` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `platform` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -86,8 +82,7 @@ CREATE TABLE `api2_tokenv2`  (
 -- ----------------------------
 -- Table structure for auth_group
 -- ----------------------------
-DROP TABLE IF EXISTS `auth_group`;
-CREATE TABLE `auth_group`  (
+CREATE TABLE IF NOT EXISTS `auth_group`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
@@ -97,8 +92,7 @@ CREATE TABLE `auth_group`  (
 -- ----------------------------
 -- Table structure for auth_group_permissions
 -- ----------------------------
-DROP TABLE IF EXISTS `auth_group_permissions`;
-CREATE TABLE `auth_group_permissions`  (
+CREATE TABLE IF NOT EXISTS `auth_group_permissions`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `group_id` int NOT NULL,
   `permission_id` int NOT NULL,
@@ -112,8 +106,7 @@ CREATE TABLE `auth_group_permissions`  (
 -- ----------------------------
 -- Table structure for auth_permission
 -- ----------------------------
-DROP TABLE IF EXISTS `auth_permission`;
-CREATE TABLE `auth_permission`  (
+CREATE TABLE IF NOT EXISTS `auth_permission`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `content_type_id` int NOT NULL,
@@ -126,8 +119,7 @@ CREATE TABLE `auth_permission`  (
 -- ----------------------------
 -- Table structure for auth_user
 -- ----------------------------
-DROP TABLE IF EXISTS `auth_user`;
-CREATE TABLE `auth_user`  (
+CREATE TABLE IF NOT EXISTS `auth_user`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `password` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `last_login` datetime NULL DEFAULT NULL,
@@ -146,8 +138,7 @@ CREATE TABLE `auth_user`  (
 -- ----------------------------
 -- Table structure for auth_user_groups
 -- ----------------------------
-DROP TABLE IF EXISTS `auth_user_groups`;
-CREATE TABLE `auth_user_groups`  (
+CREATE TABLE IF NOT EXISTS `auth_user_groups`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
   `group_id` int NOT NULL,
@@ -161,8 +152,7 @@ CREATE TABLE `auth_user_groups`  (
 -- ----------------------------
 -- Table structure for auth_user_user_permissions
 -- ----------------------------
-DROP TABLE IF EXISTS `auth_user_user_permissions`;
-CREATE TABLE `auth_user_user_permissions`  (
+CREATE TABLE IF NOT EXISTS `auth_user_user_permissions`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
   `permission_id` int NOT NULL,
@@ -176,8 +166,7 @@ CREATE TABLE `auth_user_user_permissions`  (
 -- ----------------------------
 -- Table structure for avatar_avatar
 -- ----------------------------
-DROP TABLE IF EXISTS `avatar_avatar`;
-CREATE TABLE `avatar_avatar`  (
+CREATE TABLE IF NOT EXISTS `avatar_avatar`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `emailuser` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `primary` tinyint(1) NOT NULL,
@@ -189,8 +178,7 @@ CREATE TABLE `avatar_avatar`  (
 -- ----------------------------
 -- Table structure for avatar_groupavatar
 -- ----------------------------
-DROP TABLE IF EXISTS `avatar_groupavatar`;
-CREATE TABLE `avatar_groupavatar`  (
+CREATE TABLE IF NOT EXISTS `avatar_groupavatar`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `group_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `avatar` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -201,8 +189,7 @@ CREATE TABLE `avatar_groupavatar`  (
 -- ----------------------------
 -- Table structure for base_clientlogintoken
 -- ----------------------------
-DROP TABLE IF EXISTS `base_clientlogintoken`;
-CREATE TABLE `base_clientlogintoken`  (
+CREATE TABLE IF NOT EXISTS `base_clientlogintoken`  (
   `token` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `timestamp` datetime NOT NULL,
@@ -213,8 +200,7 @@ CREATE TABLE `base_clientlogintoken`  (
 -- ----------------------------
 -- Table structure for base_commandslastcheck
 -- ----------------------------
-DROP TABLE IF EXISTS `base_commandslastcheck`;
-CREATE TABLE `base_commandslastcheck`  (
+CREATE TABLE IF NOT EXISTS `base_commandslastcheck`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `command_type` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `last_check` datetime NOT NULL,
@@ -224,8 +210,7 @@ CREATE TABLE `base_commandslastcheck`  (
 -- ----------------------------
 -- Table structure for base_devicetoken
 -- ----------------------------
-DROP TABLE IF EXISTS `base_devicetoken`;
-CREATE TABLE `base_devicetoken`  (
+CREATE TABLE IF NOT EXISTS `base_devicetoken`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `token` varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -239,8 +224,7 @@ CREATE TABLE `base_devicetoken`  (
 -- ----------------------------
 -- Table structure for base_filecomment
 -- ----------------------------
-DROP TABLE IF EXISTS `base_filecomment`;
-CREATE TABLE `base_filecomment`  (
+CREATE TABLE IF NOT EXISTS `base_filecomment`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `author` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `comment` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -259,8 +243,7 @@ CREATE TABLE `base_filecomment`  (
 -- ----------------------------
 -- Table structure for base_reposecretkey
 -- ----------------------------
-DROP TABLE IF EXISTS `base_reposecretkey`;
-CREATE TABLE `base_reposecretkey`  (
+CREATE TABLE IF NOT EXISTS `base_reposecretkey`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `repo_id` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `secret_key` varchar(44) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -271,8 +254,7 @@ CREATE TABLE `base_reposecretkey`  (
 -- ----------------------------
 -- Table structure for base_userlastlogin
 -- ----------------------------
-DROP TABLE IF EXISTS `base_userlastlogin`;
-CREATE TABLE `base_userlastlogin`  (
+CREATE TABLE IF NOT EXISTS `base_userlastlogin`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `last_login` datetime NOT NULL,
@@ -283,8 +265,7 @@ CREATE TABLE `base_userlastlogin`  (
 -- ----------------------------
 -- Table structure for base_userstarredfiles
 -- ----------------------------
-DROP TABLE IF EXISTS `base_userstarredfiles`;
-CREATE TABLE `base_userstarredfiles`  (
+CREATE TABLE IF NOT EXISTS `base_userstarredfiles`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(254) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `org_id` int NOT NULL,
@@ -299,8 +280,7 @@ CREATE TABLE `base_userstarredfiles`  (
 -- ----------------------------
 -- Table structure for captcha_captchastore
 -- ----------------------------
-DROP TABLE IF EXISTS `captcha_captchastore`;
-CREATE TABLE `captcha_captchastore`  (
+CREATE TABLE IF NOT EXISTS `captcha_captchastore`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `challenge` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `response` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -313,8 +293,7 @@ CREATE TABLE `captcha_captchastore`  (
 -- ----------------------------
 -- Table structure for constance_config
 -- ----------------------------
-DROP TABLE IF EXISTS `constance_config`;
-CREATE TABLE `constance_config`  (
+CREATE TABLE IF NOT EXISTS `constance_config`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `constance_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `value` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
@@ -325,8 +304,7 @@ CREATE TABLE `constance_config`  (
 -- ----------------------------
 -- Table structure for contacts_contact
 -- ----------------------------
-DROP TABLE IF EXISTS `contacts_contact`;
-CREATE TABLE `contacts_contact`  (
+CREATE TABLE IF NOT EXISTS `contacts_contact`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `contact_email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -339,8 +317,7 @@ CREATE TABLE `contacts_contact`  (
 -- ----------------------------
 -- Table structure for custom_share_permission
 -- ----------------------------
-DROP TABLE IF EXISTS `custom_share_permission`;
-CREATE TABLE `custom_share_permission`  (
+CREATE TABLE IF NOT EXISTS `custom_share_permission`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `repo_id` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -353,8 +330,7 @@ CREATE TABLE `custom_share_permission`  (
 -- ----------------------------
 -- Table structure for django_cas_ng_proxygrantingticket
 -- ----------------------------
-DROP TABLE IF EXISTS `django_cas_ng_proxygrantingticket`;
-CREATE TABLE `django_cas_ng_proxygrantingticket`  (
+CREATE TABLE IF NOT EXISTS `django_cas_ng_proxygrantingticket`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `session_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `pgtiou` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -369,8 +345,7 @@ CREATE TABLE `django_cas_ng_proxygrantingticket`  (
 -- ----------------------------
 -- Table structure for django_cas_ng_sessionticket
 -- ----------------------------
-DROP TABLE IF EXISTS `django_cas_ng_sessionticket`;
-CREATE TABLE `django_cas_ng_sessionticket`  (
+CREATE TABLE IF NOT EXISTS `django_cas_ng_sessionticket`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `session_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `ticket` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -380,8 +355,7 @@ CREATE TABLE `django_cas_ng_sessionticket`  (
 -- ----------------------------
 -- Table structure for django_content_type
 -- ----------------------------
-DROP TABLE IF EXISTS `django_content_type`;
-CREATE TABLE `django_content_type`  (
+CREATE TABLE IF NOT EXISTS `django_content_type`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `app_label` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `model` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -392,8 +366,7 @@ CREATE TABLE `django_content_type`  (
 -- ----------------------------
 -- Table structure for django_migrations
 -- ----------------------------
-DROP TABLE IF EXISTS `django_migrations`;
-CREATE TABLE `django_migrations`  (
+CREATE TABLE IF NOT EXISTS `django_migrations`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `app` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -404,8 +377,7 @@ CREATE TABLE `django_migrations`  (
 -- ----------------------------
 -- Table structure for django_session
 -- ----------------------------
-DROP TABLE IF EXISTS `django_session`;
-CREATE TABLE `django_session`  (
+CREATE TABLE IF NOT EXISTS `django_session`  (
   `session_key` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `session_data` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `expire_date` datetime NOT NULL,
@@ -416,8 +388,7 @@ CREATE TABLE `django_session`  (
 -- ----------------------------
 -- Table structure for drafts_draft
 -- ----------------------------
-DROP TABLE IF EXISTS `drafts_draft`;
-CREATE TABLE `drafts_draft`  (
+CREATE TABLE IF NOT EXISTS `drafts_draft`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -439,8 +410,7 @@ CREATE TABLE `drafts_draft`  (
 -- ----------------------------
 -- Table structure for drafts_draftreviewer
 -- ----------------------------
-DROP TABLE IF EXISTS `drafts_draftreviewer`;
-CREATE TABLE `drafts_draftreviewer`  (
+CREATE TABLE IF NOT EXISTS `drafts_draftreviewer`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `reviewer` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `draft_id` int NOT NULL,
@@ -453,8 +423,7 @@ CREATE TABLE `drafts_draftreviewer`  (
 -- ----------------------------
 -- Table structure for external_department
 -- ----------------------------
-DROP TABLE IF EXISTS `external_department`;
-CREATE TABLE `external_department`  (
+CREATE TABLE IF NOT EXISTS `external_department`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `group_id` int NOT NULL,
   `provider` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -467,8 +436,7 @@ CREATE TABLE `external_department`  (
 -- ----------------------------
 -- Table structure for file_participants_fileparticipant
 -- ----------------------------
-DROP TABLE IF EXISTS `file_participants_fileparticipant`;
-CREATE TABLE `file_participants_fileparticipant`  (
+CREATE TABLE IF NOT EXISTS `file_participants_fileparticipant`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `uuid_id` char(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -480,8 +448,7 @@ CREATE TABLE `file_participants_fileparticipant`  (
 -- ----------------------------
 -- Table structure for file_tags_filetags
 -- ----------------------------
-DROP TABLE IF EXISTS `file_tags_filetags`;
-CREATE TABLE `file_tags_filetags`  (
+CREATE TABLE IF NOT EXISTS `file_tags_filetags`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `file_uuid_id` char(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `repo_tag_id` int NOT NULL,
@@ -495,8 +462,7 @@ CREATE TABLE `file_tags_filetags`  (
 -- ----------------------------
 -- Table structure for institutions_institution
 -- ----------------------------
-DROP TABLE IF EXISTS `institutions_institution`;
-CREATE TABLE `institutions_institution`  (
+CREATE TABLE IF NOT EXISTS `institutions_institution`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `create_time` datetime NOT NULL,
@@ -506,8 +472,7 @@ CREATE TABLE `institutions_institution`  (
 -- ----------------------------
 -- Table structure for institutions_institutionadmin
 -- ----------------------------
-DROP TABLE IF EXISTS `institutions_institutionadmin`;
-CREATE TABLE `institutions_institutionadmin`  (
+CREATE TABLE IF NOT EXISTS `institutions_institutionadmin`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `institution_id` int NOT NULL,
@@ -520,8 +485,7 @@ CREATE TABLE `institutions_institutionadmin`  (
 -- ----------------------------
 -- Table structure for institutions_institutionquota
 -- ----------------------------
-DROP TABLE IF EXISTS `institutions_institutionquota`;
-CREATE TABLE `institutions_institutionquota`  (
+CREATE TABLE IF NOT EXISTS `institutions_institutionquota`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `quota` bigint NOT NULL,
   `institution_id` int NOT NULL,
@@ -533,8 +497,7 @@ CREATE TABLE `institutions_institutionquota`  (
 -- ----------------------------
 -- Table structure for invitations_invitation
 -- ----------------------------
-DROP TABLE IF EXISTS `invitations_invitation`;
-CREATE TABLE `invitations_invitation`  (
+CREATE TABLE IF NOT EXISTS `invitations_invitation`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `token` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `inviter` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -551,8 +514,7 @@ CREATE TABLE `invitations_invitation`  (
 -- ----------------------------
 -- Table structure for notifications_notification
 -- ----------------------------
-DROP TABLE IF EXISTS `notifications_notification`;
-CREATE TABLE `notifications_notification`  (
+CREATE TABLE IF NOT EXISTS `notifications_notification`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `message` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `primary` tinyint(1) NOT NULL,
@@ -563,8 +525,7 @@ CREATE TABLE `notifications_notification`  (
 -- ----------------------------
 -- Table structure for notifications_usernotification
 -- ----------------------------
-DROP TABLE IF EXISTS `notifications_usernotification`;
-CREATE TABLE `notifications_usernotification`  (
+CREATE TABLE IF NOT EXISTS `notifications_usernotification`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `to_user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `msg_type` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -580,8 +541,7 @@ CREATE TABLE `notifications_usernotification`  (
 -- ----------------------------
 -- Table structure for ocm_share
 -- ----------------------------
-DROP TABLE IF EXISTS `ocm_share`;
-CREATE TABLE `ocm_share`  (
+CREATE TABLE IF NOT EXISTS `ocm_share`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `shared_secret` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `from_user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -603,8 +563,7 @@ CREATE TABLE `ocm_share`  (
 -- ----------------------------
 -- Table structure for ocm_share_received
 -- ----------------------------
-DROP TABLE IF EXISTS `ocm_share_received`;
-CREATE TABLE `ocm_share_received`  (
+CREATE TABLE IF NOT EXISTS `ocm_share_received`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `shared_secret` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `from_user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -628,8 +587,7 @@ CREATE TABLE `ocm_share_received`  (
 -- ----------------------------
 -- Table structure for ocm_via_webdav_received_shares
 -- ----------------------------
-DROP TABLE IF EXISTS `ocm_via_webdav_received_shares`;
-CREATE TABLE `ocm_via_webdav_received_shares`  (
+CREATE TABLE IF NOT EXISTS `ocm_via_webdav_received_shares`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -659,8 +617,7 @@ CREATE TABLE `ocm_via_webdav_received_shares`  (
 -- ----------------------------
 -- Table structure for onlyoffice_onlyofficedockey
 -- ----------------------------
-DROP TABLE IF EXISTS `onlyoffice_onlyofficedockey`;
-CREATE TABLE `onlyoffice_onlyofficedockey`  (
+CREATE TABLE IF NOT EXISTS `onlyoffice_onlyofficedockey`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `doc_key` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -676,8 +633,7 @@ CREATE TABLE `onlyoffice_onlyofficedockey`  (
 -- ----------------------------
 -- Table structure for options_useroptions
 -- ----------------------------
-DROP TABLE IF EXISTS `options_useroptions`;
-CREATE TABLE `options_useroptions`  (
+CREATE TABLE IF NOT EXISTS `options_useroptions`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `option_key` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -690,8 +646,7 @@ CREATE TABLE `options_useroptions`  (
 -- ----------------------------
 -- Table structure for organizations_orgmemberquota
 -- ----------------------------
-DROP TABLE IF EXISTS `organizations_orgmemberquota`;
-CREATE TABLE `organizations_orgmemberquota`  (
+CREATE TABLE IF NOT EXISTS `organizations_orgmemberquota`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `org_id` int NOT NULL,
   `quota` int NOT NULL,
@@ -702,8 +657,7 @@ CREATE TABLE `organizations_orgmemberquota`  (
 -- ----------------------------
 -- Table structure for organizations_orgsettings
 -- ----------------------------
-DROP TABLE IF EXISTS `organizations_orgsettings`;
-CREATE TABLE `organizations_orgsettings`  (
+CREATE TABLE IF NOT EXISTS `organizations_orgsettings`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `org_id` int NOT NULL,
   `role` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -714,8 +668,7 @@ CREATE TABLE `organizations_orgsettings`  (
 -- ----------------------------
 -- Table structure for post_office_attachment
 -- ----------------------------
-DROP TABLE IF EXISTS `post_office_attachment`;
-CREATE TABLE `post_office_attachment`  (
+CREATE TABLE IF NOT EXISTS `post_office_attachment`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `file` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -727,8 +680,7 @@ CREATE TABLE `post_office_attachment`  (
 -- ----------------------------
 -- Table structure for post_office_attachment_emails
 -- ----------------------------
-DROP TABLE IF EXISTS `post_office_attachment_emails`;
-CREATE TABLE `post_office_attachment_emails`  (
+CREATE TABLE IF NOT EXISTS `post_office_attachment_emails`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `attachment_id` int NOT NULL,
   `email_id` int NOT NULL,
@@ -742,8 +694,7 @@ CREATE TABLE `post_office_attachment_emails`  (
 -- ----------------------------
 -- Table structure for post_office_email
 -- ----------------------------
-DROP TABLE IF EXISTS `post_office_email`;
-CREATE TABLE `post_office_email`  (
+CREATE TABLE IF NOT EXISTS `post_office_email`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `from_email` varchar(254) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `to` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -773,8 +724,7 @@ CREATE TABLE `post_office_email`  (
 -- ----------------------------
 -- Table structure for post_office_emailtemplate
 -- ----------------------------
-DROP TABLE IF EXISTS `post_office_emailtemplate`;
-CREATE TABLE `post_office_emailtemplate`  (
+CREATE TABLE IF NOT EXISTS `post_office_emailtemplate`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `description` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -794,8 +744,7 @@ CREATE TABLE `post_office_emailtemplate`  (
 -- ----------------------------
 -- Table structure for post_office_log
 -- ----------------------------
-DROP TABLE IF EXISTS `post_office_log`;
-CREATE TABLE `post_office_log`  (
+CREATE TABLE IF NOT EXISTS `post_office_log`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `date` datetime NOT NULL,
   `status` smallint UNSIGNED NOT NULL,
@@ -810,8 +759,7 @@ CREATE TABLE `post_office_log`  (
 -- ----------------------------
 -- Table structure for profile_detailedprofile
 -- ----------------------------
-DROP TABLE IF EXISTS `profile_detailedprofile`;
-CREATE TABLE `profile_detailedprofile`  (
+CREATE TABLE IF NOT EXISTS `profile_detailedprofile`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `department` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -823,8 +771,7 @@ CREATE TABLE `profile_detailedprofile`  (
 -- ----------------------------
 -- Table structure for profile_profile
 -- ----------------------------
-DROP TABLE IF EXISTS `profile_profile`;
-CREATE TABLE `profile_profile`  (
+CREATE TABLE IF NOT EXISTS `profile_profile`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `user` varchar(254) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `nickname` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -845,8 +792,7 @@ CREATE TABLE `profile_profile`  (
 -- ----------------------------
 -- Table structure for registration_registrationprofile
 -- ----------------------------
-DROP TABLE IF EXISTS `registration_registrationprofile`;
-CREATE TABLE `registration_registrationprofile`  (
+CREATE TABLE IF NOT EXISTS `registration_registrationprofile`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `emailuser_id` int NOT NULL,
   `activation_key` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -856,8 +802,7 @@ CREATE TABLE `registration_registrationprofile`  (
 -- ----------------------------
 -- Table structure for related_files_relatedfiles
 -- ----------------------------
-DROP TABLE IF EXISTS `related_files_relatedfiles`;
-CREATE TABLE `related_files_relatedfiles`  (
+CREATE TABLE IF NOT EXISTS `related_files_relatedfiles`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `o_uuid_id` char(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `r_uuid_id` char(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -871,8 +816,7 @@ CREATE TABLE `related_files_relatedfiles`  (
 -- ----------------------------
 -- Table structure for repo_api_tokens
 -- ----------------------------
-DROP TABLE IF EXISTS `repo_api_tokens`;
-CREATE TABLE `repo_api_tokens`  (
+CREATE TABLE IF NOT EXISTS `repo_api_tokens`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `repo_id` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `app_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -890,8 +834,7 @@ CREATE TABLE `repo_api_tokens`  (
 -- ----------------------------
 -- Table structure for repo_auto_delete
 -- ----------------------------
-DROP TABLE IF EXISTS `repo_auto_delete`;
-CREATE TABLE `repo_auto_delete`  (
+CREATE TABLE IF NOT EXISTS `repo_auto_delete`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `repo_id` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `days` int NOT NULL,
@@ -902,8 +845,7 @@ CREATE TABLE `repo_auto_delete`  (
 -- ----------------------------
 -- Table structure for repo_share_invitation
 -- ----------------------------
-DROP TABLE IF EXISTS `repo_share_invitation`;
-CREATE TABLE `repo_share_invitation`  (
+CREATE TABLE IF NOT EXISTS `repo_share_invitation`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `repo_id` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `path` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -918,8 +860,7 @@ CREATE TABLE `repo_share_invitation`  (
 -- ----------------------------
 -- Table structure for repo_tags_repotags
 -- ----------------------------
-DROP TABLE IF EXISTS `repo_tags_repotags`;
-CREATE TABLE `repo_tags_repotags`  (
+CREATE TABLE IF NOT EXISTS `repo_tags_repotags`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `repo_id` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -933,8 +874,7 @@ CREATE TABLE `repo_tags_repotags`  (
 -- ----------------------------
 -- Table structure for revision_tag_revisiontags
 -- ----------------------------
-DROP TABLE IF EXISTS `revision_tag_revisiontags`;
-CREATE TABLE `revision_tag_revisiontags`  (
+CREATE TABLE IF NOT EXISTS `revision_tag_revisiontags`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `repo_id` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `path` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -952,8 +892,7 @@ CREATE TABLE `revision_tag_revisiontags`  (
 -- ----------------------------
 -- Table structure for revision_tag_tags
 -- ----------------------------
-DROP TABLE IF EXISTS `revision_tag_tags`;
-CREATE TABLE `revision_tag_tags`  (
+CREATE TABLE IF NOT EXISTS `revision_tag_tags`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
@@ -963,8 +902,7 @@ CREATE TABLE `revision_tag_tags`  (
 -- ----------------------------
 -- Table structure for role_permissions_adminrole
 -- ----------------------------
-DROP TABLE IF EXISTS `role_permissions_adminrole`;
-CREATE TABLE `role_permissions_adminrole`  (
+CREATE TABLE IF NOT EXISTS `role_permissions_adminrole`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(254) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `role` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -975,8 +913,7 @@ CREATE TABLE `role_permissions_adminrole`  (
 -- ----------------------------
 -- Table structure for share_anonymousshare
 -- ----------------------------
-DROP TABLE IF EXISTS `share_anonymousshare`;
-CREATE TABLE `share_anonymousshare`  (
+CREATE TABLE IF NOT EXISTS `share_anonymousshare`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `repo_owner` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `repo_id` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -989,8 +926,7 @@ CREATE TABLE `share_anonymousshare`  (
 -- ----------------------------
 -- Table structure for share_extragroupssharepermission
 -- ----------------------------
-DROP TABLE IF EXISTS `share_extragroupssharepermission`;
-CREATE TABLE `share_extragroupssharepermission`  (
+CREATE TABLE IF NOT EXISTS `share_extragroupssharepermission`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `repo_id` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `group_id` int NOT NULL,
@@ -1003,8 +939,7 @@ CREATE TABLE `share_extragroupssharepermission`  (
 -- ----------------------------
 -- Table structure for share_extrasharepermission
 -- ----------------------------
-DROP TABLE IF EXISTS `share_extrasharepermission`;
-CREATE TABLE `share_extrasharepermission`  (
+CREATE TABLE IF NOT EXISTS `share_extrasharepermission`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `repo_id` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `share_to` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -1017,8 +952,7 @@ CREATE TABLE `share_extrasharepermission`  (
 -- ----------------------------
 -- Table structure for share_fileshare
 -- ----------------------------
-DROP TABLE IF EXISTS `share_fileshare`;
-CREATE TABLE `share_fileshare`  (
+CREATE TABLE IF NOT EXISTS `share_fileshare`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `repo_id` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -1041,8 +975,7 @@ CREATE TABLE `share_fileshare`  (
 -- ----------------------------
 -- Table structure for share_orgfileshare
 -- ----------------------------
-DROP TABLE IF EXISTS `share_orgfileshare`;
-CREATE TABLE `share_orgfileshare`  (
+CREATE TABLE IF NOT EXISTS `share_orgfileshare`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `org_id` int NOT NULL,
   `file_share_id` int NOT NULL,
@@ -1055,8 +988,7 @@ CREATE TABLE `share_orgfileshare`  (
 -- ----------------------------
 -- Table structure for share_privatefiledirshare
 -- ----------------------------
-DROP TABLE IF EXISTS `share_privatefiledirshare`;
-CREATE TABLE `share_privatefiledirshare`  (
+CREATE TABLE IF NOT EXISTS `share_privatefiledirshare`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `from_user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `to_user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -1075,8 +1007,7 @@ CREATE TABLE `share_privatefiledirshare`  (
 -- ----------------------------
 -- Table structure for share_uploadlinkshare
 -- ----------------------------
-DROP TABLE IF EXISTS `share_uploadlinkshare`;
-CREATE TABLE `share_uploadlinkshare`  (
+CREATE TABLE IF NOT EXISTS `share_uploadlinkshare`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `repo_id` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -1095,8 +1026,7 @@ CREATE TABLE `share_uploadlinkshare`  (
 -- ----------------------------
 -- Table structure for social_auth_usersocialauth
 -- ----------------------------
-DROP TABLE IF EXISTS `social_auth_usersocialauth`;
-CREATE TABLE `social_auth_usersocialauth`  (
+CREATE TABLE IF NOT EXISTS `social_auth_usersocialauth`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `provider` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -1110,8 +1040,7 @@ CREATE TABLE `social_auth_usersocialauth`  (
 -- ----------------------------
 -- Table structure for sysadmin_extra_userloginlog
 -- ----------------------------
-DROP TABLE IF EXISTS `sysadmin_extra_userloginlog`;
-CREATE TABLE `sysadmin_extra_userloginlog`  (
+CREATE TABLE IF NOT EXISTS `sysadmin_extra_userloginlog`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `login_date` datetime NOT NULL,
@@ -1125,8 +1054,7 @@ CREATE TABLE `sysadmin_extra_userloginlog`  (
 -- ----------------------------
 -- Table structure for tags_filetag
 -- ----------------------------
-DROP TABLE IF EXISTS `tags_filetag`;
-CREATE TABLE `tags_filetag`  (
+CREATE TABLE IF NOT EXISTS `tags_filetag`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `tag_id` int NOT NULL,
@@ -1141,8 +1069,7 @@ CREATE TABLE `tags_filetag`  (
 -- ----------------------------
 -- Table structure for tags_fileuuidmap
 -- ----------------------------
-DROP TABLE IF EXISTS `tags_fileuuidmap`;
-CREATE TABLE `tags_fileuuidmap`  (
+CREATE TABLE IF NOT EXISTS `tags_fileuuidmap`  (
   `uuid` char(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `repo_id` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `repo_id_parent_path_md5` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -1157,8 +1084,7 @@ CREATE TABLE `tags_fileuuidmap`  (
 -- ----------------------------
 -- Table structure for tags_tags
 -- ----------------------------
-DROP TABLE IF EXISTS `tags_tags`;
-CREATE TABLE `tags_tags`  (
+CREATE TABLE IF NOT EXISTS `tags_tags`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
@@ -1168,8 +1094,7 @@ CREATE TABLE `tags_tags`  (
 -- ----------------------------
 -- Table structure for termsandconditions_termsandconditions
 -- ----------------------------
-DROP TABLE IF EXISTS `termsandconditions_termsandconditions`;
-CREATE TABLE `termsandconditions_termsandconditions`  (
+CREATE TABLE IF NOT EXISTS `termsandconditions_termsandconditions`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `slug` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `name` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -1185,8 +1110,7 @@ CREATE TABLE `termsandconditions_termsandconditions`  (
 -- ----------------------------
 -- Table structure for termsandconditions_usertermsandconditions
 -- ----------------------------
-DROP TABLE IF EXISTS `termsandconditions_usertermsandconditions`;
-CREATE TABLE `termsandconditions_usertermsandconditions`  (
+CREATE TABLE IF NOT EXISTS `termsandconditions_usertermsandconditions`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `ip_address` char(39) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -1201,8 +1125,7 @@ CREATE TABLE `termsandconditions_usertermsandconditions`  (
 -- ----------------------------
 -- Table structure for trusted_ip_trustedip
 -- ----------------------------
-DROP TABLE IF EXISTS `trusted_ip_trustedip`;
-CREATE TABLE `trusted_ip_trustedip`  (
+CREATE TABLE IF NOT EXISTS `trusted_ip_trustedip`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `ip` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
@@ -1212,8 +1135,7 @@ CREATE TABLE `trusted_ip_trustedip`  (
 -- ----------------------------
 -- Table structure for two_factor_phonedevice
 -- ----------------------------
-DROP TABLE IF EXISTS `two_factor_phonedevice`;
-CREATE TABLE `two_factor_phonedevice`  (
+CREATE TABLE IF NOT EXISTS `two_factor_phonedevice`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -1228,8 +1150,7 @@ CREATE TABLE `two_factor_phonedevice`  (
 -- ----------------------------
 -- Table structure for two_factor_staticdevice
 -- ----------------------------
-DROP TABLE IF EXISTS `two_factor_staticdevice`;
-CREATE TABLE `two_factor_staticdevice`  (
+CREATE TABLE IF NOT EXISTS `two_factor_staticdevice`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -1241,8 +1162,7 @@ CREATE TABLE `two_factor_staticdevice`  (
 -- ----------------------------
 -- Table structure for two_factor_statictoken
 -- ----------------------------
-DROP TABLE IF EXISTS `two_factor_statictoken`;
-CREATE TABLE `two_factor_statictoken`  (
+CREATE TABLE IF NOT EXISTS `two_factor_statictoken`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `token` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `device_id` int NOT NULL,
@@ -1255,8 +1175,7 @@ CREATE TABLE `two_factor_statictoken`  (
 -- ----------------------------
 -- Table structure for two_factor_totpdevice
 -- ----------------------------
-DROP TABLE IF EXISTS `two_factor_totpdevice`;
-CREATE TABLE `two_factor_totpdevice`  (
+CREATE TABLE IF NOT EXISTS `two_factor_totpdevice`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -1275,8 +1194,7 @@ CREATE TABLE `two_factor_totpdevice`  (
 -- ----------------------------
 -- Table structure for wiki_wiki
 -- ----------------------------
-DROP TABLE IF EXISTS `wiki_wiki`;
-CREATE TABLE `wiki_wiki`  (
+CREATE TABLE IF NOT EXISTS `wiki_wiki`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
