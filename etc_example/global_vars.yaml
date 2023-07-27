@@ -42,7 +42,7 @@ ipmi_username: root
 ipmi_password: Troila12#$
 host_username: root
 host_password: Troila12#$
-create_swap_file: "{% if enable_single_net | bool %}false{% else %}true{% endif %}"
+create_swap_file: false
 swap_file_path: /swapfile
 swap_file_block_size: 2M
 swap_file_true: 10240
