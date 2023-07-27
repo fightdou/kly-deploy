@@ -2,7 +2,7 @@
 - import_tasks: install.yaml
 
 - import_tasks: createlvm.yaml
-  when: inventory_hostname in groups['gluster']
+  when: inventory_hostname in groups['glusterfs']
 
 - import_tasks: createvolume.yaml
 

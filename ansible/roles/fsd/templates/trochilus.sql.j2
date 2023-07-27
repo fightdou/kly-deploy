@@ -15,7 +15,6 @@
     {% endif %}
     {% set uuid = host | get_trochilus_agent_id(trochilus_api_addr) %}
     {% set vdiFileNum = hostvars[host]['vdi_storage_num'] %}
-    {% set voiFileNum = hostvars[host]['voi_storage_num'] %}
 
     {% set node_info = {
         "cpuNum": cpuNum,
@@ -23,7 +22,7 @@
         "memoryVoiNum": memoryVoiNum,
         "uuid": uuid,
         "vdiFileNum": vdiFileNum,
-        "voiFileNum": voiFileNum
+        "voiFileNum": voi_storage_num
     } %}
     {% set _ = node_resource_info.append(node_info) %}
 {% endfor %}
@@ -37,9 +36,9 @@ UPDATE `des_resource_pool` SET
     `voi_memory_num` = {{ total_voi_mems }},
     `vdi_ceph_num` = {{ ceph_storage_num }},
     `vdi_file_num` = {{ total_vdi_file_num }},
-    `iso_file_num` = {{ total_iso_share_num }},
-    `cloud_disk_num` = {{ total_net_share_num }},
-    `voi_file_num` = {{ total_voi_file_num }},
+    `iso_file_num` = {{ vdi_file_storage_num }},
+    `cloud_disk_num` = {{ cloud_disk_num }},
+    `voi_file_num` = {{ voi_storage_num }},
     `node_resource_info` = '{{ node_resource_info | to_json }}'
 WHERE `uuid` = '0';
 UPDATE `sys_setting` SET info = '{"proxyIp":"{{ fsd_proxy_ip }}","vip":"{{ fsd_vip }}","trackerPort":{{ bt_tracker_external_port }},"frontPort":{{ fsd_external_nginx_port }},"netMode":"INNER"}' WHERE uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8Z1';
@@ -51,9 +50,9 @@ UPDATE `des_resource_pool` SET
     `voi_memory_num` = {{ total_voi_mems }},
     `vdi_ceph_num` = 0,
     `vdi_file_num` = {{ total_vdi_file_num }},
-    `iso_file_num` = {{ total_iso_share_num }},
-    `cloud_disk_num` = {{ total_net_share_num }},
-    `voi_file_num` = {{ total_voi_file_num }},
+    `iso_file_num` = {{ vdi_file_storage_num }},
+    `cloud_disk_num` = {{ cloud_disk_num }},
+    `voi_file_num` = {{ voi_storage_num }},
     `node_resource_info` = '{{ node_resource_info | to_json }}'
 WHERE `uuid` = '0';
 UPDATE `sys_setting` SET info = '{"proxyIp":"{{ fsd_proxy_ip }}","vip":"{{ fsd_vip }}","trackerPort":{{ bt_tracker_external_port }},"frontPort":{{ fsd_external_nginx_port }},"netMode":"INNER"}' WHERE uuid = '5b2d43b2-5ff3-4731-a2e6-0854be87a8Z1';
