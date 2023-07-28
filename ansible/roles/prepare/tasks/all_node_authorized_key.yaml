@@ -40,6 +40,7 @@
 - name: Splicing public keys of each node
   shell: find /tmp/ssh/ -type f -exec sh -c 'cat {}>>/tmp/ssh/authorized_keys.log' \;
   run_once: True
+  delegate_to: "localhost"
 
 - name: Copy authorized_ Keys file to each node
   copy:
@@ -52,3 +53,4 @@
     path: /tmp/ssh/
     state: absent
   run_once: True
+  delegate_to: "localhost"
