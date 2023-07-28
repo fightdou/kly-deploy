@@ -10,12 +10,14 @@
   register: local_net_uuid
   when:
     - share_device | length == 0
+  failed_when: local_net_uuid.stdout == ""
 
 - name: cat share UUID
   shell: "blkid /dev/{{ local_share_vg_name }}/{{ local_net_lv_name }} | awk -F' ' '{print $2}'"
   register: share_net_uuid
   when:
     - share_device | length != 0
+  failed_when: share_net_uuid.stdout == ""
 
 - name: set net uuid
   set_fact:

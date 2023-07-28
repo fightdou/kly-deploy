@@ -116,6 +116,7 @@
     - name: cat trochilus UUID
       shell: "blkid | grep {{ local_vg_name }}-{{ local_trochilus_lv_name }} | awk -F' ' '{print $2}'"
       register: trochilus_uuid
+      failed_when: trochilus_uuid.stdout == ""
 
     - name: Mount trochilus logical volume
       mount:
