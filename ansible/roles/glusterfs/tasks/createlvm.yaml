@@ -10,13 +10,14 @@
   register: local_net_uuid
   when:
     - share_device | length == 0
+    - fsd_deploy_mode != 'voi'
   failed_when: local_net_uuid.stdout == ""
 
 - name: cat share UUID
   shell: "blkid /dev/{{ local_share_vg_name }}/{{ local_net_lv_name }} | awk -F' ' '{print $2}'"
   register: share_net_uuid
   when:
-    - share_device | length != 0
+    - share_device | length != 0 or (share_device | length == 0 and  fsd_deploy_mode == 'voi')
   failed_when: share_net_uuid.stdout == ""
 
 - name: set net uuid
@@ -24,12 +25,13 @@
     net_uuid: "{{ local_net_uuid.stdout }}"
   when:
     - share_device | length == 0
+    - fsd_deploy_mode != 'voi'
 
 - name: set share uuid
   set_fact:
     net_uuid: "{{ share_net_uuid.stdout }}"
   when:
-    - share_device | length != 0
+    - share_device | length != 0 or (share_device | length == 0 and fsd_deploy_mode == 'voi')
 
 - name: Mount Glusterfs Metadata Lvm To Glusterfs Metadata Path
   mount:

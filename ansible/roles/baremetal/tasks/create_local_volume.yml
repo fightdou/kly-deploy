@@ -72,9 +72,8 @@
         dev: /dev/{{ local_share_vg_name }}/{{ local_net_lv_name }}
         force: true
       when: not share_lvbool | bool
-
   when: 
-    - share_device | length != 0 or share_device | length == 0 and fsd_deploy_mode == 'voi'
+    - share_device | length != 0 or( share_device | length == 0 and fsd_deploy_mode == 'voi')
     - inventory_hostname in groups['glusterfs']
 
 - name: 非单voi时创建local资源
@@ -124,7 +123,6 @@
         src: "{{ trochilus_uuid.stdout | replace('\"', '') }}"
         fstype: ext4
         state: mounted
-
   when: fsd_deploy_mode != 'voi'
 
 - name: 当share不单独使用磁盘时控制节点创建vg
@@ -146,6 +144,7 @@
 
   when:
     - share_device | length == 0
+    - fsd_deploy_mode != 'voi'
     - inventory_hostname in groups['glusterfs']
 
 - name: Apply role glusterfs
