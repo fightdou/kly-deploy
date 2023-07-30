@@ -60,6 +60,16 @@
     src: "{{ item }}"
     dest: "{{ share_disk_mount_path }}/static/vdiUpgradePackage/"
     mode: "0644"
+  with_items: "{{ tdesktop_edu_path_name }}"
+  when:
+    - deploy_edu | bool
+
+- name: Copy Tdesktop.exe to share path
+  become: true
+  copy:
+    src: "{{ item }}"
+    dest: "{{ share_disk_mount_path }}/static/vdiUpgradePackage/"
+    mode: "0644"
   with_items: "{{ tdesktop_path_name }}"
   when:
     - not only_deploy_voi | bool
