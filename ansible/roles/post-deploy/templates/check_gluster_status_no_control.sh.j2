@@ -18,9 +18,9 @@ function logger() {
   esac
 }
 {% if groups['control'] | length == 1 %}
-mount_shell="mount -t glusterfs -o log-level=WARNING {{ inventory_hostname }}:/{{ share_volume_name }} {{ share_mount_dir }} > /dev/null"
+mount_shell="mount -t glusterfs -o log-level=WARNING {{ groups['control'][0] }}:/{{ share_volume_name }} {{ share_mount_dir }} > /dev/null"
 {% else %}
-mount_shell="mount -t glusterfs -o backup-volfile-servers={{ groups['glusterfs'] | difference(inventory_hostname) | join(':') }},log-level=WARNING {{ inventory_hostname }}:/{{ share_volume_name }} {{ share_mount_dir }} > /dev/null"
+mount_shell="mount -t glusterfs -o backup-volfile-servers={{ groups['glusterfs'] | difference(inventory_hostname) | join(':') }},log-level=WARNING {{ groups['control'][0] }}:/{{ share_volume_name }} {{ share_mount_dir }} > /dev/null"
 {% endif %}
 
 function main() {

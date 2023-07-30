@@ -47,7 +47,7 @@ ONBOOT=yes
 BOOTPROTO=static
 IPADDR=${ip_address}
 GATEWAY=${ip_gateway}
-PREFIX=24
+PREFIX={{ external_manage_netmask }}
 MACADDR=${mac_address}
 EOL
 

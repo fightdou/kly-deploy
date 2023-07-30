@@ -29,3 +29,10 @@
   run_once: True
   delegate_to: "{{ groups['baremetal'][0] }}"
   with_items: "{{ groups['baremetal'] }}"
+
+- name: Restart veth-setup service
+  systemd:
+    name: veth-setup.service
+    state: restarted
+    enabled: True
+  when: enable_single_net | bool
