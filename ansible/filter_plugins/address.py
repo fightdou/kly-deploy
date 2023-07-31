@@ -314,7 +314,16 @@ def filter_vdi_node_mems(context, hostname=None):
             return 4 - voi_reserved_memory
 
     if ceph_bool:
-        osd_num = filter_node_ceph_osd_num(context,hostname)
+        ceph_volume_data = hostvars.get('ceph_volume_data')
+        if ceph_volume_data is None:
+            _field_none_error('ceph_volume_data', hostname)
+        bcache_map_list = hostvars.get('bcache_map_list')
+        if bcache_map_list is None:
+            _field_none_error('bcache_map_list', hostname)
+        if ceph_volume_data == [] and bcache_map_list == []:
+            osd_num = 0
+        else:
+            osd_num = filter_node_ceph_osd_num(context,hostname)
         host_reserved_osd_memory_mb = hostvars.get('reserved_osd_memory_mb')
         if host_reserved_osd_memory_mb is None:
             _field_none_error('reserved_osd_memory_mb', hostname)
