@@ -32,6 +32,12 @@ function main() {
         if [ $gluster_status = 'active' ]; then
             logger info "SUCCESS! Connected already exists in gluster, start mounting..."
             sleep 1
+            volume_status=$(gluster volume status  | grep {{ inventory_hostname }}:/ | awk '{print $5}' 2>&1)
+            if [ $volume_status != 'Y' ]; then
+                logger warn "Gluster volume not online, Rstart gluster servers...."
+                systemctl restart glusterd
+                sleep 3
+            fi
             mount_status=$(mount -t glusterfs -o log-level=WARNING {{ inventory_hostname }}:/{{ share_volume_name }} {{ share_mount_dir }} 2>&1)
             if (( $? == 0 )); then
                 logger info "SUCCESS! Successfully mounted,Waiting for detection..."
