@@ -1,12 +1,30 @@
 ---
+- name: check bridge_exits is exit
+  shell: nmcli connection show {{ single_net_bridge_name }}
+  register: bridge_exits
+  ignore_errors: true
+
 - name: get external_manage_ip netmask
   shell: nmcli device show {{ api_interface }} | grep IP4.ADDRESS | awk '{print $2}' | grep {{ external_manage_ip }}
-  register: result
-  
+  register: net_result
+  when: bridge_exits is failed
+
 - name: set external_manage_netmask
   set_fact:
-    external_manage_netmask: "{{ result.stdout.split('/')[-1] }}"
+    external_manage_netmask: "{{ net_result.stdout.split('/')[-1] }}"
   failed_when: external_manage_netmask == ""
+  when: bridge_exits is failed
+  
+- name: get external_manage_ip netmask
+  shell: nmcli device show {{ single_net_bridge_name }} | grep IP4.ADDRESS | awk '{print $2}' | grep {{ external_manage_ip }}
+  register: bridge_result
+  when: bridge_exits is success
+
+- name: set external_manage_netmask
+  set_fact:
+    external_manage_netmask: "{{ bridge_result.stdout.split('/')[-1] }}"
+  failed_when: external_manage_netmask == ""
+  when: bridge_exits is success
 
 - name: Copy add-tap.sh
   template:
