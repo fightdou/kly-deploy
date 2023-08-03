@@ -1,5 +1,5 @@
 ---
-ceph_local_ip: "{{ hostvars[inventory_hostname]['ansible_' + ceph_public_interface]['ipv4']['address'] }}"
+ceph_local_ip: "{% if ceph_public_interface == api_interface %}{{ inventory_hostname }}{% else %}{{ hostvars[inventory_hostname]['ansible_' + ceph_public_interface]['ipv4']['address'] }}{% endif %}"
 desktop_mount_shell_dir: "/etc/ceph/cephmount"
 cephmount_service_dir: "/usr/lib/systemd/system/"
 
