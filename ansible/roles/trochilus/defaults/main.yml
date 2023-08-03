@@ -53,6 +53,8 @@ trochilus_default_volumes:
   - "/etc/localtime:/etc/localtime"
   - "/etc/machine-id:/etc/machine-id"
   - "/etc/sysctl.d/:/etc/sysctl.d/"
+  - "/etc/ssh/:/etc/ssh/"
+  - "/root/.ssh/:/root/.ssh/"
   - "/etc/lvm/:/etc/lvm/"
   - "/sys/fs/cgroup/:/sys/fs/cgroup/:rw"
   - "/dev/:/dev/"
