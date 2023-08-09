@@ -13,4 +13,3 @@
 - name: upgade btserver service
   import_role:
     name: btserver
-
