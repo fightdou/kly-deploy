@@ -13,10 +13,10 @@ else
 fi
 
 # 执行升级命令
-java -jar {{ upgrade_resource_path }}/upgrade-web.jar \
+/opt/jdk1.8.0_331/bin/java -jar {{ upgrade_resource_path }}/upgrade-web.jar \
     --spring.datasource.password={{ mariadb_root_password }} \
     --upgrade.biz.deploy.nodeIp={{ fsd_proxy_ip }} \
-    --upgrade.biz.deploy.project=klcloud_fsd{{deploy_type}} \
+    --upgrade.biz.deploy.project=klcloud_fsd{{deploy_type}}mix \
     --upgrade.biz.path.logPath=/var/log/deploy \
     --server.port={{ fsd_upgrade_server_port }} >/dev/null &
 
@@ -25,7 +25,7 @@ while [ $retry_count -lt $MAX_RETRY ]; do
   if netstat -an | grep -w "{{ fsd_upgrade_server_port }}" >/dev/null; then
     # 发送升级请求并检查状态码
     response=$(curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" \
-      -d "{\"currentVersion\": \"$version\",\"project\": \"fsd{{deploy_type}}\",\"targetVersion\": \"{{ upgrade_version }}\"}" \
+      -d "{\"currentVersion\": \"$version\",\"project\": \"fsd{{deploy_type}}mix\",\"targetVersion\": \"{{ upgrade_version }}\"}" \
       "http://localhost:{{ fsd_upgrade_server_port }}/api/v1/upgrade/")
     status=$(echo $response | jq -r '.state')
 

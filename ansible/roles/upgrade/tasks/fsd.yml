@@ -1,12 +1,25 @@
+- name: Copy Tdesktop.exe to share path
+  become: true
+  copy:
+    src: "{{ item }}"
+    dest: "/opt/offline/"
+    mode: "0644"
+  with_items: 
+    - "{{ upgrade_resource_path }}/Win-TDesktop.exe"
+
 - name: 生成 fsd_db_upgrade.sh 文件
   template:
     src: fsd_db_upgrade.sh.j2
     dest: "{{ config_directory }}/upgrade/fsd_db_upgrade.sh"
     owner: root
     mode: 0644
+  run_once: true
+  delegate_to: "{{ groups['fsd'][0] }}"
 
 - name: 执行 fsd_db_upgrade.sh
   shell: sh "{{ config_directory }}/upgrade/fsd_db_upgrade.sh"
+  run_once: true
+  delegate_to: "{{ groups['fsd'][0] }}"
 
 - name: bakup fsd config file
   vars:
@@ -19,18 +32,8 @@
     owner: root
     group: root
     mode: "0755"
-
-- name: bakup fsd config file
-  vars:
-    folder_name: fsd
-    timestamp: "{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
-  file:
-    src: "{{ config_directory }}/{{ folder_name }}"
-    dest: "{{ config_directory }}/{{ folder_name }}-{{ timestamp }}"
-    state: directory
-    owner: root
-    group: root
-    mode: "0755"
+  run_once: true
+  delegate_to: "{{ groups['fsd'][0] }}"
 
 - name: remove fsd container
   kolla_docker:

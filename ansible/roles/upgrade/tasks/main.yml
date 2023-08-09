@@ -1,10 +1,15 @@
 ---
-- name: Copy image to remote host
-  copy:
+- name: Ensuring upgrade directories exist
+  file:
+    path: "{{ upgrade_resource_path }}"
+    state: "directory"
+    mode: "0775"
+  become: true
+
+- name:  Sync directory to remote host
+  synchronize:
     src: "{{ upgrade_image_file }}"
     dest: "{{ upgrade_image_file }}"
-  delegate_to: localhost
-  run_once: true
 
 - name: Load upgrade image
   shell: "docker load -i {{ upgrade_image_file }}"

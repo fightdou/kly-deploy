@@ -42,3 +42,11 @@ custom:
   port_java_file: {{ fsd_listen_tcp_file_port }}
   port_java_tcp_file_vip: {{ fsd_external_tcp_file_port }}
   port_java_console: {{ fsd_console_port }}
+  pool_database_init: 50
+  pool_database_min: 50
+  pool_database_max: 200
+  pool_database_wait: 60000
+  pool_thread_core: 100
+  pool_thread_max: 1000
+  pool_thread_keep: 0
+  pool_thread_queue: 500

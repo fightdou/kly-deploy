@@ -87,7 +87,7 @@
         - not loop_exists.stat.exists
 
     - name: 查看 coredump 文件是否 mount
-      shell: mount | grep {{ coredump_img_file_path }}/coredump.img | wc -l
+      shell: mount | grep {{ coredump_libvirt_path }} | wc -l
       register: loop_mount 
 
     - name: 格式化 loop 设备文件系统
