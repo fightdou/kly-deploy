@@ -165,7 +165,7 @@ listen btserver
 listen fsd_nginx
     mode tcp
     bind 0.0.0.0:{{ fsd_external_nginx_port }}
-    balance source
+    balance roundrobin
     option tcplog
 {% for host in (groups['fsd']) %}
     server {{ host }} {{ host }}:{{ fsd_internal_nginx_port }} check inter 2000 rise 2 fall 5
@@ -201,7 +201,7 @@ listen fsd_tcp_file
 listen fsd
     mode tcp
     bind 0.0.0.0:{{ fsd_external_main_port }}
-    balance source
+    balance roundrobin
     option tcplog
 {% for host in (groups['fsd']) %}
     server {{ host }} {{ host }}:{{ fsd_internal_main_port }} check inter 2000 rise 2 fall 5
