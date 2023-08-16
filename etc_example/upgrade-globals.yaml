@@ -13,3 +13,4 @@ btserver_tag: "{{ upgrade_version }}"
 guest_service_tag: "{{ upgrade_version }}"
 libvirt_tag: "{{ upgrade_version }}"
 fsd_upgrade_server_port: 9014
+fsd_broadcast_port: 8050

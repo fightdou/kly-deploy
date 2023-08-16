@@ -246,6 +246,7 @@ fsd_console_port: 9040
 fsd_external_main_port: 9010
 fsd_internal_main_port: 19010
 fsd_ssd_port: 22222
+fsd_broadcast_port: 8050
 fsd_webhook_token: abc123
 fsd_default_tag: 3.0.1
 fsd_console_tag: latest
