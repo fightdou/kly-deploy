@@ -6,6 +6,14 @@
     mode: "0775"
   become: true
 
+- name: Cat mgmt network ip
+  shell: cat /etc/sysconfig/network-scripts/ifcfg-{{ api_interface }} | grep IPADDR | egrep -v {{ inventory_hostname }} | awk -F'=' '{print $2}'
+  register: manage_ip
+
+- name: set manage_ip
+  set_fact:
+    ext_manage_ip: "{{ manage_ip.stdout }}"
+
 - name: copy opentracker.conf conf file
   template:
     src: opentracker.conf.j2
