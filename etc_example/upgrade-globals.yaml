@@ -1,6 +1,6 @@
-upgrade_version: 3.0.1
-upgrade_resource_path: /opt/kly-upgrade/EDU-upgrade_resource_v3.0.1
-upgrade_image_file: "{{ upgrade_resource_path }}/upgrade_image_3.0.1.tar.gz"
+upgrade_version: 3.0.2
+upgrade_resource_path: /opt/kly-upgrade/EDU-upgrade_resource_v3.0.2
+upgrade_image_file: "{{ upgrade_resource_path }}/upgrade_image_3.0.2.tar.gz"
 upgrade_service:
   - libvirt
   - trochilus
