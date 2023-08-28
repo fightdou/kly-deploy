@@ -1,6 +1,6 @@
-upgrade_version: 2.1.0
-upgrade_resource_path: /opt/kly-upgrade/COMM-upgrade_resource_v2.1.0
-upgrade_image_file: "{{ upgrade_resource_path }}/upgrade_image_2.1.0.tar.gz"
+upgrade_version: 2.1.1
+upgrade_resource_path: /opt/kly-upgrade/COMM-upgrade_resource_v2.1.1
+upgrade_image_file: "{{ upgrade_resource_path }}/upgrade_image_2.1.1.tar.gz"
 upgrade_service:
   - libvirt
   - trochilus

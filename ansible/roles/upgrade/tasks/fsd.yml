@@ -1,3 +1,15 @@
+- name: Copy client package to share path
+  become: true
+  copy:
+    src: "{{ upgrade_resource_path }}/{{ item }}"
+    dest: "/opt/offline/"
+    mode: "0644"
+  with_items: 
+    - "Win-TDesktop.exe"
+    - "kylin_ARM-TDesktop.deb"
+    - "UOS_X86-TDesktop.deb"
+    - "UOS_ARM-TDesktop.deb"
+
 - name: 生成 fsd_db_upgrade.sh 文件
   template:
     src: fsd_db_upgrade.sh.j2
