@@ -1,4 +1,13 @@
 ---
+- name: get external_manage_ip netmask
+  shell: nmcli device show {{ api_interface }} | grep IP4.ADDRESS | awk '{print $2}' | grep {{ external_manage_ip }}
+  register: result
+
+- name: set external_manage_netmask
+  set_fact:
+    external_manage_netmask: "{{ result.stdout.split('/')[-1] }}"
+  failed_when: external_manage_netmask == ""
+
 - name: Copy add-tap.sh
   template:
     src: single_net.sh.j2
