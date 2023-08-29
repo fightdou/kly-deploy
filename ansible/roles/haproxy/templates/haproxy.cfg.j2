@@ -69,7 +69,7 @@ listen emqx
 listen trochilus-api
     mode tcp
     bind 0.0.0.0:{{ trochilus_external_api_listen_port }}
-    balance source
+    balance roundrobin
     option tcplog
 {% for host in (groups['trochilus-api']) %}
     server {{ host }} {{ host }}:{{ trochilus_internal_api_listen_port }} check inter 2000 rise 2 fall 5
