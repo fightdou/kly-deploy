@@ -25,7 +25,9 @@
     - enable_hugepages | bool
 
 - import_tasks: set_voi_data_device.yml
-  when: only_deploy_voi | bool
+  when: 
+    - only_deploy_voi | bool
+    - deploy_comm | bool
   run_once: True
 
 - import_tasks: set_voi_virt_nic.yml

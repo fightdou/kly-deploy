@@ -103,7 +103,15 @@
 
 - name: 创建定时任务,每天晚上2点清除系统缓存
   cron:
+    minute: "0"
     name: "clean linux cache"
     hour: "2"
     job: "sync && echo 1 > /proc/sys/vm/drop_caches"
   when: inventory_hostname in groups["control"]
+
+- name: 创建定时任务,每天晚上2点重启chronyd
+  cron:
+    minute: "0"
+    name: "reboot chronyd"
+    hour: "2"
+    job: "systemctl restart chronyd"
