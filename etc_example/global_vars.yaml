@@ -22,7 +22,7 @@ api_interface_address: '{{ "api" | filter_address }}'
 network_address_family: "ipv4"
 api_address_family: "{{ network_address_family }}"
 reserved_host_cpus: 2
-reserved_host_memory_mb: 16384
+reserved_host_memory_mb: 32768
 # 每个osd需要留2G内存
 ceph_reserved_host_memory_mb: 6
 cpu_allocation_ratio: 4

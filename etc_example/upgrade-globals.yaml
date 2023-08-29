@@ -46,3 +46,7 @@ seafile_fileserver_port: 8082
 seafile_admin_pass: "Troila"
 seafile_admin_e: "123@aaa.com"
 seafile_default_tag: "latest"
+
+## 修改变量
+reserved_host_memory_mb: 32768
+create_swap_file: false
