@@ -20,7 +20,8 @@
 
 - name: Set total_mems vars
   set_fact:
-    total_mems: "{{ total_mems | int + ((hostvars[item].ansible_memtotal_mb  - reserved_osd_memory_mb * osd_num.stdout | int - reserved_mds_memory_mb - reserved_mon_memory_mb - reseverd_system_memory_mb - reserved_host_memory_mb) /1024) | int }}"
+    total_mems: >-
+      {% if ansible_memtotal_mb >= 61440 %}{{ total_mems | int + ((hostvars[item].ansible_memtotal_mb  - reserved_osd_memory_mb * osd_num.stdout | int - reserved_mds_memory_mb - reserved_mon_memory_mb - reseverd_system_memory_mb - reserved_host_memory_mb) / 1024) | int }}{% elif ansible_memtotal_mb >= 30720 %}16384{% elif ansible_memtotal_mb >= 16000 %}8192{% else %}4096{% endif %}
   run_once: True
   with_items: "{{ groups['compute'] }}"
   when: not only_deploy_voi | bool
@@ -28,7 +29,8 @@
 # 内存每台机器保留16
 - name: Set total_mems vars
   set_fact:
-    total_mems: "{{ total_mems | int + ((hostvars[item].ansible_memtotal_mb - reserved_host_memory_mb) / 1024) | int }}"
+    total_mems: >-
+      {% if ansible_memtotal_mb >= 61440 %}{{ total_mems | int + ((hostvars[item].ansible_memtotal_mb - reserved_host_memory_mb) / 1024) | int }}{% elif ansible_memtotal_mb >= 30720 %}16384{% elif ansible_memtotal_mb >= 16000 %}8192{% else %}4096{% endif %}
   run_once: True
   with_items: "{{ groups['compute'] }}"
   when: only_deploy_voi | bool

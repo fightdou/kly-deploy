@@ -23,7 +23,8 @@
 
 - name: 获取可分配的大页数量
   set_fact:
-    hugepages_total: "{{ (ansible_memtotal_mb  - reserved_osd_memory_mb * osd_num.stdout | int - reserved_mds_memory_mb - reserved_mon_memory_mb - reseverd_system_memory_mb - reserved_host_memory_mb) // 2 | int }}"
+    hugepages_total: >-
+      {% if ansible_memtotal_mb >= 61440 %}{{ (ansible_memtotal_mb - reserved_osd_memory_mb * osd_num.stdout | int - reserved_mds_memory_mb - reserved_mon_memory_mb - reseverd_system_memory_mb - reserved_host_memory_mb) // 2 | int }}{% elif ansible_memtotal_mb >= 30720 %}8192{% else %}4096{% endif %}
   when:
     - enable_hugepages | bool
 
