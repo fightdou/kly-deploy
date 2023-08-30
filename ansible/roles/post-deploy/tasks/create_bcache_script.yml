@@ -22,3 +22,11 @@
     enabled: true
   when:
     - inventory_hostname in groups['storage']
+
+- name: Restart systemctl and enable resize_bcache_minimum service
+  become: true
+  systemd:
+    name: resize_bcache_minimum
+    state: restarted
+  when:
+    - inventory_hostname in groups['storage']
