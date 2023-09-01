@@ -1,15 +1,7 @@
 ---
-- name: Check if chrony is installed
-  command: "rpm -qa chrony"
-  register: chrony_check
-  changed_when: false
-  args:
-    warn: false
-
 - name: Install chrony
   package:
     name: chrony
-  when: chrony_check.rc != 0
 
 - name: Copy chrony conf
   template:
