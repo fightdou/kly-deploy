@@ -62,3 +62,4 @@ fsd_listen_nginx_port: "{% if enable_internal_communication | bool %}{{ fsd_inte
 fsd_listen_job_port: "{% if enable_internal_communication | bool %}{{ fsd_internal_job_port }}{% else %}{{ fsd_external_job_port }}{% endif %}"
 fsd_listen_tcp_port: "{% if enable_internal_communication | bool %}{{ fsd_internal_tcp_port }}{% else %}{{ fsd_external_tcp_port }}{% endif %}"
 fsd_listen_tcp_file_port: "{% if enable_internal_communication | bool %}{{ fsd_internal_tcp_file_port }}{% else %}{{ fsd_external_tcp_file_port }}{% endif %}"
+docker_proxy: true

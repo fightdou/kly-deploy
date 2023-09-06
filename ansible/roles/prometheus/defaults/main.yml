@@ -51,6 +51,7 @@ prometheus_services:
     enabled: "{{ enable_prometheus | bool }}"
     image: "{{ host_exporter_image_full }}"
     pid_mode: "host"
+    privileged: True
     volumes: "{{ host_exporter_default_volumes }}"
     dimensions: "{{ host_exporter_dimensions }}"
     command: --web.listen-address={{ default_internal_server_listen_ip }}:{{ host_exporter_port }} --ipmi.timeout=10s --config.path=/opt/config.yml
