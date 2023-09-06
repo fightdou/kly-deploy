@@ -59,13 +59,18 @@
       set_fact:
         share_lvbool: "{{ local_net_lv_name in ansible_lvm.lvs }}"
 
-    - name: 创建share的lv
-      lvol:
-        vg: "{{ local_share_vg_name }}"
-        lv: "{{ local_net_lv_name }}"
-        size: "{{ share_lv_size }}"
-      when: not share_lvbool | bool
+    - name: 创建 share 的 lv
+      shell: "lvcreate -y -L {{ share_lv_size }} -i {{ share_device | length | int }}  -I {{ local_stripe_size }} -n {{ local_net_lv_name }} {{ local_vg_name }}"
+      when: 
+        - not share_lvbool | bool
+        - share_device | length != 0
     
+    - name: 创建 share 的 lv
+      shell: "lvcreate -y -L {{ share_lv_size }} -n {{ local_net_lv_name }} {{ local_vg_name }}"
+      when: 
+        - not share_lvbool | bool
+        - share_device | length == 0
+
     - name: 格式化share的lv
       filesystem:
         fstype: ext4
@@ -73,7 +78,7 @@
         force: true
       when: not share_lvbool | bool
   when: 
-    - share_device | length != 0 or( share_device | length == 0 and fsd_deploy_mode == 'voi')
+    - share_device | length != 0 or ( share_device | length == 0 and fsd_deploy_mode == 'voi')
     - inventory_hostname in groups['glusterfs']
 
 - name: 非单voi时创建local资源
@@ -130,7 +135,7 @@
 
     - name: 创建 net 逻辑卷
       become: true
-      shell: "lvcreate -y -L {{ share_lv_size }} -i {{ share_device | length | int }}  -I {{ local_stripe_size }} -n {{ local_net_lv_name }} {{ local_vg_name }}"
+      shell: "lvcreate -y -L {{ share_lv_size }} -i {{ local_device | length | int }}  -I {{ local_stripe_size }} -n {{ local_net_lv_name }} {{ local_vg_name }}"
       when:
         - net_lv_exist.stdout == "0"
 
@@ -138,7 +143,6 @@
       shell: "mkfs.ext4 /dev/{{ local_vg_name }}/{{ local_net_lv_name }}"
       when:
         - net_lv_exist.stdout == "0"
-
   when:
     - share_device | length == 0
     - fsd_deploy_mode != 'voi'
