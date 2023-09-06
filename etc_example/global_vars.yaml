@@ -5,6 +5,7 @@ docker_namespace_name: klcloud_{{ system_type }}
 docker_image_repository: "{{ docker_register_domain }}/{{ docker_namespace_name }}"
 docker_image_tag: latest
 docker_network: 169.17.0.0/16
+docker_proxy: true
 #配置文件目录
 config_directory: "/etc/klcloud"
 
@@ -111,6 +112,7 @@ local_share_vg_name: share
 local_vg_name: local
 local_trochilus_lv_name: trochilus
 local_net_lv_name: net
+local_stripe_size: 128k
 share_mount_dir: "/opt/share"
 
 #################
