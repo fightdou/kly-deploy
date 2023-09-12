@@ -1,11 +1,12 @@
-upgrade_version: 3.0.2
-upgrade_resource_path: /opt/kly-upgrade/EDU-upgrade_resource_v3.0.2
-upgrade_image_file: "{{ upgrade_resource_path }}/upgrade_image_3.0.2.tar.gz"
+upgrade_version: 3.0.3
+upgrade_resource_path: /opt/kly-upgrade/EDU-upgrade_resource_v3.0.3
+upgrade_image_file: "{{ upgrade_resource_path }}/upgrade_image_3.0.3.tar.gz"
 upgrade_service:
   - libvirt
   - trochilus
   - guest-service
   - fsd
+  - btserver
 
 fsd_default_tag: "{{ upgrade_version }}"
 trochilus_tag: "{{ upgrade_version }}"
